@@ -11,6 +11,8 @@ import {
 import { RiFilePaper2Line } from "react-icons/ri";
 import { FiBox } from "react-icons/fi";
 import { FaWpforms } from "react-icons/fa";
+import { Link } from "react-router-dom"
+
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -50,7 +52,7 @@ const Sidebar = () => {
         aria-label="Dashboard Logo"
       >
         <img src={layout} alt="Dashboard logo" className="w-10 h-10" />
-        {!isCollapsed && <p className="text-xl font-bold">Dashboard</p>}
+        {!isCollapsed && <Link to="/" ><p className="text-xl font-bold">Dashboard</p></Link>}
       </div>
 
       {/* Dashboard */}
