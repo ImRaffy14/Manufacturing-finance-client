@@ -1,8 +1,13 @@
 import { useState } from "react";
-import layout from "./Assets/layout.png";
+import layout from '../assets/layout.png';
 import { MdOutlineScreenshotMonitor } from "react-icons/md";
 import { BsBoxSeam } from "react-icons/bs";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { MdManageSearch } from "react-icons/md";
+import { RiUserReceived2Fill } from "react-icons/ri";
+import { MdOutlinePayments } from "react-icons/md";
+import { MdOutlineDensitySmall } from "react-icons/md";
+import { MdAccountCircle } from "react-icons/md";
 import {
   IoFileTrayOutline,
   IoChatboxOutline,
@@ -17,6 +22,10 @@ import { Link } from "react-router-dom"
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
+  const [isDropdownOpen3, setIsDropdownOpen3] = useState(false);
+  const [isDropdownOpen4, setIsDropdownOpen4] = useState(false);
+  const [isDropdownOpen5, setIsDropdownOpen5] = useState(false);
 
   const toggleSidebar = () => {
     setIsCollapsed((prev) => !prev);
@@ -25,6 +34,26 @@ const Sidebar = () => {
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
+
+  const toggleDropdown2 = () => {
+    setIsDropdownOpen2((prev) => !prev);
+  };
+
+  const toggleDropdown3 = () => {
+    setIsDropdownOpen3((prev) => !prev);
+  };
+
+  const toggleDropdown4 = () => {
+    setIsDropdownOpen4((prev) => !prev);
+  };
+
+  const toggleDropdown5 = () => {
+    setIsDropdownOpen5((prev) => !prev);
+  };
+
+
+
+
 
   return (
     <div
@@ -71,17 +100,19 @@ const Sidebar = () => {
             isCollapsed ? "hidden" : ""
           }`}
         >
-          Apps
+          Modules
         </p>
+
+            {/** Cash Management **/}
         <div
           className="flex gap-2 items-center cursor-pointer text-sm hover:text-blue-500 transition duration-200"
           onClick={toggleDropdown}
           aria-expanded={isDropdownOpen}
-          aria-controls="apps-dropdown"
-          aria-label="Ecommerce Apps"
+          aria-controls="module-dropdown"
+          aria-label="Cash Management"
         >
-          <BsBoxSeam className="w-5 h-5" />
-          {!isCollapsed && <span>Ecommerce</span>}
+          <MdManageSearch className="w-5 h-5" />
+          {!isCollapsed && <span>Cash Collection</span>}
           {!isCollapsed && (
             <div className="ml-auto">
               {isDropdownOpen ? (
@@ -93,18 +124,15 @@ const Sidebar = () => {
           )}
         </div>
         <ul
-          id="apps-dropdown"
+          id="module-dropdown"
           className={`pl-6 mt-1 space-y-1 overflow-hidden transition-max-height duration-500 ease-in-out ${
             isDropdownOpen ? "max-h-screen" : "max-h-0"
           }`}
         >
           {[
-            "Orders",
-            "Order Details",
-            "Products",
-            "Sellers",
-            "Customers",
-            "Shops",
+            <Link to="Budgeting" >Budgeting Planning</Link>,
+            <Link to="cashCollection" >Cash Collection</Link>,
+
           ].map((item) => (
             <li key={item}>
               <a
@@ -118,6 +146,145 @@ const Sidebar = () => {
           ))}
         </ul>
       </div>
+
+          {/** Accounts Receivable**/}
+      <div
+          className="flex gap-2 items-center cursor-pointer text-sm hover:text-blue-500 transition duration-200"
+          onClick={toggleDropdown2}
+          aria-expanded={isDropdownOpen2}
+          aria-controls="module-dropdown"
+          aria-label="Accounts Receivables"
+        >
+          <RiUserReceived2Fill className="w-5 h-5" />
+          {!isCollapsed && <span>Account Receivable & Payable</span>}
+          {!isCollapsed && (
+            <div className="ml-auto">
+              {isDropdownOpen2 ? (
+                <IoIosArrowUp size={15} />
+              ) : (
+                <IoIosArrowDown size={15} />
+              )}
+            </div>
+          )}
+        </div>
+
+        <ul
+          id="apps-dropdown"
+          className={`pl-6 mt-1 space-y-1 overflow-hidden transition-max-height duration-500 ease-in-out ${
+            isDropdownOpen2 ? "max-h-screen" : "max-h-0"
+          }`}
+        >
+          {[
+            <Link to="InvoiceGeneration" >Invoice Generation</Link>,
+            <Link to="VendorInvoice" >Vendor Invoice</Link>,
+
+          ].map((item) => (
+            <li key={item}>
+              <a
+                className={`text-sm flex justify-between py-1 cursor-pointer hover:text-blue-500 transition ${
+                  isCollapsed ? "hidden" : ""
+                }`}
+              >
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        
+         {/** Financial Ledger **/}
+      <div
+          className="flex gap-2 items-center cursor-pointer text-sm hover:text-blue-500 transition duration-200"
+          onClick={toggleDropdown4}
+          aria-expanded={isDropdownOpen4}
+          aria-controls="module-dropdown"
+          aria-label="Financial Ledger"
+        >
+          <MdOutlineDensitySmall className="w-5 h-5" />
+          {!isCollapsed && <span>Financial Ledger</span>}
+          {!isCollapsed && (
+            <div className="ml-auto">
+              {isDropdownOpen4 ? (
+                <IoIosArrowUp size={15} />
+              ) : (
+                <IoIosArrowDown size={15} />
+              )}
+            </div>
+          )}
+        </div>
+
+        <ul
+          id="apps-dropdown"
+          className={`pl-6 mt-1 space-y-1 overflow-hidden transition-max-height duration-500 ease-in-out ${
+            isDropdownOpen4 ? "max-h-screen" : "max-h-0"
+          }`}
+        >
+          {[  
+            <Link to="AuditControl" >Internal Audit and Controls</Link>,
+            <Link to="ReportingCompliance" >Financial Reporting and Compliance </Link>,
+
+          ].map((item) => (
+            <li key={item}>
+              <a
+                className={`text-sm flex justify-between py-1 cursor-pointer hover:text-blue-500 transition ${
+                  isCollapsed ? "hidden" : ""
+                }`}
+              >
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {/** Accounts Management **/}
+      <div
+          className="flex gap-2 items-center cursor-pointer text-sm hover:text-blue-500 transition duration-200"
+          onClick={toggleDropdown5}
+          aria-expanded={isDropdownOpen5}
+          aria-controls="module-dropdown"
+          aria-label="Accounts Management"
+        >
+          <MdAccountCircle className="w-5 h-5" />
+          {!isCollapsed && <span>Accounts Management</span>}
+          {!isCollapsed && (
+            <div className="ml-auto">
+              {isDropdownOpen5 ? (
+                <IoIosArrowUp size={15} />
+              ) : (
+                <IoIosArrowDown size={15} />
+              )}
+            </div>
+          )}
+        </div>
+
+        <ul
+          id="apps-dropdown"
+          className={`pl-6 mt-1 space-y-1 overflow-hidden transition-max-height duration-500 ease-in-out ${
+            isDropdownOpen5 ? "max-h-screen" : "max-h-0"
+          }`}
+        >
+          {[  
+            <Link to="Accounts  " >Accounts List</Link>,
+    
+
+          ].map((item) => (
+            <li key={item}>
+              <a
+                className={`text-sm flex justify-between py-1 cursor-pointer hover:text-blue-500 transition ${
+                  isCollapsed ? "hidden" : ""
+                }`}
+              >
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+
+
+        
+
+      
 
       {/* File Manager */}
       <div

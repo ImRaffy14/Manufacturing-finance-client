@@ -1,5 +1,6 @@
 import React from "react";
 import AdminPage from './Pages/AdminPage'
+import Login from './Pages/Login'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 const App = () => {
@@ -8,6 +9,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
             <Route path="/*" element={ <AdminPage/> } />
+            <Route path="Login" element={ <Login/> } />
         </Routes>
       </BrowserRouter>
       </>
