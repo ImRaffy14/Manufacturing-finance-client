@@ -1,58 +1,33 @@
 import { useState } from "react";
 import layout from '../assets/layout.png';
 import { MdOutlineScreenshotMonitor } from "react-icons/md";
-import { BsBoxSeam } from "react-icons/bs";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { MdManageSearch } from "react-icons/md";
 import { RiUserReceived2Fill } from "react-icons/ri";
-import { MdOutlinePayments } from "react-icons/md";
-import { MdOutlineDensitySmall } from "react-icons/md";
+import { TbBrandCashapp } from "react-icons/tb";
 import { MdAccountCircle } from "react-icons/md";
-import {
-  IoFileTrayOutline,
-  IoChatboxOutline,
-  IoDocumentTextOutline,
-} from "react-icons/io5";
-import { RiFilePaper2Line } from "react-icons/ri";
-import { FiBox } from "react-icons/fi";
-import { FaWpforms } from "react-icons/fa";
+import { SiAmazonpay } from "react-icons/si";
+import { FaList } from "react-icons/fa";
+
+import { MdOutlineCallReceived } from "react-icons/md";
+import { BsCash } from "react-icons/bs";
+import { FaFileInvoiceDollar } from "react-icons/fa";
+import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
+import { FaCodePullRequest } from "react-icons/fa6";
+import { AiOutlineAudit } from "react-icons/ai";
+import { TbReportSearch } from "react-icons/tb";
+import { MdManageAccounts } from "react-icons/md";
+import { MdSpatialTracking } from "react-icons/md";
 import { Link } from "react-router-dom"
 
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
-  const [isDropdownOpen3, setIsDropdownOpen3] = useState(false);
-  const [isDropdownOpen4, setIsDropdownOpen4] = useState(false);
-  const [isDropdownOpen5, setIsDropdownOpen5] = useState(false);
+
 
   const toggleSidebar = () => {
     setIsCollapsed((prev) => !prev);
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
-
-  const toggleDropdown2 = () => {
-    setIsDropdownOpen2((prev) => !prev);
-  };
-
-  const toggleDropdown3 = () => {
-    setIsDropdownOpen3((prev) => !prev);
-  };
-
-  const toggleDropdown4 = () => {
-    setIsDropdownOpen4((prev) => !prev);
-  };
-
-  const toggleDropdown5 = () => {
-    setIsDropdownOpen5((prev) => !prev);
-  };
-
-
-
+  
 
 
   return (
@@ -102,268 +77,167 @@ const Sidebar = () => {
         >
           Modules
         </p>
+        
+        {/* Cash management */}
+        <ul className="menu  rounded-box w-56">
+          {isCollapsed && <TbBrandCashapp className="w-5 h-5" />}   
+          {!isCollapsed && 
+            <li>
+            <details open>
+              <summary><TbBrandCashapp className="w-5 h-5" /> Cash Management</summary>
+                <ul>
+                 <li>
+                    <details open>
+                      <summary><MdOutlineCallReceived/> Cash Collection</summary>
+                          <ul>
+                            <Link to="/viewCollection"><li><a>View Collection</a></li></Link>
+                            <Link to="/collectionReports"><li><a>Collection Reports</a></li></Link>
+                          </ul>
+                    </details>
+                </li>
 
-            {/** Cash Management **/}
-        <div
-          className="flex gap-2 items-center cursor-pointer text-sm hover:text-blue-500 transition duration-200"
-          onClick={toggleDropdown}
-          aria-expanded={isDropdownOpen}
-          aria-controls="module-dropdown"
-          aria-label="Cash Management"
-        >
-          <MdManageSearch className="w-5 h-5" />
-          {!isCollapsed && <span>Cash Collection</span>}
-          {!isCollapsed && (
-            <div className="ml-auto">
-              {isDropdownOpen ? (
-                <IoIosArrowUp size={15} />
-              ) : (
-                <IoIosArrowDown size={15} />
-              )}
-            </div>
-          )}
-        </div>
-        <ul
-          id="module-dropdown"
-          className={`pl-6 mt-1 space-y-1 overflow-hidden transition-max-height duration-500 ease-in-out ${
-            isDropdownOpen ? "max-h-screen" : "max-h-0"
-          }`}
-        >
-          {[
-            <Link to="Budgeting" >Budgeting Planning</Link>,
-            <Link to="cashCollection" >Cash Collection</Link>,
+                <li>
+                    <details open>
+                      <summary><BsCash/>Budgeting</summary>
+                          <ul>
+                            <Link to="/createBudget"><li><a>Create Budget</a></li></Link>
+                            <Link to="/editBudget"><li><a>View/Edit Budgets</a></li></Link>
+                            <Link to="/budgetReports"><li><a>Budget Reports</a></li></Link>
+                          </ul>
+                    </details>
+                </li>
+              </ul>
+          </details>
+          </li>
+          }
+        </ul>
 
-          ].map((item) => (
-            <li key={item}>
-              <a
-                className={`text-sm flex justify-between py-1 cursor-pointer hover:text-blue-500 transition ${
-                  isCollapsed ? "hidden" : ""
-                }`}
-              >
-                {item}
-              </a>
-            </li>
-          ))}
+            {/* Accounts Receivable */}
+        <ul className="menu  rounded-box w-56">
+          {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}   
+          {!isCollapsed && 
+            <li>
+            <details open>
+              <summary><RiUserReceived2Fill className="w-5 h-5" /> Accounts Receivable</summary>
+                <ul>
+                 <li>
+                    <details open>
+                      <summary><FaFileInvoiceDollar/>Invoice Generation</summary>
+                          <ul>
+                            <Link to="/createInvoice"><li><a>Create Invoice</a></li></Link>
+                            <Link to="/pendingInvoice"><li><a>View Pending Invoice</a></li></Link>
+                            <Link to="/paidInvoice"><li><a>Paid/Closed Invoices</a></li></Link>
+                            <Link to="customerPaymentStatus"><li><a>Customer Payment Status</a></li></Link>
+                          </ul>
+                    </details>
+                </li>
+              </ul>
+          </details>
+          </li>
+          }
+        </ul>
+
+        {/* Accounts Payable */}
+        <ul className="menu  rounded-box w-56">
+          {isCollapsed && <SiAmazonpay className="w-5 h-5" />}   
+          {!isCollapsed && 
+            <li>
+            <details open>
+              <summary><SiAmazonpay className="w-5 h-5" /> Accounts Payable</summary>
+                <ul>
+                 <li>
+                    <details open>
+                      <summary><LiaFileInvoiceDollarSolid/>Manage Invoices</summary>
+                          <ul>
+                          <Link to="/reviewSupplierInvoice"><li><a>Review Supplier Invoices</a></li></Link>
+                          <Link to="/approveRejectInvoice"><li><a>Approve/Reject Invoices</a></li></Link>
+                          <Link to="/paymentStatus"><li><a>Payment Status</a></li></Link>
+                          <Link to="/supplierPaymentHistory"><li><a>Supplier Payment History</a></li></Link>
+                          </ul>
+                    </details>
+                </li>
+
+                <li>
+                    <details open>
+                      <summary><FaCodePullRequest/>Request of Funds</summary>
+                          <ul>
+                          <Link to="/budgetRequest"><li><a>Budget Requests</a></li></Link>
+                          <Link to="/budgetApproval"><li><a>Budget Approval</a></li></Link>
+                          <Link to="/pendingApproval"><li><a>Pending Approvals</a></li></Link>
+                          <Link to="/approvedBudgets"><li><a>Approved Budgets</a></li></Link>
+                          </ul>
+                    </details>
+                </li>
+              </ul>
+          </details>
+          </li>
+          }
+        </ul>
+
+        {/* General Ledger */}
+        <ul className="menu  rounded-box w-56">
+          {isCollapsed && <FaList className="w-5 h-5" />}   
+          {!isCollapsed && 
+            <li>
+            <details open>
+              <summary><FaList className="w-5 h-5" />General Ledger</summary>
+                <ul>
+                 <li>
+                    <details open>
+                      <summary><AiOutlineAudit/>Internal Audit and Controls</summary>
+                          <ul>
+                          <Link to="/auditRecords"><li><a>Audit Records</a></li></Link>
+                          <Link to="/reviewPaymentTransactions"><li><a>Review Payment Transactions</a></li></Link>
+                          <Link to="/viewAuditHistory"><li><a>View Audit History</a></li></Link>
+                          </ul>
+                    </details>
+                </li>
+
+                <li>
+                    <details open>
+                      <summary><TbReportSearch/>Financial Reporting</summary>
+                          <ul>
+                          <Link to="/financialReports"><li><a>Financial Reports</a></li></Link>
+                          <Link to="/transactionRecords"><li><a>Transaction Records</a></li></Link>
+                          </ul>
+                    </details>
+                </li>
+              </ul>
+          </details>
+          </li>
+          }
+        </ul>
+
+        {/* Accounts Management */}
+        <ul className="menu  rounded-box w-56">
+          {isCollapsed && <MdAccountCircle className="w-5 h-5" />}   
+          {!isCollapsed && 
+            <li>
+            <details open>
+              <summary><MdAccountCircle className="w-5 h-5" />Accounts Management</summary>
+                <ul>
+                 <li>
+                    <details open>
+                      <summary><MdManageAccounts/>Manage Accounts</summary>
+                          <ul>
+                          <Link to=""><li><a>View All Accounts</a></li></Link>
+                          <Link to=""><li><a>Add/Edit Accounts</a></li></Link>
+                          <Link to=""><li><a>Manage Roles & Permissions</a></li></Link>
+                          </ul>
+                    </details>
+                </li>
+
+                    <li>
+                    <Link to=""><summary><MdSpatialTracking/>Audit Trails</summary></Link>
+                   </li>
+              </ul>
+          </details>
+          </li>
+          }
         </ul>
       </div>
-
-          {/** Accounts Receivable**/}
-      <div
-          className="flex gap-2 items-center cursor-pointer text-sm hover:text-blue-500 transition duration-200"
-          onClick={toggleDropdown2}
-          aria-expanded={isDropdownOpen2}
-          aria-controls="module-dropdown"
-          aria-label="Accounts Receivables"
-        >
-          <RiUserReceived2Fill className="w-5 h-5" />
-          {!isCollapsed && <span>Account Receivable & Payable</span>}
-          {!isCollapsed && (
-            <div className="ml-auto">
-              {isDropdownOpen2 ? (
-                <IoIosArrowUp size={15} />
-              ) : (
-                <IoIosArrowDown size={15} />
-              )}
-            </div>
-          )}
-        </div>
-
-        <ul
-          id="apps-dropdown"
-          className={`pl-6 mt-1 space-y-1 overflow-hidden transition-max-height duration-500 ease-in-out ${
-            isDropdownOpen2 ? "max-h-screen" : "max-h-0"
-          }`}
-        >
-          {[
-            <Link to="InvoiceGeneration" >Invoice Generation</Link>,
-            <Link to="VendorInvoice" >Vendor Invoice</Link>,
-
-          ].map((item) => (
-            <li key={item}>
-              <a
-                className={`text-sm flex justify-between py-1 cursor-pointer hover:text-blue-500 transition ${
-                  isCollapsed ? "hidden" : ""
-                }`}
-              >
-                {item}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        
-         {/** Financial Ledger **/}
-      <div
-          className="flex gap-2 items-center cursor-pointer text-sm hover:text-blue-500 transition duration-200"
-          onClick={toggleDropdown4}
-          aria-expanded={isDropdownOpen4}
-          aria-controls="module-dropdown"
-          aria-label="Financial Ledger"
-        >
-          <MdOutlineDensitySmall className="w-5 h-5" />
-          {!isCollapsed && <span>Financial Ledger</span>}
-          {!isCollapsed && (
-            <div className="ml-auto">
-              {isDropdownOpen4 ? (
-                <IoIosArrowUp size={15} />
-              ) : (
-                <IoIosArrowDown size={15} />
-              )}
-            </div>
-          )}
-        </div>
-
-        <ul
-          id="apps-dropdown"
-          className={`pl-6 mt-1 space-y-1 overflow-hidden transition-max-height duration-500 ease-in-out ${
-            isDropdownOpen4 ? "max-h-screen" : "max-h-0"
-          }`}
-        >
-          {[  
-            <Link to="AuditControl" >Internal Audit and Controls</Link>,
-            <Link to="ReportingCompliance" >Financial Reporting and Compliance </Link>,
-
-          ].map((item) => (
-            <li key={item}>
-              <a
-                className={`text-sm flex justify-between py-1 cursor-pointer hover:text-blue-500 transition ${
-                  isCollapsed ? "hidden" : ""
-                }`}
-              >
-                {item}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {/** Accounts Management **/}
-      <div
-          className="flex gap-2 items-center cursor-pointer text-sm hover:text-blue-500 transition duration-200"
-          onClick={toggleDropdown5}
-          aria-expanded={isDropdownOpen5}
-          aria-controls="module-dropdown"
-          aria-label="Accounts Management"
-        >
-          <MdAccountCircle className="w-5 h-5" />
-          {!isCollapsed && <span>Accounts Management</span>}
-          {!isCollapsed && (
-            <div className="ml-auto">
-              {isDropdownOpen5 ? (
-                <IoIosArrowUp size={15} />
-              ) : (
-                <IoIosArrowDown size={15} />
-              )}
-            </div>
-          )}
-        </div>
-
-        <ul
-          id="apps-dropdown"
-          className={`pl-6 mt-1 space-y-1 overflow-hidden transition-max-height duration-500 ease-in-out ${
-            isDropdownOpen5 ? "max-h-screen" : "max-h-0"
-          }`}
-        >
-          {[  
-            <Link to="Accounts  " >Accounts List</Link>,
-    
-
-          ].map((item) => (
-            <li key={item}>
-              <a
-                className={`text-sm flex justify-between py-1 cursor-pointer hover:text-blue-500 transition ${
-                  isCollapsed ? "hidden" : ""
-                }`}
-              >
-                {item}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-
-
-        
 
       
-
-      {/* File Manager */}
-      <div
-        className="flex gap-2 items-center text-sm cursor-pointer mb-2 hover:text-blue-500 transition"
-        aria-label="File Manager"
-      >
-        <IoFileTrayOutline className="w-5 h-5" />
-        {!isCollapsed && <p>File Manager</p>}
-      </div>
-
-      {/* Chat */}
-      <div
-        className="flex gap-2 items-center text-sm cursor-pointer mb-2 hover:text-blue-500 transition"
-        aria-label="Chat"
-      >
-        <IoChatboxOutline className="w-5 h-5" />
-        {!isCollapsed && <p>Chat</p>}
-      </div>
-
-      {/* Pages */}
-      <div className="mt-4">
-        <p
-          className={`text-gray-500 mb-2 font-semibold text-sm ${
-            isCollapsed ? "hidden" : ""
-          }`}
-        >
-          Pages
-        </p>
-        <div
-          className="flex gap-2 items-center text-sm cursor-pointer mb-2 hover:text-blue-500 transition"
-          aria-label="Landing Page"
-        >
-          <RiFilePaper2Line className="w-5 h-5" />
-          {!isCollapsed && <p>Landing</p>}
-        </div>
-      </div>
-
-      {/* UI Showcase */}
-      <div className="mt-4">
-        <p
-          className={`text-gray-500 mb-2 font-semibold text-sm ${
-            isCollapsed ? "hidden" : ""
-          }`}
-        >
-          UI Showcase
-        </p>
-        <div
-          className="flex gap-2 items-center text-sm cursor-pointer mb-2 hover:text-blue-500 transition"
-          aria-label="Components"
-        >
-          <FiBox className="w-5 h-5" />
-          {!isCollapsed && <p>Components</p>}
-        </div>
-        <div
-          className="flex gap-2 items-center text-sm cursor-pointer mb-2 hover:text-blue-500 transition"
-          aria-label="Forms"
-        >
-          <FaWpforms className="w-5 h-5" />
-          {!isCollapsed && <p>Forms</p>}
-        </div>
-      </div>
-
-      {/* Others */}
-      <div className="mt-4">
-        <p
-          className={`text-gray-500 mb-2 font-semibold text-sm ${
-            isCollapsed ? "hidden" : ""
-          }`}
-        >
-          Others
-        </p>
-        <div
-          className="flex gap-2 items-center text-sm cursor-pointer mb-3 hover:text-blue-500 transition"
-          aria-label="Documentation"
-        >
-          <IoDocumentTextOutline className="w-5 h-5" />
-          {!isCollapsed && <p>Documentation</p>}
-        </div>
-      </div>
     </div>
   );
 };
