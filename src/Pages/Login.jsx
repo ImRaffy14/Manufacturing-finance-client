@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 
 
@@ -35,7 +36,7 @@ function Login () {
                         </div>
 
                         <div className="form-control mt-6">
-                            <button className="btn btn-primary">Login</button>
+                           <Link to="Dashboard"><button className="btn btn-primary">Login</button></Link>
                         </div>
                     </form>
                 </div>

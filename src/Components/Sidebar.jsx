@@ -32,7 +32,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`flex flex-col h-screen bg-white text-black px-4 py-4 border-r-2 sticky top-0 max-md:hidden transition-all duration-300 ${
+      className={`flex flex-col overflow-auto bg-white text-black px-4 py-4 border-r-2 sticky top-0 max-md:hidden transition-all duration-300 ${
         isCollapsed ? "w-20" : "w-72 lg:w-80"
       }`}
       aria-label="Sidebar"
@@ -90,8 +90,8 @@ const Sidebar = () => {
                     <details open>
                       <summary><MdOutlineCallReceived/> Cash Collection</summary>
                           <ul>
-                            <Link to="/viewCollection"><li><a>View Collection</a></li></Link>
-                            <Link to="/collectionReports"><li><a>Collection Reports</a></li></Link>
+                            <Link to="viewCollection"><li><a>View Collection</a></li></Link>
+                            <Link to="collectionReports"><li><a>Collection Reports</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -100,9 +100,9 @@ const Sidebar = () => {
                     <details open>
                       <summary><BsCash/>Budgeting</summary>
                           <ul>
-                            <Link to="/createBudget"><li><a>Create Budget</a></li></Link>
-                            <Link to="/editBudget"><li><a>View/Edit Budgets</a></li></Link>
-                            <Link to="/budgetReports"><li><a>Budget Reports</a></li></Link>
+                            <Link to="createBudget"><li><a>Create Budget</a></li></Link>
+                            <Link to="editBudget"><li><a>View/Edit Budgets</a></li></Link>
+                            <Link to="budgetReports"><li><a>Budget Reports</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -124,9 +124,9 @@ const Sidebar = () => {
                     <details open>
                       <summary><FaFileInvoiceDollar/>Invoice Generation</summary>
                           <ul>
-                            <Link to="/createInvoice"><li><a>Create Invoice</a></li></Link>
-                            <Link to="/pendingInvoice"><li><a>View Pending Invoice</a></li></Link>
-                            <Link to="/paidInvoice"><li><a>Paid/Closed Invoices</a></li></Link>
+                            <Link to="createInvoice"><li><a>Create Invoice</a></li></Link>
+                            <Link to="pendingInvoice"><li><a>View Pending Invoice</a></li></Link>
+                            <Link to="paidInvoice"><li><a>Paid/Closed Invoices</a></li></Link>
                             <Link to="customerPaymentStatus"><li><a>Customer Payment Status</a></li></Link>
                           </ul>
                     </details>
@@ -149,10 +149,10 @@ const Sidebar = () => {
                     <details open>
                       <summary><LiaFileInvoiceDollarSolid/>Manage Invoices</summary>
                           <ul>
-                          <Link to="/reviewSupplierInvoice"><li><a>Review Supplier Invoices</a></li></Link>
-                          <Link to="/approveRejectInvoice"><li><a>Approve/Reject Invoices</a></li></Link>
-                          <Link to="/paymentStatus"><li><a>Payment Status</a></li></Link>
-                          <Link to="/supplierPaymentHistory"><li><a>Supplier Payment History</a></li></Link>
+                          <Link to="reviewSupplierInvoice"><li><a>Review Supplier Invoices</a></li></Link>
+                          <Link to="approveRejectInvoice"><li><a>Approve/Reject Invoices</a></li></Link>
+                          <Link to="paymentStatus"><li><a>Payment Status</a></li></Link>
+                          <Link to="supplierPaymentHistory"><li><a>Supplier Payment History</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -161,10 +161,10 @@ const Sidebar = () => {
                     <details open>
                       <summary><FaCodePullRequest/>Request of Funds</summary>
                           <ul>
-                          <Link to="/budgetRequest"><li><a>Budget Requests</a></li></Link>
-                          <Link to="/budgetApproval"><li><a>Budget Approval</a></li></Link>
-                          <Link to="/pendingApproval"><li><a>Pending Approvals</a></li></Link>
-                          <Link to="/approvedBudgets"><li><a>Approved Budgets</a></li></Link>
+                          <Link to="budgetRequest"><li><a>Budget Requests</a></li></Link>
+                          <Link to="budgetApproval"><li><a>Budget Approval</a></li></Link>
+                          <Link to="pendingApproval"><li><a>Pending Approvals</a></li></Link>
+                          <Link to="approvedBudgets"><li><a>Approved Budgets</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -186,9 +186,9 @@ const Sidebar = () => {
                     <details open>
                       <summary><AiOutlineAudit/>Internal Audit and Controls</summary>
                           <ul>
-                          <Link to="/auditRecords"><li><a>Audit Records</a></li></Link>
-                          <Link to="/reviewPaymentTransactions"><li><a>Review Payment Transactions</a></li></Link>
-                          <Link to="/viewAuditHistory"><li><a>View Audit History</a></li></Link>
+                          <Link to="auditRecords"><li><a>Audit Records</a></li></Link>
+                          <Link to="reviewPaymentTransactions"><li><a>Review Payment Transactions</a></li></Link>
+                          <Link to="viewAuditHistory"><li><a>View Audit History</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -197,8 +197,8 @@ const Sidebar = () => {
                     <details open>
                       <summary><TbReportSearch/>Financial Reporting</summary>
                           <ul>
-                          <Link to="/financialReports"><li><a>Financial Reports</a></li></Link>
-                          <Link to="/transactionRecords"><li><a>Transaction Records</a></li></Link>
+                          <Link to="financialReports"><li><a>Financial Reports</a></li></Link>
+                          <Link to="transactionRecords"><li><a>Transaction Records</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -221,7 +221,7 @@ const Sidebar = () => {
                       <summary><MdManageAccounts/>Manage Accounts</summary>
                           <ul>
                           <Link to=""><li><a>View All Accounts</a></li></Link>
-                          <Link to=""><li><a>Add/Edit Accounts</a></li></Link>
+                          <Link to="accountCreation"><li><a>Add/Edit Accounts</a></li></Link>
                           <Link to=""><li><a>Manage Roles & Permissions</a></li></Link>
                           </ul>
                     </details>

@@ -37,9 +37,9 @@ import ViewCollection from '../Components/viewCollection';
 function AdminPage () {
     return(
         <>
-            <div className="flex">
+            <div className="h-screen flex">
                 <Sidebar />
-                <div className="flex-col w-full">
+                <div className="flex-col w-full overflow-auto">
                     <Search />
                     <Routes>
                         <Route path="/" element={ <Dashboard/> } />
