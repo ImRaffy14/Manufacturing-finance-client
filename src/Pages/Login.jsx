@@ -20,7 +20,8 @@ function Login () {
                     <div className="hero-content flex w-full ">
                         <div className="card bg-white w-[600px]  shadow-2xl rounded-lg p-3">
                             <form className="card-body">
-                                <div className="form-control mb-6">
+                                <h1 className="text-2xl text-center font-extrabold text-gray-900 leading-none mb-4">LOGIN</h1>
+                                <div className="form-control">
                                     <label className="label mb-2">
                                         <span className="label-text font-semibold text-lg text-gray-700">Email</span>
                                     </label>
@@ -46,9 +47,6 @@ function Login () {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
-                            <label className="label">
-                                <a href="#" className="label-text-alt link link-hover text-blue-500">Forgot password?</a>
-                            </label>
                         </div>
 
                         <div className="form-control ">
