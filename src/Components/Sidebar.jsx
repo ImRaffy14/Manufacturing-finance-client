@@ -228,9 +228,7 @@ const Sidebar = () => {
                 </li>
                 
                 <li>
-                    
-                    <summary><MdSpatialTracking/>Audit Trails</summary>
-                    
+                    <summary><MdSpatialTracking/>Audit Trails</summary>  
                 </li>
               </ul>
           </details>
