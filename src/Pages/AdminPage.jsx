@@ -2,7 +2,6 @@ import Dashboard from '../Components/Dashboard';
 import Search from '../Components/Search';
 import Sidebar from '../Components/Sidebar';
 import { Routes, Route } from 'react-router-dom'
-import Page1 from '../Pages/page1';
 import AccountCreation from '../Components/accountCreation';
 import ApprovedBudgets from '../Components/approvedBudgets';
 import ApproveRejectInvoice from '../Components/approveRejectInvoice';
@@ -43,7 +42,6 @@ function AdminPage () {
                     <Search />
                     <Routes>
                         <Route path="/" element={ <Dashboard/> } />
-                        <Route path="page1" element={ <Page1/> } />
                         <Route path="accountCreation" element={ <AccountCreation/> } />
                         <Route path="approvedBudgets" element={ <ApprovedBudgets/> } />
                         <Route path="approveRejectInvoice" element={ <ApproveRejectInvoice/> } />
