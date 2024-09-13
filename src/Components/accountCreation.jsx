@@ -24,12 +24,14 @@ function accountCreation() {
 
     return (
         <>
-            <div className="flex flex-col items-center justify-center min-h-screen">
-                <div className="overflow-x-auto w-full max-w-5xl">
+            <div className="max-w-screen-2xl mx-auto mt-4">
+            <div className="flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-xl border border-gray-300">
+                <div className="overflow-x-auto w-full">
                     <table className="table w-full">
                         {/* head */}
                         <thead>
                             <tr>
+                                <th>Picture</th>
                                 <th>Full Name</th>
                                 <th>Email Address</th>
                                 <th>Request Form</th>
@@ -47,9 +49,11 @@ function accountCreation() {
                                                     alt="Avatar Tailwind CSS Component" />
                                             </div>
                                         </div>
-                                        <div>
-                                            <div className="font-bold">Hart Hagerty</div>
-                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div className="font-bold">Hart Hagerty</div>
                                     </div>
                                 </td>
                                 <td>
@@ -60,71 +64,126 @@ function accountCreation() {
                                     <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
                                 </td>
                             </tr>
-
-                            {/* row 2 */}
-                            <tr>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">Hart Hagerty</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>harthagerty@gmail.com</div>
-                                </td>
-                                <td>
-                                    {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
-                                </td>
-                            </tr>
-
-                            {/* row 3 */}
-                            <tr>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">Hart Hagerty</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>harthagerty@gmail.com</div>
-                                </td>
-                                <td>
-                                    {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
-                                </td>
-                            </tr>
-
-                            
-
-                            
-                            
                         </tbody>
-                        <tfoot>
+
+                        <tbody>
+                            {/* row 1 */}
                             <tr>
-                                <th>Full Name</th>
-                                <th>Email Address</th>
-                                <th>Request Form</th>
+                                <td>
+                                    <div className="flex items-center gap-3">
+                                        <div className="avatar">
+                                            <div className="mask mask-squircle h-12 w-12">
+                                                <img
+                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                                                    alt="Avatar Tailwind CSS Component" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div className="font-bold">Hart Hagerty</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>harthagerty@gmail.com</div>
+                                </td>
+                                <td>
+                                    {/* Modal Button */}
+                                    <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
+                                </td>
                             </tr>
-                        </tfoot>
+                        </tbody>
+
+                        <tbody>
+                            {/* row 1 */}
+                            <tr>
+                                <td>
+                                    <div className="flex items-center gap-3">
+                                        <div className="avatar">
+                                            <div className="mask mask-squircle h-12 w-12">
+                                                <img
+                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                                                    alt="Avatar Tailwind CSS Component" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div className="font-bold">Hart Hagerty</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>harthagerty@gmail.com</div>
+                                </td>
+                                <td>
+                                    {/* Modal Button */}
+                                    <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tbody>
+                            {/* row 1 */}
+                            <tr>
+                                <td>
+                                    <div className="flex items-center gap-3">
+                                        <div className="avatar">
+                                            <div className="mask mask-squircle h-12 w-12">
+                                                <img
+                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                                                    alt="Avatar Tailwind CSS Component" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div className="font-bold">Hart Hagerty</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>harthagerty@gmail.com</div>
+                                </td>
+                                <td>
+                                    {/* Modal Button */}
+                                    <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                                                <tbody>
+                            {/* row 1 */}
+                            <tr>
+                                <td>
+                                    <div className="flex items-center gap-3">
+                                        <div className="avatar">
+                                            <div className="mask mask-squircle h-12 w-12">
+                                                <img
+                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                                                    alt="Avatar Tailwind CSS Component" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div className="font-bold">Hart Hagerty</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>harthagerty@gmail.com</div>
+                                </td>
+                                <td>
+                                    {/* Modal Button */}
+                                    <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
+            </div>
             </div>
 
             {/* Modal */}
@@ -185,11 +244,11 @@ function accountCreation() {
                             </div>
                         </div>
 
-                        <div className="mt-2 w-full flex justify-center">
+                        <div className="mt-2 w-full flex">
                             <select className="select select-bordered w-[230px]"
                             value={role}
                             onChange={(e) => setRole(e.target.value)}>
-                                <option disabled selected>Select Role</option>
+                                <option selected>Select Role</option>
                                 <option>ADMIN</option>
                                 <option>Financial Officer</option>
                                 <option>Auditor</option>
