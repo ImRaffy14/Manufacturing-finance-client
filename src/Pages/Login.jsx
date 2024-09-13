@@ -5,33 +5,37 @@ import { Link } from 'react-router-dom'
 
 
 function Login () {
-    const [email , setEmail] = useState('');
+    const [username , setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(email, password);
+        console.log({
+            username,
+            password
+          });
 
     }
     return (
         <>
         
+            
                 <div className="hero bg-custom-gradient min-h-screen flex justify-center items-center">
                     <div className="hero-content flex w-full ">
                         <div className="card bg-white w-[600px]  shadow-2xl rounded-lg p-3">
-                            <form className="card-body">
+                            <form onSubmit={handleSubmit} className="card-body">
                                 <h1 className="text-2xl text-center font-extrabold text-gray-900 leading-none mb-4">LOGIN</h1>
                                 <div className="form-control">
                                     <label className="label mb-2">
-                                        <span className="label-text font-semibold text-lg text-gray-700">Email</span>
+                                        <span className="label-text font-semibold text-lg text-gray-700">Username</span>
                                     </label>
                                         <input
-                                            type="email"
-                                            placeholder="Enter your email"
+                                            type="text"
+                                            placeholder="Enter your username"
                                             className="input input-bordered w-full py-3 px-4 text-lg border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                                             required
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
                                         />
                                 </div>
 
