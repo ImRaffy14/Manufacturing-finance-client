@@ -16,6 +16,8 @@ import { AiOutlineAudit } from "react-icons/ai";
 import { TbReportSearch } from "react-icons/tb";
 import { MdManageAccounts } from "react-icons/md";
 import { MdSpatialTracking } from "react-icons/md";
+
+import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom"
 
 
@@ -90,7 +92,7 @@ const Sidebar = () => {
                     <details open>
                       <summary><MdOutlineCallReceived/>Cash Collection</summary>
                           <ul>
-                            <Link to="viewCollection"><li className="hover:text-blue-500">View Collection</li></Link>
+                            <Link to="viewCollection"><li className="flex hover:text-blue-500"> ViewCollection</li></Link>
                             <Link to="collectionReports"><li className="hover:text-blue-500">Collection Reports</li></Link>
                           </ul>
                     </details>
@@ -221,7 +223,7 @@ const Sidebar = () => {
                       <summary><MdManageAccounts/>Manage Accounts</summary>
                           <ul>
                           <Link to=""><li className="hover:text-blue-500">View All Accounts</li></Link>
-                          <Link to="accountCreation"><li className="hover:text-blue-500">Add/Edit Accounts</li></Link>
+                          <Link to="accountCreation"><li className="hover:text-blue-500">Account Requests</li></Link>
                           <Link to=""><li className="hover:text-blue-500">Manage Roles & Permissions</li></Link>
                           </ul>
                     </details>

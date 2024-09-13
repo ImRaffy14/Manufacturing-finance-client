@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'BG': "url('/src/assets/BG.jpg')",
+        'custom-gradient': 'linear-gradient(135deg, #f0f4f8, #d9e2ec)',
       },
       backdropBlur: {
         lg: '100px',
