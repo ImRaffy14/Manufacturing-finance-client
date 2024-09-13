@@ -24,9 +24,10 @@ function accountCreation() {
 
     return (
         <>
+        
             <div className="max-w-screen-2xl mx-auto mt-4">
-            <div className="flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-xl border border-gray-300">
-                <div className="overflow-x-auto w-full">
+                <div className="flex flex-col items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
+                    <div className="overflow-x-auto w-full">
                     <table className="table w-full">
                         {/* head */}
                         <thead>

@@ -222,21 +222,25 @@ const Sidebar = () => {
                     <details open>
                       <summary><MdManageAccounts/>Manage Accounts</summary>
                           <ul>
-                          <Link to=""><li className="hover:text-blue-500">● View All Accounts</li></Link>
                           <Link to="accountCreation"><li className="hover:text-blue-500">● Account Requests</li></Link>
+                          <Link to=""><li className="hover:text-blue-500">● View All Accounts</li></Link>
                           <Link to=""><li className="hover:text-blue-500">● Manage Roles & Permissions</li></Link>
                           </ul>
                     </details>
                 </li>
                 
-                <li>
-                    <summary><MdSpatialTracking/>Audit Trails</summary>  
-                </li>
+                <Link to="auditTrails">
+                  <li>
+                    <summary><MdSpatialTracking/>Audit Trails</summary>
+                  </li>
+                </Link>  
               </ul>
           </details>
           </li>
           }
         </ul>
+
+        
       </div>
 
       

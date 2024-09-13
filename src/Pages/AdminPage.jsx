@@ -38,7 +38,7 @@ function AdminPage () {
         <>
             <div className="h-screen flex">
                 <Sidebar />
-                <div className="flex-col w-full overflow-auto">
+                <div className="flex-col w-full overflow-auto bg-gray-200">
                     <Search />
                     <Routes>
                         <Route path="/" element={ <Dashboard/> } />
