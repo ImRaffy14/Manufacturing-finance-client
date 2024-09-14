@@ -80,6 +80,7 @@ const Sidebar = () => {
           Modules
         </p>
         
+        
         {/* Cash management */}
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <TbBrandCashapp className="w-5 h-5" />}   
