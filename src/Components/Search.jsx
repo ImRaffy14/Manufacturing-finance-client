@@ -2,18 +2,23 @@ import React from "react";
 import { RiMenuFold2Fill } from "react-icons/ri";
 import { MdOutlineDarkMode } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { logout } from "../authentication/auth"
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
+
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   return (
     <div className="w-full p-5 bg-white text-black/70 h-[85px] rounded-l-sm">
       <div className="flex justify-between max-md:flex max-md:justify-end">
         <div className="flex gap-5 items-center w-[600px] max-md:hidden">
           {/* Sidebar toggle button */}
-         
-       
-            <h1 className="text-2xl font-bold ">FINANCIAL MANAGEMENT</h1>
-      
-         
+            <h1 className="text-2xl font-bold ">FINANCIAL MANAGEMENT</h1>   
         </div>
 
         {/* Right-side icons and user profile */}
@@ -32,7 +37,7 @@ const Search = () => {
               <li>
                 <a>Settings</a>
               </li>
-              <li>
+              <li onClick={handleLogout}>
                 <a>Log out</a>
               </li>
             </ul>

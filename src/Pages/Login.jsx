@@ -1,20 +1,48 @@
 import React from 'react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate} from 'react-router-dom'
+import { login } from '../authentication/auth'
 
 
 
 function Login () {
-    const [username , setUsername] = useState('');
+    const [userName , setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('')
+    console.log(errorMessage)
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        const isAuthenticated = () => {
+            const token = localStorage.getItem('token');
+            if(token){
+              navigate('/Dashboard')
+            }
+          };
+
+          isAuthenticated()
+    }, [navigate])
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({
-            username,
-            password
-          });
+       
+        try{
+            const userData = { userName, password }
+            const response = await login(userData)
 
+            if(response.token){
+                navigate('/Dashboard')
+            }
+        }
+        catch (err) {
+            if (err.response) {
+                setErrorMessage(err.response.data.msg); 
+            } else if (err.request) {
+                setErrorMessage('No response from server');
+            } else {
+                setErrorMessage('Error during login');
+            }
+        }
     }
     return (
         <>
@@ -34,8 +62,8 @@ function Login () {
                                             placeholder="Enter your username"
                                             className="input input-bordered w-full py-3 px-4 text-lg border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                                             required
-                                            value={username}
-                                            onChange={(e) => setUsername(e.target.value)}
+                                            value={userName}
+                                            onChange={(e) => setUserName(e.target.value)}
                                         />
                                 </div>
 

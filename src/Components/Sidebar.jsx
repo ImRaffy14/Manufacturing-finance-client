@@ -34,8 +34,8 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`flex flex-col overflow-auto bg-white text-black px-4 py-4 border-r-2 sticky top-0 max-md:hidden transition-all duration-300 ${
-        isCollapsed ? "w-20" : "w-72 lg:w-80"
+      className={`flex flex-col overflow-auto bg-white text-black border-r-2 sticky top-0 max-md:hidden transition-all duration-300 ${
+        isCollapsed ? "w-20 px-4 py-4" : "w-72 lg:w-80 px-2 py-4"
       }`}
       aria-label="Sidebar"
     >
@@ -93,8 +93,8 @@ const Sidebar = () => {
                     <details open>
                       <summary><MdOutlineCallReceived/>Cash Collection</summary>
                           <ul>
-                            <Link to="viewCollection"><li className="flex hover:text-blue-500">● ViewCollection</li></Link>
-                            <Link to="collectionReports"><li className="hover:text-blue-500">● Collection Reports</li></Link>
+                            <Link to="viewCollection"><li className="flex hover:text-blue-500"><a>● ViewCollection</a></li></Link>
+                            <Link to="collectionReports"><li className="hover:text-blue-500"><a>● Collection Reports</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -103,9 +103,9 @@ const Sidebar = () => {
                     <details open>
                       <summary><BsCash/>Budgeting</summary>
                           <ul>
-                            <Link to="createBudget"><li className="hover:text-blue-500">● Create Budget</li></Link>
-                            <Link to="editBudget"><li className="hover:text-blue-500">● View/Edit Budgets</li></Link>
-                            <Link to="budgetReports"><li className="hover:text-blue-500">● Budget Reports</li></Link>
+                            <Link to="createBudget"><li className="hover:text-blue-500"><a>● Create Budget</a></li></Link>
+                            <Link to="editBudget"><li className="hover:text-blue-500"><a>● View/Edit Budgets</a></li></Link>
+                            <Link to="budgetReports"><li className="hover:text-blue-500"><a>● Budget Reports</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -127,10 +127,10 @@ const Sidebar = () => {
                     <details open>
                       <summary><FaFileInvoiceDollar/>Invoice Generation</summary>
                           <ul>
-                            <Link to="createInvoice"><li className="hover:text-blue-500">● Create Invoice</li></Link>
-                            <Link to="pendingInvoice"><li className="hover:text-blue-500">● View Pending Invoice</li></Link>
-                            <Link to="paidInvoice"><li className="hover:text-blue-500">● Paid/Closed Invoices</li></Link>
-                            <Link to="customerPaymentStatus"><li className="hover:text-blue-500">● Customer Payment Status</li></Link>
+                            <Link to="createInvoice"><li className="hover:text-blue-500"><a>● Create Invoice</a></li></Link>
+                            <Link to="pendingInvoice"><li className="hover:text-blue-500"><a>● View Pending Invoice</a></li></Link>
+                            <Link to="paidInvoice"><li className="hover:text-blue-500"><a>● Paid/Closed Invoices</a></li></Link>
+                            <Link to="customerPaymentStatus"><li className="hover:text-blue-500"><a>● Customer Payment Status</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -152,10 +152,10 @@ const Sidebar = () => {
                     <details open>
                       <summary><LiaFileInvoiceDollarSolid/>Manage Invoices</summary>
                           <ul>
-                          <Link to="reviewSupplierInvoice"><li className="hover:text-blue-500">● Review Supplier Invoices</li></Link>
-                          <Link to="approveRejectInvoice"><li className="hover:text-blue-500">● Approve/Reject Invoices</li></Link>
-                          <Link to="paymentStatus"><li className="hover:text-blue-500">● Payment Status</li></Link>
-                          <Link to="supplierPaymentHistory"><li className="hover:text-blue-500">● Supplier Payment History</li></Link>
+                          <Link to="reviewSupplierInvoice"><li className="hover:text-blue-500"><a>● Review Supplier Invoices</a></li></Link>
+                          <Link to="approveRejectInvoice"><li className="hover:text-blue-500"><a>● Approve/Reject Invoices</a></li></Link>
+                          <Link to="paymentStatus"><li className="hover:text-blue-500"><a>● Payment Status</a></li></Link>
+                          <Link to="supplierPaymentHistory"><li className="hover:text-blue-500"><a>● Supplier Payment History</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -164,10 +164,10 @@ const Sidebar = () => {
                     <details open>
                       <summary><FaCodePullRequest/>Request of Funds</summary>
                           <ul>
-                          <Link to="budgetRequest"><li className="hover:text-blue-500">● Budget Requests</li></Link>
-                          <Link to="budgetApproval"><li className="hover:text-blue-500">● Budget Approval</li></Link>
-                          <Link to="pendingApproval"><li className="hover:text-blue-500">● Pending Approvals</li></Link>
-                          <Link to="approvedBudgets"><li className="hover:text-blue-500">● Approved Budgets</li></Link>
+                          <Link to="budgetRequest"><li className="hover:text-blue-500"><a>● Budget Requests</a></li></Link>
+                          <Link to="budgetApproval"><li className="hover:text-blue-500"><a>● Budget Approval</a></li></Link>
+                          <Link to="pendingApproval"><li className="hover:text-blue-500"><a>● Pending Approvals</a></li></Link>
+                          <Link to="approvedBudgets"><li className="hover:text-blue-500"><a>● Approved Budgets</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -189,9 +189,9 @@ const Sidebar = () => {
                     <details open>
                       <summary><AiOutlineAudit/>Internal Audit and Controls</summary>
                           <ul>
-                          <Link to="auditRecords"><li className="hover:text-blue-500">● Audit Records</li></Link>
-                          <Link to="reviewPaymentTransactions"><li className="hover:text-blue-500">● Review Payment Transactions</li></Link>
-                          <Link to="viewAuditHistory"><li className="hover:text-blue-500">● View Audit History</li></Link>
+                          <Link to="auditRecords"><li className="hover:text-blue-500"><a>● Audit Records</a></li></Link>
+                          <Link to="reviewPaymentTransactions"><li className="hover:text-blue-500"><a>● Review Payment Transactions</a></li></Link>
+                          <Link to="viewAuditHistory"><li className="hover:text-blue-500"><a>● View Audit History</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -200,8 +200,8 @@ const Sidebar = () => {
                     <details open>
                       <summary><TbReportSearch/>Financial Reporting</summary>
                           <ul>
-                          <Link to="financialReports"><li className="hover:text-blue-500">● Financial Reports</li></Link>
-                          <Link to="transactionRecords"><li className="hover:text-blue-500">● Transaction Records</li></Link>
+                          <Link to="financialReports"><li className="hover:text-blue-500"><a>● Financial Reports</a></li></Link>
+                          <Link to="transactionRecords"><li className="hover:text-blue-500"><a>● Transaction Records</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -223,9 +223,9 @@ const Sidebar = () => {
                     <details open>
                       <summary><MdManageAccounts/>Manage Accounts</summary>
                           <ul>
-                          <Link to="accountCreation"><li className="hover:text-blue-500">● Account Requests</li></Link>
-                          <Link to=""><li className="hover:text-blue-500">● View All Accounts</li></Link>
-                          <Link to=""><li className="hover:text-blue-500">● Manage Roles & Permissions</li></Link>
+                          <Link to="accountCreation"><li className="hover:text-blue-500"><a>● Account Requests</a></li></Link>
+                          <Link to=""><li className="hover:text-blue-500"><a>● View All Accounts</a></li></Link>
+                          <Link to=""><li className="hover:text-blue-500"><a>● Manage Roles & Permissions</a></li></Link>
                           </ul>
                     </details>
                 </li>

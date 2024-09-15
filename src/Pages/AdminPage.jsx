@@ -1,7 +1,8 @@
+import React, { useState, useEffect } from 'react'
 import Dashboard from '../Components/Dashboard';
 import Search from '../Components/Search';
 import Sidebar from '../Components/Sidebar';
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate} from 'react-router-dom'
 import AccountCreation from '../Components/accountCreation';
 import ApprovedBudgets from '../Components/approvedBudgets';
 import ApproveRejectInvoice from '../Components/approveRejectInvoice';
@@ -32,8 +33,28 @@ import TransactionRecords from '../Components/transactionRecords';
 import ViewAllAccounts from '../Components/viewAllAccounts';
 import ViewAuditHistory from '../Components/viewAuditHistory';
 import ViewCollection from '../Components/viewCollection';
+import { getProfile } from '../authentication/auth'
 
 function AdminPage () {
+
+    const [user, setUser] = useState(null);
+
+    const navigate = useNavigate()
+    console.log(user)
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const data = await getProfile();
+                setUser(data);
+            } catch (error) {
+                console.error('Error fetching profile', error);
+                navigate('/');
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
     return(
         <>
             <div className="h-screen flex">
