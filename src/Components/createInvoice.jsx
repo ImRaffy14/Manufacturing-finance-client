@@ -95,7 +95,12 @@ function CreateInvoice() {
 
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-6xl">
+     
+          {/* Open the modal using document.getElementById('ID').showModal() method */}
+    <button className="btn" onClick={()=>document.getElementById('my_modal_2').showModal()}>open modal</button>
+      <dialog id="my_modal_2" className="modal">
+          <div className="modal-box w-full max-w-7xl ">
+          <div className="bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-center text-2xl font-bold mb-6">Create Invoice</h2>
 
         <form onSubmit={handleSubmit}>
@@ -381,8 +386,19 @@ function CreateInvoice() {
           </div>
         </form>
       </div>
+            </div>
+            <form method="dialog" className="modal-backdrop">
+    <button>close</button>
+          </form>
+      </dialog>
     </div>
+
+    
   );
+
+    
 }
+
+
 
 export default CreateInvoice;
