@@ -33,6 +33,7 @@ import TransactionRecords from '../Components/transactionRecords';
 import ViewAllAccounts from '../Components/viewAllAccounts';
 import ViewAuditHistory from '../Components/viewAuditHistory';
 import ViewCollection from '../Components/viewCollection';
+import PageNotFound from '../Pages/pageNotFound';
 import { getProfile } from '../authentication/auth'
 
 function AdminPage () {
@@ -93,6 +94,7 @@ function AdminPage () {
                         <Route path="viewAllAccounts" element={ <ViewAllAccounts/> } />
                         <Route path="viewAuditHistory" element={ <ViewAuditHistory/> } />
                         <Route path="viewCollection" element={ <ViewCollection/> } />
+                        <Route path="pageNotFound" element={ <PageNotFound/> } />
                     </Routes>
                 </div>
             </div>

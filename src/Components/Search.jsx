@@ -34,9 +34,6 @@ const Search = () => {
               <li>
                 <a>Profile</a>
               </li>
-              <li>
-                <a>Settings</a>
-              </li>
               <li onClick={handleLogout}>
                 <a>Log out</a>
               </li>
