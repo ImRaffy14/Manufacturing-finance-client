@@ -9,7 +9,7 @@ function Login () {
     const [userName , setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('')
-    console.log(errorMessage)
+    
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -36,7 +36,9 @@ function Login () {
         }
         catch (err) {
             if (err.response) {
-                setErrorMessage(err.response.data.msg); 
+                setErrorMessage(err.response.data.msg);
+                setUserName("")
+                setPassword("") 
             } else if (err.request) {
                 setErrorMessage('No response from server');
             } else {
@@ -80,7 +82,8 @@ function Login () {
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                         </div>
-
+                        {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage}</h1>}
+                        
                         <div className="form-control ">
                             <button className="btn btn-primary w-full py-3 text-lg font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg">
                                 Login

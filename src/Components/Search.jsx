@@ -5,10 +5,9 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { logout } from "../authentication/auth";
 import { useNavigate } from "react-router-dom";
 
-const Search = ({userData}) => {
+const Search = ({ userData }) => {
   const navigate = useNavigate();
 
-  console.log(userData);
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -39,7 +38,7 @@ const Search = ({userData}) => {
                 tabIndex={0}
                 className="dropdown-content menu bg-white rounded-box z-[1] w-52 p-2 mt-2 shadow"
               >
-                <li onClick={()=>document.getElementById('my_modal_2').showModal()}>
+                <li onClick={() => document.getElementById('my_modal_2').showModal()}>
                   <a>Profile</a>
                 </li>
                 <li onClick={() => document.getElementById("logout_modal").showModal()}>
@@ -52,42 +51,41 @@ const Search = ({userData}) => {
       </div>
 
       {/* Modal */}
-    <dialog id="logout_modal" className="modal">
-      <div className="modal-box">
-         <h3 className="font-bold text-lg">Are you sure you want to logout?</h3>
-            <div className="py-4">
-                <p>Click "Yes" to logout or "No" to stay on the page.</p>
-            </div>
-              <div className="flex justify-end gap-4">
-                  <button className="btn btn-outline" onClick={handleLogout}>
-                      Yes
-                  </button>
-                  <button className="btn btn-error" onClick={() => document.getElementById("logout_modal").close()}>
-                      No
-                  </button>
-              </div>
-      </div>
-      <form method="dialog" className="modal-backdrop">
-        <button>close</button>
-      </form>
-    </dialog>
+      <dialog id="logout_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Are you sure you want to logout?</h3>
+          <div className="py-4">
+            <p>Click "Yes" to logout or "No" to stay on the page.</p>
+          </div>
+          <div className="flex justify-end gap-4">
+            <button className="btn btn-outline" onClick={handleLogout}>
+              Yes
+            </button>
+            <button className="btn btn-error" onClick={() => document.getElementById("logout_modal").close()}>
+              No
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
 
-{/* Open the modal using document.getElementById('ID').showModal() method */}
-<dialog id="my_modal_2" className="modal">
-  <div className="modal-box">
-    <div className="py-4">
-      <img src="https://via.placeholder.com/150" alt="Sample Profile" className="rounded-full w-24 h-24 mx-auto mb-4" />
+      {/* Profile Modal */}
+      <dialog id="my_modal_2" className="modal">
+        <div className="modal-box">
+          <div className="py-4">
+            <img src={userData.image} alt="Profile" className="rounded-full w-24 h-24 mx-auto mb-4" />
             <p><strong>Full Name:</strong> {userData.fullName}</p>
             <p><strong>Email:</strong> {userData.email}</p>
             <p><strong>Username:</strong> {userData.userName}</p>
-            <p><strong>Role:</strong> {userData.role}</p>
-    </div>
-  </div>
-  <form method="dialog" className="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
-      
+            <p><strong>Role:</strong> {userData.role || 'N/A'}</p>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </>
   );
 };
