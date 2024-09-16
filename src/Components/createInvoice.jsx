@@ -13,7 +13,7 @@ function CreateInvoice() {
     { name: 'Orders', selector: row => row.orderItem },
     { name: 'Contact Information', selector: row => row.contactInformation },
     { name: 'Create Invoice', selector: row => (<a className="text-4xl"><IoCreateOutline className="  hover:cursor-pointer" 
-                                                                 onClick={() => document.getElementById('my_modal_2').showModal()}/></a>
+                                                                 onClick={() => document.getElementById('invoice_modal').showModal()}/></a>
           
       ) },
   ];
@@ -167,7 +167,7 @@ function CreateInvoice() {
 
    {/* Open the modal using document.getElementById('ID').showModal() method */}
    
-   <dialog id="my_modal_2" className="modal">
+   <dialog id="invoice_modal" className="modal">
        <div className="modal-box w-full max-w-7xl ">
        <div className="bg-white p-8 rounded-lg shadow-md">
      <h2 className="text-center text-2xl font-bold mb-6">Create Invoice</h2>
