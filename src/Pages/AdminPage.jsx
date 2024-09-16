@@ -3,6 +3,7 @@ import Dashboard from '../Components/Dashboard';
 import Search from '../Components/Search';
 import Sidebar from '../Components/Sidebar';
 import { Routes, Route, useNavigate} from 'react-router-dom'
+import PageNotFound from '../Pages/pageNotFound';
 import AccountCreation from '../Components/accountCreation';
 import ApprovedBudgets from '../Components/approvedBudgets';
 import ApproveRejectInvoice from '../Components/approveRejectInvoice';
@@ -33,7 +34,6 @@ import TransactionRecords from '../Components/transactionRecords';
 import ViewAllAccounts from '../Components/viewAllAccounts';
 import ViewAuditHistory from '../Components/viewAuditHistory';
 import ViewCollection from '../Components/viewCollection';
-import PageNotFound from '../Pages/pageNotFound';
 import { getProfile } from '../authentication/auth'
 
 function AdminPage () {
@@ -64,6 +64,7 @@ function AdminPage () {
                     <Search userData={user}/>
                     <Routes>
                         <Route path="/" element={ <Dashboard/> } />
+                        <Route path="*" element={ <PageNotFound/> }/>
                         <Route path="accountCreation" element={ <AccountCreation/> } />
                         <Route path="approvedBudgets" element={ <ApprovedBudgets/> } />
                         <Route path="approveRejectInvoice" element={ <ApproveRejectInvoice/> } />
@@ -94,7 +95,6 @@ function AdminPage () {
                         <Route path="viewAllAccounts" element={ <ViewAllAccounts/> } />
                         <Route path="viewAuditHistory" element={ <ViewAuditHistory/> } />
                         <Route path="viewCollection" element={ <ViewCollection/> } />
-                        <Route path="pageNotFound" element={ <PageNotFound/> } />
                     </Routes>
                 </div>
             </div>
