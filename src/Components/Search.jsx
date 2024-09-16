@@ -5,9 +5,10 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { logout } from "../authentication/auth";
 import { useNavigate } from "react-router-dom";
 
-const Search = () => {
+const Search = ({userData}) => {
   const navigate = useNavigate();
 
+  console.log(userData)
   const handleLogout = () => {
     logout();
     navigate("/");

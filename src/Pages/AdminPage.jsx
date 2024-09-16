@@ -41,7 +41,7 @@ function AdminPage () {
     const [user, setUser] = useState(null);
 
     const navigate = useNavigate()
-    console.log(user)
+    
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -61,7 +61,7 @@ function AdminPage () {
             <div className="h-screen flex">
                 <Sidebar />
                 <div className="flex-col w-full overflow-auto bg-gray-200">
-                    <Search />
+                    <Search userData={user}/>
                     <Routes>
                         <Route path="/" element={ <Dashboard/> } />
                         <Route path="accountCreation" element={ <AccountCreation/> } />
