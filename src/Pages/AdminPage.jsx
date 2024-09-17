@@ -60,9 +60,14 @@ function AdminPage() {
     }, [navigate]);
 
     if (loading) {
-        // Optionally, you can display a loading spinner or message here
-        return <div>Loading...</div>;
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <span className="loading loading-infinity loading-lg"></span>
+            </div>
+        );
     }
+    
+    
 
     return (
         <div className="h-screen flex">

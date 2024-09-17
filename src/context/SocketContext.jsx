@@ -10,13 +10,16 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
-    const [token, setToken] = useState(true)
+
+    const isAuthenticated = () => {
+        const token = localStorage.getItem('token');
+        return !!token
+      };
 
     useEffect(() => {
-        if(token){
+        if(isAuthenticated()){
             const newSocket = io.connect('http://localhost:4000');
             setSocket(newSocket);
-    
             return () => {
                 newSocket.disconnect();
             };

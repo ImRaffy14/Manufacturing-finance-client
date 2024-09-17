@@ -8,9 +8,20 @@ import { useNavigate } from "react-router-dom";
 const Search = ({ userData }) => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/");
+  //GET TIME
+  function getCurrentDateTime() {
+    const now = new Date();
+    const date = now.toLocaleDateString();
+    const time = now.toLocaleTimeString();
+    return `${date} ${time}`;
+  }
+
+  const handleLogout = async () => {
+    const logoutTrails = {dateTime: getCurrentDateTime(), userId: userData._id, userName: userData.userName,  role: userData.role, action: "LOGOUT", description: "Logged out to the system."}
+    const response = await logout(logoutTrails);
+    if(response){
+      navigate("/");
+    }
   };
 
   return (

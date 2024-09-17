@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:4000/API/Auth'; // Your backend API
+const API_URL = 'http://localhost:4000/API/Auth';
 
 // Register
 export const register = async (userData) => {
@@ -21,8 +21,13 @@ export const login = async (userData) => {
 };
 
 // Logout
-export const logout = () => {
-    localStorage.removeItem('token');
+export const logout = async (userTrail) => {
+    const response = await axios.post('http://localhost:4000/API/AuditTrails/CreateTrails', userTrail);
+    if(response.data){
+        localStorage.removeItem('token');
+    }
+
+    return response.data
 };
 
 // Get current user profile (Protected Route)

@@ -6,13 +6,12 @@ function auditTrails() {
     const [searchText, setSearchText] = useState('');
     
     const columns = [
-        { name: 'ID', selector: row => row.id },
-        { name: 'Name', selector: row => row.name },
-        { name: 'Position', selector: row => row.position },
-        { name: 'Office', selector: row => row.office },
-        { name: 'Age', selector: row => row.age },
-        { name: 'Start Date', selector: row => row.startDate },
-        { name: 'Salary', selector: row => row.salary },
+        { name: 'Date & Time', selector: row => row.id },
+        { name: 'User ID', selector: row => row.name },
+        { name: 'Username', selector: row => row.position },
+        { name: 'Role', selector: row => row.office },
+        { name: 'Action', selector: row => row.age },
+        { name: 'Description', selector: row => row.startDate },
       ];
       
       const data = [
