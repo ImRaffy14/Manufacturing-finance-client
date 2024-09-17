@@ -130,7 +130,6 @@ const Sidebar = () => {
                             <Link to="createInvoice"><li className="hover:text-blue-500"><a>● Create Invoice</a></li></Link>
                             <Link to="pendingInvoice"><li className="hover:text-blue-500"><a>● View Pending Invoice</a></li></Link>
                             <Link to="paidInvoice"><li className="hover:text-blue-500"><a>● Paid/Closed Invoices</a></li></Link>
-                            <Link to="customerPaymentStatus"><li className="hover:text-blue-500"><a>● Customer Payment Status</a></li></Link>
                           </ul>
                     </details>
                 </li>
@@ -224,7 +223,7 @@ const Sidebar = () => {
                       <summary><MdManageAccounts/>Manage Accounts</summary>
                           <ul>
                           <Link to="accountCreation"><li className="hover:text-blue-500"><a>● Account Requests</a></li></Link>
-                          <Link to=""><li className="hover:text-blue-500"><a>● View All Accounts</a></li></Link>
+                          <Link to="viewAllAccounts"><li className="hover:text-blue-500"><a>● View All Accounts</a></li></Link>
                           <Link to=""><li className="hover:text-blue-500"><a>● Manage Roles & Permissions</a></li></Link>
                           </ul>
                     </details>

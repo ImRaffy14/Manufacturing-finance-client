@@ -142,7 +142,7 @@ function CreateInvoice() {
                 <div className="mx-4">
                     <div className="overflow-x-auto w-full">
                         <DataTable
-                            title="Audit Trails"
+                            title="Invoice Creation"
                             columns={columns}
                             data={filteredData}
                             pagination
@@ -270,10 +270,11 @@ function CreateInvoice() {
        </div>
 
        {/* Items Information */}
+
        <h3 className="text-lg font-semibold mb-4">Items</h3>
        <div className="grid grid-cols-2 gap-4 mb-6">
          {items.map((item, index) => (
-           <div key={index} className="flex items-center space-x-4 mb-2">
+           <div key={index} className="flex items-center space-x-4 mb-2 bg-gray-100 rounded-lg p-3">
              <div className="flex-1">
                <label className="block mb-1 font-semibold">Item</label>
                <select
@@ -331,7 +332,7 @@ function CreateInvoice() {
            Add Another Item
          </button>
        </div>
-
+       
        {/* Invoice Details */}
        <h3 className="text-lg font-semibold mb-4">Invoice Details</h3>
        <div className="grid grid-cols-3 gap-4 mb-6">

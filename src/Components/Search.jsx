@@ -49,7 +49,7 @@ const Search = ({ userData }) => {
                 tabIndex={0}
                 className="dropdown-content menu bg-white rounded-box z-[1] w-52 p-2 mt-2 shadow"
               >
-                <li onClick={()=>document.getElementById('my_modal_2').showModal()}>
+                <li onClick={()=>document.getElementById('profile_modal').showModal()}>
                   <a>Profile</a>
                 </li>
                 <li onClick={() => document.getElementById("logout_modal").showModal()}>
@@ -65,14 +65,11 @@ const Search = ({ userData }) => {
       <dialog id="logout_modal" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Are you sure you want to logout?</h3>
-          <div className="py-4">
-            <p>Click "Yes" to logout or "No" to stay on the page.</p>
-          </div>
           <div className="flex justify-end gap-4">
-            <button className="btn btn-outline" onClick={handleLogout}>
+            <button className="btn  btn-outline btn-success" onClick={handleLogout}>
               Yes
             </button>
-            <button className="btn btn-error" onClick={() => document.getElementById("logout_modal").close()}>
+            <button className="btn btn-outline btn-error" onClick={() => document.getElementById("logout_modal").close()}>
               No
             </button>
           </div>
@@ -83,7 +80,7 @@ const Search = ({ userData }) => {
       </dialog>
 
 {/* Open the modal using document.getElementById('ID').showModal() method */}
-<dialog id="my_modal_2" className="modal">
+<dialog id="profile_modal" className="modal">
   <div className="modal-box">
     <div className="py-4">
       <img src="https://via.placeholder.com/150" alt="Sample Profile" className="rounded-full w-24 h-24 mx-auto mb-4" />

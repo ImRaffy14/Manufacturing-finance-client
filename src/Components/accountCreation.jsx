@@ -62,7 +62,7 @@ function accountCreation() {
                                 </td>
                                 <td>
                                     {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
+                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -91,7 +91,7 @@ function accountCreation() {
                                 </td>
                                 <td>
                                     {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('accountCreation').showModal()}>View Form</button>
+                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -120,7 +120,7 @@ function accountCreation() {
                                 </td>
                                 <td>
                                     {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('accountCreation').showModal()}>View Form</button>
+                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -149,7 +149,7 @@ function accountCreation() {
                                 </td>
                                 <td>
                                     {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
+                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -178,7 +178,7 @@ function accountCreation() {
                                 </td>
                                 <td>
                                     {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('my_modal_2').showModal()}>View Form</button>
+                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -188,7 +188,7 @@ function accountCreation() {
             </div>
 
             {/* Modal */}
-            <dialog id="accountCreation" className="modal">
+            <dialog id="account_modal" className="modal">
                 <div className="modal-box shadow-xl">
 
                 
