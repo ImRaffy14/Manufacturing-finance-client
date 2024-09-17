@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
+import { toPng } from "html-to-image";
 import { IoCreateOutline } from "react-icons/io5";
 
 function CreateInvoice() {
@@ -25,6 +26,8 @@ function CreateInvoice() {
     // Add more data as needed
   ];
 
+
+
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
@@ -38,6 +41,12 @@ function CreateInvoice() {
 
 
   //modal data
+  const defaultTerms = `These are the terms and conditions:
+  - All purchases are final.
+  - No refunds after 30 days.
+  - Users must agree to the privacy policy.
+  `;
+  const invoiceRef = useRef(null);
   const [formData, setFormData] = useState({
     customerName: '',
     customerAddress: '',
@@ -47,15 +56,12 @@ function CreateInvoice() {
     orderDate: '',
     shippingMethod: '',
     deliveryDate: '',
-    invoiceNumber: '',
     invoiceDate: '',
     dueDate: '',
-    paymentTerms: '',
     subtotal: 0,
-    taxes: 0,
     discounts: 0,
     totalAmount: 0,
-    terms: '',
+    terms: defaultTerms, 
     notes: '',
   });
 
@@ -127,8 +133,23 @@ function CreateInvoice() {
     }));
   };
 
+  const handleGenerateImage = () => {
+    if (invoiceRef.current) {
+      toPng(invoiceRef.current)
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.href = dataUrl;
+          link.download = "invoice.png"; // Download the image
+          link.click();
+        })
+        .catch((err) => {
+          console.error("Error generating invoice image", err);
+        });
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
+    handleGenerateImage();
     console.log('Form submitted:', formData, items);
   };
 
@@ -169,7 +190,7 @@ function CreateInvoice() {
    
    <dialog id="invoice_modal" className="modal">
        <div className="modal-box w-full max-w-7xl ">
-       <div className="bg-white p-8 rounded-lg shadow-md">
+       <div ref={invoiceRef} className="invoice-container bg-white p-8 rounded-lg shadow-md">
      <h2 className="text-center text-2xl font-bold mb-6">Create Invoice</h2>
 
      <form onSubmit={handleSubmit}>
@@ -337,17 +358,6 @@ function CreateInvoice() {
        <h3 className="text-lg font-semibold mb-4">Invoice Details</h3>
        <div className="grid grid-cols-3 gap-4 mb-6">
          <div>
-           <label className="block mb-2 font-semibold">Invoice Number</label>
-           <input
-             type="text"
-             name="invoiceNumber"
-             value={formData.invoiceNumber}
-             onChange={handleChange}
-             className="border px-4 py-2 w-full rounded"
-             placeholder="Enter invoice number"
-           />
-         </div>
-         <div>
            <label className="block mb-2 font-semibold">Invoice Date</label>
            <input
              type="date"
@@ -368,34 +378,12 @@ function CreateInvoice() {
            />
          </div>
          <div>
-           <label className="block mb-2 font-semibold">Payment Terms</label>
-           <input
-             type="text"
-             name="paymentTerms"
-             value={formData.paymentTerms}
-             onChange={handleChange}
-             className="border px-4 py-2 w-full rounded"
-             placeholder="Enter payment terms"
-           />
-         </div>
-         <div>
            <label className="block mb-2 font-semibold">Subtotal</label>
            <input
              type="text"
              value={formData.subtotal}
              readOnly
              className="border px-4 py-2 w-full rounded bg-gray-200"
-           />
-         </div>
-         <div>
-           <label className="block mb-2 font-semibold">Taxes</label>
-           <input
-             type="number"
-             name="taxes"
-             value={formData.taxes}
-             onChange={handleChange}
-             className="border px-4 py-2 w-full rounded"
-             placeholder="Enter taxes"
            />
          </div>
          <div>
@@ -429,7 +417,7 @@ function CreateInvoice() {
              name="terms"
              value={formData.terms}
              onChange={handleChange}
-             className="border px-4 py-2 w-full rounded"
+             className="border px-4 py-2 h-[120px] w-full rounded"
              placeholder="Enter terms and conditions"
            />
          </div>
@@ -439,7 +427,7 @@ function CreateInvoice() {
              name="notes"
              value={formData.notes}
              onChange={handleChange}
-             className="border px-4 py-2 w-full rounded"
+             className="border px-4 py-2 h-[120px] w-full rounded"
              placeholder="Enter additional notes"
            />
          </div>

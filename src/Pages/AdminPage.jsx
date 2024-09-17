@@ -34,6 +34,7 @@ import TransactionRecords from '../Components/transactionRecords';
 import ViewAllAccounts from '../Components/viewAllAccounts';
 import ViewAuditHistory from '../Components/viewAuditHistory';
 import ViewCollection from '../Components/viewCollection';
+import Invoice from '../Components/Certificate/Invoice';
 import { getProfile } from '../authentication/auth';
 
 function AdminPage() {
