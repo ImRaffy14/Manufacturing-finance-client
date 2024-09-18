@@ -1,26 +1,39 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
+import { useSocket } from '../context/SocketContext'
 
 function auditTrails() {
     const [searchText, setSearchText] = useState('');
+    const [trailsData, setTrailsData] = useState ([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    const socket = useSocket()
     
     const columns = [
-        { name: 'Date & Time', selector: row => row.id },
-        { name: 'User ID', selector: row => row.name },
-        { name: 'Username', selector: row => row.position },
-        { name: 'Role', selector: row => row.office },
-        { name: 'Action', selector: row => row.age },
-        { name: 'Description', selector: row => row.startDate },
+        { name: 'Date & Time', selector: row => row.dateTime },
+        { name: 'User ID', selector: row => row._id },
+        { name: 'Username', selector: row => row.userName },
+        { name: 'Role', selector: row => row.role },
+        { name: 'Action', selector: row => row.action },
+        { name: 'Description', selector: row => row.description },
       ];
       
-      const data = [
-        { id: 1, name: 'Tiger Nixon', position: 'System Architect', office: 'Edinburgh', age: 61, startDate: '2011/04/25', salary: '$320,800' },
-        { id: 1, name: 'Tiger Nixon', position: 'System Architect', office: 'Edinburgh', age: 61, startDate: '2011/04/25', salary: '$320,800' },
-        { id: 1, name: 'Tiger Nixon', position: 'System Architect', office: 'Edinburgh', age: 61, startDate: '2011/04/25', salary: '$320,800' },
-        // Add more data as needed
-      ];
+      const data = trailsData
 
+      useEffect(() => {
+
+        if(!socket) return;
+      
+        socket.emit('getAuditTrails',{msg: 'get audit trails'})
+    
+        socket.on("receive_audit_trails", (response) => {
+          setTrailsData(response)
+          setIsLoading(!isLoading)
+        })
+        
+      }, [socket])
+      
       const handleSearch = (event) => {
         setSearchText(event.target.value);
       };
@@ -32,6 +45,14 @@ function auditTrails() {
         )
       );
     
+      if(isLoading){
+        return <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-[270px] w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+      </div>
+      }
 
   return (
 <>

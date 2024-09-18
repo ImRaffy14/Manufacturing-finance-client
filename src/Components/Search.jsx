@@ -4,9 +4,12 @@ import { MdOutlineDarkMode } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { logout } from "../authentication/auth";
 import { useNavigate } from "react-router-dom";
+import { useSocket } from '../context/SocketContext'
 
 const Search = ({ userData }) => {
   const navigate = useNavigate();
+
+  const socket = useSocket()
 
   //GET TIME
   function getCurrentDateTime() {
@@ -16,12 +19,10 @@ const Search = ({ userData }) => {
     return `${date} ${time}`;
   }
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     const logoutTrails = {dateTime: getCurrentDateTime(), userId: userData._id, userName: userData.userName,  role: userData.role, action: "LOGOUT", description: "Logged out to the system."}
-    const response = await logout(logoutTrails);
-    if(response){
-      navigate("/");
-    }
+    logout(logoutTrails, socket);
+    navigate("/");
   };
 
   return (

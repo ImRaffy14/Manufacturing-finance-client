@@ -21,13 +21,9 @@ export const login = async (userData) => {
 };
 
 // Logout
-export const logout = async (userTrail) => {
-    const response = await axios.post('http://localhost:4000/API/AuditTrails/CreateTrails', userTrail);
-    if(response.data){
-        localStorage.removeItem('token');
-    }
-
-    return response.data
+export const logout = (userTrail, socket) => {
+    socket.emit("addAuditTrails", userTrail)
+    localStorage.removeItem('token');
 };
 
 // Get current user profile (Protected Route)
