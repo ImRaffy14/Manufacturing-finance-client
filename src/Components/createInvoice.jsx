@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import DataTable from 'react-data-table-component';
 import { toPng } from "html-to-image";
 import { IoCreateOutline } from "react-icons/io5";
+import InvoiceDownload from './invoiceDownload';
 
 function CreateInvoice() {
+  const [isSubmitted, setIsSubmitted] = useState(false);  // Track form submission
   const [searchText, setSearchText] = useState('');
 
   const columns = [
@@ -149,9 +152,12 @@ function CreateInvoice() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleGenerateImage();
+    setIsSubmitted(true);
     console.log('Form submitted:', formData, items);
   };
+  if (isSubmitted) {
+    return <InvoiceDownload invoiceData={formData} />;
+  }
 
   return (
 
@@ -435,13 +441,13 @@ function CreateInvoice() {
 
        {/* Submit Button */}
        <div className="text-center">
-         <button
-           type="submit"
-           className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
-         >
-           Submit Invoice
-         </button>
-       </div>
+          <button
+            type="submit"
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
+          >
+            Submit Invoice
+          </button>
+        </div>
      </form>
    </div>
          </div>

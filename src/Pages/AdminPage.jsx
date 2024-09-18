@@ -34,7 +34,7 @@ import TransactionRecords from '../Components/transactionRecords';
 import ViewAllAccounts from '../Components/viewAllAccounts';
 import ViewAuditHistory from '../Components/viewAuditHistory';
 import ViewCollection from '../Components/viewCollection';
-import Invoice from '../Components/Certificate/Invoice';
+import InvoiceDownload from '../Components/invoiceDownload';
 import { getProfile } from '../authentication/auth';
 
 function AdminPage() {
@@ -108,6 +108,8 @@ function AdminPage() {
                     <Route path="viewAllAccounts" element={<ViewAllAccounts />} />
                     <Route path="viewAuditHistory" element={<ViewAuditHistory />} />
                     <Route path="viewCollection" element={<ViewCollection />} />
+                    <Route path="invoiceDownload" element={<InvoiceDownload />} />
+
                 </Routes>
             </div>
         </div>
