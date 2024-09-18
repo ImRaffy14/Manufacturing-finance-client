@@ -68,18 +68,17 @@ function invoiceDownload({ invoiceData }) {
             </tr>
           </thead>
           <tbody>
-            {/* If you have line items in your form, map them here */}
-            {/* Assuming you have an array for items with description, unit price, and qty */}
-            {/* Example: */}
-            {invoiceData.items && invoiceData.items.map((item, index) => (
-              <tr key={index} className="border-b">
-                <td className="py-2">{item.description}</td>
-                <td className="py-2 text-right">${item.unitPrice}</td>
-                <td className="py-2 text-right">{item.quantity}</td>
-                <td className="py-2 text-right">${item.total}</td>
-              </tr>
-            ))}
-          </tbody>
+  {invoiceData.items && invoiceData.items.map((item, index) => (
+    <tr key={index} className="border-b">
+      <td className="py-2">{item.itemName}</td> 
+      <td className="py-2 text-right">${item.price.toFixed(2)}</td> 
+      <td className="py-2 text-right">{item.quantity}</td>
+      <td className="py-2 text-right">
+        ${(item.price * item.quantity).toFixed(2)}
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
       </div>
 
