@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 
-function accountCreation() {
+function accountCreation({ userData }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');

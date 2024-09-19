@@ -4,10 +4,15 @@ import DataTable from 'react-data-table-component';
 import { toPng } from "html-to-image";
 import { IoCreateOutline } from "react-icons/io5";
 import InvoiceDownload from './invoiceDownload';
+import { useSocket } from '../context/SocketContext';
 
-function CreateInvoice() {
+function CreateInvoice({ userData }) {
   const [isSubmitted, setIsSubmitted] = useState(false);  // Track form submission
   const [searchText, setSearchText] = useState('');
+  const [items, setItems] = useState([{ itemName: '', quantity: 1, price: 0 }]);
+  const [ responseData, setResponseData] = useState(null)
+
+  const socket = useSocket()
 
   const columns = [
     { name: 'Order Number', selector: row => row.orderNumber },
@@ -53,12 +58,13 @@ function CreateInvoice() {
   const [formData, setFormData] = useState({
     customerName: '',
     customerAddress: '',
-    customerContact: '',
+    customerContact: 0,
     customerId: '',
-    orderNumber: '',
+    orderNumber: 0,
     orderDate: '',
     shippingMethod: '',
     deliveryDate: '',
+    items: [{ itemName: 'NONE', quantity: 1, price: 0 }],
     invoiceDate: '',
     dueDate: '',
     subtotal: 0,
@@ -68,9 +74,6 @@ function CreateInvoice() {
     notes: '',
   });
 
-  
-
-  const [items, setItems] = useState([{ itemName: '', quantity: 1, price: 0 }]);
 
   const itemOptions = [
     { label: 'Soap A', value: 'soap_a', price: 10 },
@@ -100,7 +103,10 @@ function CreateInvoice() {
       updatedItems[index].price = selectedItem ? selectedItem.price : 0;
     }
     
-    setItems(updatedItems);
+    setFormData(prevState => ({
+      ...prevState,
+      items: updatedItems
+    }))
   };
 
 
@@ -150,13 +156,49 @@ function CreateInvoice() {
         });
     }
   };
+
+  //GET TIME
+  function getCurrentDateTime() {
+    const now = new Date();
+    const date = now.toLocaleDateString();
+    const time = now.toLocaleTimeString();
+    return `${date} ${time}`;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    console.log('Form submitted:', formData, items);
+    
+    socket.emit("create_invoice", formData);
   };
+
+  useEffect(() => {
+    // Register the event listener when the component mounts
+    socket.on("response_create_invoice", (response) => {
+      setResponseData(response);
+      setIsSubmitted(true)
+      
+      const invoiceTrails = {
+        dateTime: getCurrentDateTime(),
+        userId: userData._id,
+        userName: userData.userName,
+        role: userData.role,
+        action: "CREATED AN INVOICE",
+        description: `Created an invoice for ${response.customerName}. Invoice ID ${response._id}`
+      };
+      
+      socket.emit("addAuditTrails", invoiceTrails);
+    });
+  
+    // Clean up the event listener when the component unmounts
+    return () => {
+      socket.off("response_create_invoice");
+    };
+  }, []);
+
+
+  //INVOICE DOWNLOAD COMPONENT
   if (isSubmitted) {
-    return <InvoiceDownload invoiceData={formData} />;
+    return <InvoiceDownload invoiceData={responseData} />;
   }
 
   return (
@@ -228,7 +270,7 @@ function CreateInvoice() {
          <div>
            <label className="block mb-2 font-semibold">Contact Information</label>
            <input
-             type="text"
+             type="number"
              name="customerContact"
              value={formData.customerContact}
              onChange={handleChange}
@@ -255,7 +297,7 @@ function CreateInvoice() {
          <div>
            <label className="block mb-2 font-semibold">Order Number</label>
            <input
-             type="text"
+             type="number"
              name="orderNumber"
              value={formData.orderNumber}
              onChange={handleChange}
@@ -386,7 +428,7 @@ function CreateInvoice() {
          <div>
            <label className="block mb-2 font-semibold">Subtotal</label>
            <input
-             type="text"
+             type="number"
              value={formData.subtotal}
              readOnly
              className="border px-4 py-2 w-full rounded bg-gray-200"
@@ -406,7 +448,7 @@ function CreateInvoice() {
          <div>
            <label className="block mb-2 font-semibold">Total Amount</label>
            <input
-             type="text"
+             type="number"
              value={formData.totalAmount}
              readOnly
              className="border px-4 py-2 w-full rounded bg-gray-200"

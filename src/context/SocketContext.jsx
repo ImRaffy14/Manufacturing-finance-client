@@ -18,7 +18,7 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         if(isAuthenticated()){
-            const newSocket = io.connect('http://localhost:4000');
+            const newSocket = io.connect(import.meta.env.VITE_SERVER_URL);
             setSocket(newSocket);
             return () => {
                 newSocket.disconnect();

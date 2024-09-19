@@ -78,7 +78,7 @@ function AdminPage() {
                 <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="*" element={<PageNotFound />} />
-                    <Route path="accountCreation" element={<AccountCreation />} />
+                    <Route path="accountCreation" element={<AccountCreation userData={user}/>} />
                     <Route path="approvedBudgets" element={<ApprovedBudgets />} />
                     <Route path="approveRejectInvoice" element={<ApproveRejectInvoice />} />
                     <Route path="auditRecords" element={<AuditRecords />} />
@@ -90,7 +90,7 @@ function AdminPage() {
                     <Route path="financialReports" element={<FinancialReports />} />
                     <Route path="createBudget" element={<CreateBudget />} />
                     <Route path="createFinancialReport" element={<CreateFinancialReport />} />
-                    <Route path="createInvoice" element={<CreateInvoice />} />
+                    <Route path="createInvoice" element={<CreateInvoice userData={user} />} />
                     <Route path="customerPaymentStatus" element={<CustomerPaymentStatus />} />
                     <Route path="editAccounts" element={<EditAccounts />} />
                     <Route path="editBudget" element={<EditBudget />} />

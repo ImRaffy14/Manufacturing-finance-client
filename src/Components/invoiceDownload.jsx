@@ -43,7 +43,7 @@ function invoiceDownload({ invoiceData }) {
         </div>
 
         <div className="text-right">
-          <p><strong>INVOICE NO:</strong> {invoiceData.orderNumber || '01234'}</p>
+          <p><strong>INVOICE ID:</strong> {invoiceData._id || '01234'}</p>
           <p><strong>DATE:</strong> {invoiceData.invoiceDate || '11.02.2030'}</p>
           <p><strong>DUE DATE:</strong> {invoiceData.dueDate || '11.03.2030'}</p>
         </div>
@@ -84,7 +84,7 @@ function invoiceDownload({ invoiceData }) {
 
       {/* Subtotal, Discounts, and Total */}
       <div className="mt-8 text-right">
-        <p><strong>SUBTOTAL:</strong> ${invoiceData.subtotal || '0'}</p>
+        <p><strong>SUBTOTAL:</strong> ${invoiceData.subTotal || '0'}</p>
         <p><strong>DISCOUNTS:</strong> ${invoiceData.discounts || '0'}</p>
         <p><strong>TOTAL AMOUNT:</strong> ${invoiceData.totalAmount || '0'}</p>
       </div>
