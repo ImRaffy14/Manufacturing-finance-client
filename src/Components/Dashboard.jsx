@@ -46,26 +46,7 @@ const data = [
   },
 ];
 
-//SOCKET CONNECTION
-import { useSocket } from '../context/SocketContext'
-
-
-
 const Dashboard = () => {
-  const socket = useSocket()
-
-  useEffect(() => {
-
-    if(!socket) return;
-  
-    socket.emit('testing',{msg: 'bobo kaba?'})
-
-    socket.on("sendTesting", (response) => {
-      console.log(response)
-    })
-    
-  }, [socket])
-
 
   return (
     <div className="bg-gray-200 text-black h-auto p-5">

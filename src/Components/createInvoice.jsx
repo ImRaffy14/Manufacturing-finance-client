@@ -163,16 +163,6 @@ useEffect(() => {
     }));
   };
 
-  
-
-  //GET TIME
-  function getCurrentDateTime() {
-    const now = new Date();
-    const date = now.toLocaleDateString();
-    const time = now.toLocaleTimeString();
-    return `${date} ${time}`;
-  }
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateItems()) {
@@ -183,14 +173,17 @@ useEffect(() => {
     socket.emit("create_invoice", formData);
   };
 
+  //RESPONSE FROM SUBMITTED INVOICE RECORD
   useEffect(() => {
-    // Register the event listener when the component mounts
     socket.on("response_create_invoice", (response) => {
       setResponseData(response);
       setIsSubmitted(true)
+
+      socket.on("trails_error", (response) => {
+        console.error(response)
+      })
       
       const invoiceTrails = {
-        dateTime: getCurrentDateTime(),
         userId: userData._id,
         userName: userData.userName,
         role: userData.role,
@@ -201,9 +194,9 @@ useEffect(() => {
       socket.emit("addAuditTrails", invoiceTrails);
     });
   
-    // Clean up the event listener when the component unmounts
     return () => {
       socket.off("response_create_invoice");
+      socket.off("trails_error");
     };
   }, []);
 

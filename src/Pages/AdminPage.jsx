@@ -36,17 +36,19 @@ import ViewAuditHistory from '../Components/viewAuditHistory';
 import ViewCollection from '../Components/viewCollection';
 import InvoiceDownload from '../Components/invoiceDownload';
 import { getProfile } from '../authentication/auth';
+import { useSocket } from '../context/SocketContext'
 
 function AdminPage() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const socket = useSocket()
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const data = await getProfile();
+                const data = await getProfile()
                 setUser(data);
             } catch (error) {
                 console.error('Error fetching profile', error);
@@ -59,6 +61,8 @@ function AdminPage() {
 
         fetchProfile();
     }, [navigate]);
+
+   
 
     if (loading) {
         return (
