@@ -7,10 +7,14 @@ import InvoiceDownload from './invoiceDownload';
 import { useSocket } from '../context/SocketContext';
 
 function CreateInvoice({ userData }) {
+  const [isPreview, setIsPreview] = useState(false); // State to manage the preview modal
   const [isSubmitted, setIsSubmitted] = useState(false);  // Track form submission
   const [searchText, setSearchText] = useState('');
   const [items, setItems] = useState([{ itemName: '', quantity: 1, price: 0 }]);
   const [ responseData, setResponseData] = useState(null)
+  const formatCurrency = (value) => {
+    return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  };
 
   const socket = useSocket()
 
@@ -73,6 +77,8 @@ function CreateInvoice({ userData }) {
     terms: defaultTerms, 
     notes: '',
   });
+
+  
 
 
   const itemOptions = [
@@ -147,6 +153,35 @@ useEffect(() => {
     );
   };
 
+  const validateForm = () => {
+    const { customerName, customerAddress, customerContact, orderNumber, orderDate, shippingMethod, deliveryDate, items } = formData;
+  
+    // Check basic fields
+    if (!customerName || !customerAddress || !customerContact || !orderNumber || !orderDate || !shippingMethod || !deliveryDate) {
+      return false;
+    }
+  
+    // Check if all items are valid
+    if (!validateItems()) {
+      return false;
+    }
+  
+    // Check if at least one item is added
+    if (items.length === 0 || items.some(item => !item.itemName || item.quantity <= 0 || item.price <= 0)) {
+      return false;
+    }
+  
+    return true;
+  };
+
+  const handleViewPreview = () => {
+    if (validateForm()) {
+      document.getElementById('preview_modal').showModal();
+    } else {
+      alert('Please fill out all required fields before viewing the preview.');
+    }
+  };
+
   const calculateTotal = () => {
     const subtotal = formData.items.reduce(
       (total, item) => total + (item.price * item.quantity || 0), // Multiply price by quantity
@@ -169,37 +204,41 @@ useEffect(() => {
       alert('Please select a valid item for all fields before submitting.');
       return;
     }
-    
+    setIsPreview(true);
+  };
+
+  const confirmSubmission = () => {
     socket.emit("create_invoice", formData);
   };
 
   //RESPONSE FROM SUBMITTED INVOICE RECORD
   useEffect(() => {
-    socket.on("response_create_invoice", (response) => {
-      setResponseData(response);
-      setIsSubmitted(true)
+  socket.on("response_create_invoice", (response) => {
+    setResponseData(response);
+    setIsSubmitted(true); // Only set this to true once the response is received
+    setIsPreview(false); // Close the modal after submission
 
-      socket.on("trails_error", (response) => {
-        console.error(response)
-      })
-      
-      const invoiceTrails = {
-        userId: userData._id,
-        userName: userData.userName,
-        role: userData.role,
-        action: "CREATED AN INVOICE",
-        description: `Created an invoice for ${response.customerName}. Invoice ID ${response._id}`
-      };
-      
-      socket.emit("addAuditTrails", invoiceTrails);
+    socket.on("trails_error", (response) => {
+      console.error(response);
     });
-  
-    return () => {
-      socket.off("response_create_invoice");
-      socket.off("trails_error");
-    };
-  }, []);
 
+    const invoiceTrails = {
+      userId: userData._id,
+      userName: userData.userName,
+      role: userData.role,
+      action: "CREATED AN INVOICE",
+      description: `Created an invoice for ${response.customerName}. Invoice ID ${response._id}`,
+
+    };
+
+    socket.emit("addAuditTrails", invoiceTrails);
+  });
+
+  return () => {
+    socket.off("response_create_invoice");
+    socket.off("trails_error");
+  };
+}, []);
 
   //INVOICE DOWNLOAD COMPONENT
   if (isSubmitted) {
@@ -498,12 +537,7 @@ useEffect(() => {
 
        {/* Submit Button */}
        <div className="text-center">
-          <button
-            type="submit"
-            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
-          >
-            Submit Invoice
-          </button>
+          <button className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors" onClick={handleViewPreview} >View Preview</button>
         </div>
      </form>
    </div>
@@ -512,7 +546,98 @@ useEffect(() => {
  <button>close</button>
        </form>
    </dialog>
- 
+
+{/* Modal for confirming invoice details */}
+<dialog id="preview_modal" className="modal">
+  <div className="modal-box">
+  <div className="invoice-container bg-white p-8 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold mb-4">Confirm Your Invoice</h2>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">Customer Information</h3>
+          <p><strong>Name:</strong> {formData.customerName}</p>
+          <p><strong>Address:</strong> {formData.customerAddress}</p>
+          <p><strong>Contact:</strong> {formData.customerContact}</p>
+        </div>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">Order Information</h3>
+          <p><strong>Order Number:</strong> {formData.orderNumber}</p>
+          <p><strong>Order Date:</strong> {formData.orderDate}</p>
+          <p><strong>Shipping Method:</strong> {formData.shippingMethod}</p>
+          <p><strong>Delivery Date:</strong> {formData.deliveryDate}</p>
+        </div>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">Additional Information</h3>
+          <p><strong>Terms and Conditions:</strong> {formData.terms}</p>
+          <p><strong>Notes:</strong> {formData.notes}</p>
+        </div>
+        <div className="mt-10">
+          <table className="w-full text-left table-auto border-collapse">
+            <thead>
+              <tr className="border-b">
+                <th className="py-2">DESCRIPTION</th>
+                <th className="py-2 text-right">UNIT PRICE</th>
+                <th className="py-2 text-right">QTY</th>
+                <th className="py-2 text-right">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {formData.items && formData.items.map((item, index) => (
+                <tr key={index} className="border-b">
+                  <td className="py-2">{item.itemName}</td>
+                  <td className="py-2 text-right">{formatCurrency(item.price)}</td>
+                  <td className="py-2 text-right">{item.quantity}</td>
+                  <td className="py-2 text-right">
+                    {formatCurrency(item.price * item.quantity)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Subtotal, Discounts, and Total */}
+        <div className="mt-8">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-right">
+              <p><strong>SUBTOTAL:</strong></p>
+              <p><strong>DISCOUNTS:</strong></p>
+            </div>
+            <div className="text-right">
+              <p>{formatCurrency(formData.subTotal || 0)}</p>
+              <p>{formatCurrency(formData.discounts || 0)}</p>
+            </div>
+          </div>
+
+          <div className="border-t-2 border-gray-300 my-2"></div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-right">
+              <p className="text-lg font-bold"><strong>TOTAL AMOUNT:</strong></p>
+            </div>
+            <div className="text-right">
+              <p className="text-lg font-bold">{formatCurrency(formData.totalAmount || 0)}</p>
+            </div>
+          </div>
+        </div>
+        <div className="text-center mt-4">
+          <button
+            type="button"
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
+            onClick={confirmSubmission} // Trigger submission
+          >
+            Submit Invoice
+          </button>
+        </div>
+      </div>
+  </div>
+  <form method="dialog" className="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+
+
+   
    </>
   );
 

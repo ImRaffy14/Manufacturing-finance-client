@@ -258,6 +258,10 @@ function accountCreation({ userData }) {
                         </div>
 
                         <div className="w-full">
+                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " />
+                            </div>
+
+                        <div className="w-full">
                             <button className="btn btn-primary w-full font-bold">Submit</button>
                         </div>
                     </div>
