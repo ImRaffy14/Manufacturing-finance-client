@@ -9,11 +9,11 @@ export default {
       backgroundImage: {
         'BG': "url('/src/assets/BG2.jpg')",
       },
-      backdropBlur: {
-        lg: '100px',
-      }
+      
     },
+    
   },
+  
   plugins: [
     require('daisyui'),
   ],

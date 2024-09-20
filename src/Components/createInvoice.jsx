@@ -64,7 +64,7 @@ function CreateInvoice({ userData }) {
     orderDate: '',
     shippingMethod: '',
     deliveryDate: '',
-    items: [{ itemName: 'NONE', quantity: 1, price: 0 }],
+    items: [{ itemName: '', quantity: 1, price: 0 }],
     invoiceDate: '',
     dueDate: '',
     subtotal: 0,
@@ -81,10 +81,16 @@ function CreateInvoice({ userData }) {
     { label: 'Soap C', value: 'soap_c', price: 20 }
   ];
 
-  useEffect(() => {
-    calculateTotal();
-  }, [items, formData.taxes, formData.discounts]);
+useEffect(() => {
+  calculateTotal();  // Recalculate total whenever items, taxes, or discounts change
+}, [formData.items, formData.taxes, formData.discounts]);
 
+  const calculateTotalAmount = (items) => {
+    return items.reduce((total, item) => {
+      const itemTotal = item.price * item.quantity; // Ensure proper multiplication
+      return total + itemTotal; // Add to total
+    }, 0);
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -95,46 +101,61 @@ function CreateInvoice({ userData }) {
 
   const handleItemChange = (index, e) => {
     const { name, value } = e.target;
-    const updatedItems = [...items];
-    updatedItems[index][name] = value;
-    
-    if (name === 'itemName') {
-      const selectedItem = itemOptions.find((item) => item.label === value);
-      updatedItems[index].price = selectedItem ? selectedItem.price : 0;
-    }
-    
-    setFormData(prevState => ({
-      ...prevState,
-      items: updatedItems
-    }))
+    const updatedItems = [...formData.items];
+    const selectedItem = itemOptions.find(option => option.label === value);
+  
+    console.log("Selected Item:", selectedItem); // Check the selected item
+  
+    updatedItems[index] = {
+      ...updatedItems[index],
+      [name]: value,
+      price: selectedItem ? selectedItem.price : 0, // Ensure price is unit price
+    };
+    const totalAmount = calculateTotalAmount(updatedItems);
+    setFormData({ ...formData, items: updatedItems, totalAmount });
   };
-
-
+  
   const handleQuantityChange = (index, e) => {
     const { value } = e.target;
-    const updatedItems = [...items];
-    updatedItems[index].quantity = value;
-    setItems(updatedItems);
+    const updatedItems = [...formData.items];
+    updatedItems[index].quantity = Number(value);
+    
+    console.log("Updated Quantity:", updatedItems[index].quantity); // Check if quantity is updated correctly
+  
+    const totalAmount = calculateTotalAmount(updatedItems);
+    setFormData({ ...formData, items: updatedItems, totalAmount });
   };
-
   const addItem = () => {
-    setItems([...items, { itemName: '', quantity: 1, price: 0 }]);
+    setFormData({
+      ...formData,
+      items: [...formData.items, { itemName: 'NONE', quantity: 1, price: 0 }],
+    });
   };
 
   const removeItem = (index) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
+    const updatedItems = formData.items.filter((_, i) => i !== index);
+    setFormData((prevData) => ({
+      ...prevData,
+      items: updatedItems,
+    }));
+  };
+
+  // Item Validation
+  const validateItems = () => {
+    return formData.items.every(item =>
+      itemOptions.some(option => option.label === item.itemName)
+    );
   };
 
   const calculateTotal = () => {
-    const subtotal = items.reduce(
-      (total, item) => total + item.price * item.quantity,
+    const subtotal = formData.items.reduce(
+      (total, item) => total + (item.price * item.quantity || 0), // Multiply price by quantity
       0
     );
     const taxes = parseFloat(formData.taxes || 0);
     const discounts = parseFloat(formData.discounts || 0);
     const totalAmount = subtotal + taxes - discounts;
-
+  
     setFormData((prevData) => ({
       ...prevData,
       subtotal,
@@ -142,20 +163,7 @@ function CreateInvoice({ userData }) {
     }));
   };
 
-  const handleGenerateImage = () => {
-    if (invoiceRef.current) {
-      toPng(invoiceRef.current)
-        .then((dataUrl) => {
-          const link = document.createElement("a");
-          link.href = dataUrl;
-          link.download = "invoice.png"; // Download the image
-          link.click();
-        })
-        .catch((err) => {
-          console.error("Error generating invoice image", err);
-        });
-    }
-  };
+  
 
   //GET TIME
   function getCurrentDateTime() {
@@ -167,6 +175,10 @@ function CreateInvoice({ userData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validateItems()) {
+      alert('Please select a valid item for all fields before submitting.');
+      return;
+    }
     
     socket.emit("create_invoice", formData);
   };
@@ -254,6 +266,7 @@ function CreateInvoice({ userData }) {
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
              placeholder="Enter customer name"
+             required
            />
          </div>
          <div>
@@ -265,6 +278,7 @@ function CreateInvoice({ userData }) {
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
              placeholder="Enter customer address"
+             required
            />
          </div>
          <div>
@@ -276,6 +290,7 @@ function CreateInvoice({ userData }) {
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
              placeholder="Enter contact info"
+             required
            />
          </div>
          <div>
@@ -287,6 +302,7 @@ function CreateInvoice({ userData }) {
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
              placeholder="Enter customer ID"
+             required
            />
          </div>
        </div>
@@ -303,6 +319,7 @@ function CreateInvoice({ userData }) {
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
              placeholder="Enter order number"
+             required
            />
          </div>
          <div>
@@ -313,6 +330,7 @@ function CreateInvoice({ userData }) {
              value={formData.orderDate}
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
+             required
            />
          </div>
          <div>
@@ -324,6 +342,7 @@ function CreateInvoice({ userData }) {
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
              placeholder="Enter shipping method"
+             required
            />
          </div>
          <div>
@@ -334,74 +353,75 @@ function CreateInvoice({ userData }) {
              value={formData.deliveryDate}
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
+             required
            />
          </div>
        </div>
 
-       {/* Items Information */}
+        {/* Items Information */}
+        <h3 className="text-lg font-semibold mb-4">Items</h3>
+        <button
+        type="button"
+        onClick={addItem}
+        className="mb-8 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+        required
+      >
+        Add Item
+      </button>
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        {formData.items.map((item, index) => (
+          <div key={index} className="flex items-center space-x-4 mb-2 bg-gray-100 rounded-lg p-3">
+            <div className="flex-1">
+              <label className="block mb-1 font-semibold">Item</label>
+              <select
+                name="itemName"
+                value={item.itemName}
+                onChange={(e) => handleItemChange(index, e)}
+                className="border px-4 py-2 w-[140px] rounded"
+                required
+              >
+                <option value="NONE">Select Item</option>
+                {itemOptions.map((option, i) => (
+                  <option key={i} value={option.label}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-       <h3 className="text-lg font-semibold mb-4">Items</h3>
-       <div className="grid grid-cols-2 gap-4 mb-6">
-         {items.map((item, index) => (
-           <div key={index} className="flex items-center space-x-4 mb-2 bg-gray-100 rounded-lg p-3">
-             <div className="flex-1">
-               <label className="block mb-1 font-semibold">Item</label>
-               <select
-                 name="itemName"
-                 value={item.itemName}  // <-- binds selected value
-                 onChange={(e) => handleItemChange(index, e)}
-                 className="border px-4 py-2 w-[140px] rounded"
-               >
-                 <option selected>Select Item</option>  {/* Placeholder */}
-                 {itemOptions.map((option, i) => (
-                   <option key={i} value={option.label}>
-                     {option.label}
-                   </option>
-                 ))}
-               </select>
-             </div>
+            <div>
+              <label className="block mb-1 font-semibold">Quantity</label>
+              <input
+                type="number"
+                name="quantity"
+                value={item.quantity}
+                onChange={(e) => handleQuantityChange(index, e)}
+                className="border px-4 py-2 w-full rounded"
+                min="1"
+              />
+            </div>
 
-             
+            <div>
+              <label className="block mb-1 font-semibold">Price</label>
+              <input
+                type="text"
+                value={item.price}
+                readOnly
+                className="border px-4 py-2 w-full rounded bg-gray-200"
+              />
+            </div>
 
-             <div>
-               <label className="block mb-1 font-semibold">Quantity</label>
-               <input
-                 type="number"
-                 name="quantity"
-                 value={item.quantity}
-                 onChange={(e) => handleQuantityChange(index, e)}
-                 className="border px-4 py-2 w-full rounded"
-               />
-             </div>
+            <button
+              type="button"
+              onClick={() => removeItem(index)}
+              className="text-red-600 font-semibold"
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+      </div>
 
-             <div>
-               <label className="block mb-1 font-semibold">Price</label>
-               <input
-                 type="text"
-                 value={item.price}
-                 readOnly
-                 className="border px-4 py-2 w-full rounded bg-gray-200"
-               />
-             </div>
-
-             <button
-               type="button"
-               onClick={() => removeItem(index)}
-               className="text-red-600 font-semibold"
-             >
-               Remove
-             </button>
-           </div>
-         ))}
-         <button
-           type="button"
-           onClick={addItem}
-           className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-         >
-           Add Another Item
-         </button>
-       </div>
-       
        {/* Invoice Details */}
        <h3 className="text-lg font-semibold mb-4">Invoice Details</h3>
        <div className="grid grid-cols-3 gap-4 mb-6">
@@ -413,6 +433,7 @@ function CreateInvoice({ userData }) {
              value={formData.invoiceDate}
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
+             required
            />
          </div>
          <div>
@@ -423,6 +444,7 @@ function CreateInvoice({ userData }) {
              value={formData.dueDate}
              onChange={handleChange}
              className="border px-4 py-2 w-full rounded"
+             required
            />
          </div>
          <div>
@@ -449,7 +471,7 @@ function CreateInvoice({ userData }) {
            <label className="block mb-2 font-semibold">Total Amount</label>
            <input
              type="number"
-             value={formData.totalAmount}
+             value={formData.totalAmount} 
              readOnly
              className="border px-4 py-2 w-full rounded bg-gray-200"
            />
