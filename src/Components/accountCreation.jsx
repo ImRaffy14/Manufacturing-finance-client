@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-
+import axios from "axios"
+const API_URL = import.meta.env.VITE_SERVER_URL;
+import { toast } from "react-toastify"
 
 function accountCreation({ userData }) {
     const [username, setUsername] = useState('');
@@ -7,18 +9,48 @@ function accountCreation({ userData }) {
     const [email, setEmail] = useState('');
     const [fullName, setFullName] = useState('');
     const [role, setRole] = useState('');
+    const [image, setImage] = useState(null)
+    const [response, setResponse] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+
+
 
     // Form submission handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    console.log({
-      username,
-      password,
-      email,
-      fullName,
-      role,
-    });
+    setIsLoading(!isLoading)
+    const data = new FormData()
+    data.append("userName", username)
+    data.append("password", password)
+    data.append("email", email)
+    data.append("role", role)
+    data.append("fullName", fullName)
+    if(image){
+        data.append("image", image)
+    }
+
+    try {
+        const res = await axios.post(`${API_URL}/API/Account/CreateAccount`, data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        setIsLoading(false)
+        toast.success(res.data.msg, {
+            position: "top-right"
+          });
+        document.getElementById('account_modal').close();
+      } catch (err) {
+        if (err.response) {
+            setIsLoading(false)
+            setResponse(err.response.data.msg || 'Invalid file type, only JPEG and PNG are allowed!')
+          } else {
+            console.error('Network or unexpected error:', err);
+          }
+        
+      }
+
   };
   
 
@@ -205,7 +237,7 @@ function accountCreation({ userData }) {
                                 type="text" 
                                 placeholder="Username"
                                 value={username}
-                                onChange={(e) => setUsername(e.target.value)} />
+                                onChange={(e) => setUsername(e.target.value)} required />
                             </div>
 
                             <div className="w-full">
@@ -216,7 +248,7 @@ function accountCreation({ userData }) {
                                 type="password" 
                                 placeholder="******************" 
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}/>
+                                onChange={(e) => setPassword(e.target.value)} required/>
                             </div>
                         </div>
 
@@ -226,10 +258,10 @@ function accountCreation({ userData }) {
                                     Email Address
                                 </label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" 
-                                type="text" 
+                                type="email" 
                                 placeholder="Email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}/> 
+                                onChange={(e) => setEmail(e.target.value)} required/> 
                             </div>
 
                             <div className="w-full">
@@ -241,7 +273,7 @@ function accountCreation({ userData }) {
                                 type="text" 
                                 placeholder="Full Name"
                                 value={fullName}
-                                onChange={(e) => setFullName(e.target.value)}/> 
+                                onChange={(e) => setFullName(e.target.value)} required/> 
                             </div>
                         </div>
 
@@ -253,19 +285,19 @@ function accountCreation({ userData }) {
                                 <option>ADMIN</option>
                                 <option>Financial Officer</option>
                                 <option>Auditor</option>
-                                <option>BURAT</option>
                             </select>
                         </div>
 
                         <div className="w-full">
-                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " />
+                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setImage(e.target.files[0])} />
                             </div>
-
+                        {response && <h1 className="text-red-500 font-bold">{response}</h1>}
                         <div className="w-full">
-                            <button className="btn btn-primary w-full font-bold">Submit</button>
+                            {!isLoading && <button className="btn btn-primary w-full font-bold">Submit</button>}
                         </div>
                     </div>
                     </form>
+                        {isLoading && <button className="btn btn-primary w-full font-bold"><span className="loading loading-spinner loading-md"></span></button>}
                 </div>
                 <form method="dialog" className="modal-backdrop">
                     <button>Close</button>

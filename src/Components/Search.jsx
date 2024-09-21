@@ -40,7 +40,7 @@ const Search = ({ userData }) => {
             <IoMdNotificationsOutline className="size-6 cursor-pointer" />
             <div className="dropdown dropdown-end">
               <img
-                src="https://i.pinimg.com/736x/ea/21/05/ea21052f12b135e2f343b0c5ca8aeabc.jpg"
+                src={userData.image}
                 tabIndex={0}
                 role="button"
                 alt="/"
@@ -84,7 +84,7 @@ const Search = ({ userData }) => {
 <dialog id="profile_modal" className="modal">
   <div className="modal-box">
     <div className="py-4">
-      <img src="https://via.placeholder.com/150" alt="Sample Profile" className="rounded-full w-24 h-24 mx-auto mb-4" />
+      <img src={userData.image} alt="Sample Profile" className="rounded-full w-24 h-24 mx-auto mb-4" />
             <p><strong>Full Name:</strong> {userData.fullName}</p>
             <p><strong>Email:</strong> {userData.email}</p>
             <p><strong>Username:</strong> {userData.userName}</p>
