@@ -4,13 +4,14 @@ import { IoCreateOutline } from "react-icons/io5";
 
 function pendingInvoice() {
   const [searchText, setSearchText] = useState('');
+  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
 
   const columns = [
     { name: 'Invoice Number', selector: row => row.invoiceNumber },
     { name: 'Invoice Date', selector: row => row.invoiceDate },
     { name: 'DueDate', selector: row => row.dueDate },
     { name: 'Payment Terms', selector: row => row.paymentTerms },
-    { name: 'Total Ammount', selector: row => row.totalAmount },
+    { name: 'Total Amount', selector: row => row.totalAmount },
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.status === 'Pending' ? 'red' : 'inherit',
                                   fontWeight: 'bold' 
@@ -99,6 +100,11 @@ function pendingInvoice() {
       totalAmount,
     }));
   };
+  // Handle row click to show modal
+  const handleRowClick = (row) => {
+    setSelectedRowData(row);
+    document.getElementById('row_modal').showModal();
+  };
 
   return (
 
@@ -116,6 +122,8 @@ function pendingInvoice() {
                             pagination
                             defaultSortField="name"
                             highlightOnHover
+                            pointerOnHover
+                            onRowClicked={handleRowClick} // Add onRowClicked handler
                             subHeader
                             subHeaderComponent={
                             <input
@@ -131,6 +139,33 @@ function pendingInvoice() {
                 </div>
             </div>
         </div> 
+
+         {/* Modal for displaying row data */}
+      {selectedRowData && (
+        <dialog id="row_modal" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Details for Invoice: {selectedRowData.invoiceNumber}</h3>
+            <div className="py-4">
+              <p><strong>Invoice Number:</strong> {selectedRowData.invoiceNumber}</p>
+              <p><strong>Invoice Date:</strong> {selectedRowData.invoiceDate}</p>
+              <p><strong>Due Date:</strong> {selectedRowData.dueDate}</p>
+              <p><strong>Total Amount:</strong> {selectedRowData.totalAmount}</p>
+              <p><strong>Status:</strong> {selectedRowData.status}</p>
+            </div>
+            <button
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={() => document.getElementById('row_modal').close()}
+            >
+              Close
+            </button>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('row_modal').close()}>
+              Close
+            </button>
+          </form>
+        </dialog>
+      )}
    </>
   );
 

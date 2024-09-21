@@ -5,7 +5,7 @@ import { useSocket } from '../context/SocketContext';
 
 function viewAllAccounts() {
     const [searchText, setSearchText] = useState('');
-
+    const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
     const socket = useSocket()
     
     const columns = [
@@ -33,6 +33,11 @@ function viewAllAccounts() {
           value.toString().toLowerCase().includes(searchText.toLowerCase())
         )
       );
+        // Handle row click to show modal
+  const handleRowClick = (row) => {
+    setSelectedRowData(row);
+    document.getElementById('row_modal').showModal();
+  };
     
 
   return (
@@ -48,6 +53,8 @@ function viewAllAccounts() {
                             pagination
                             defaultSortField="name"
                             highlightOnHover
+                            pointerOnHover
+                            onRowClicked={handleRowClick} // Add onRowClicked handler
                             subHeader
                             subHeaderComponent={
                             <input
@@ -63,6 +70,33 @@ function viewAllAccounts() {
                 </div>
             </div>
         </div>
+
+        {/* Modal for displaying row data */}
+      {selectedRowData && (
+        <dialog id="row_modal" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Details for User: {selectedRowData.userName}</h3>
+            <div className="py-4">
+              <p><strong>Full Name:</strong> {selectedRowData.name}</p>
+              <p><strong>Username</strong> {selectedRowData.username}</p>
+              <p><strong>Password:</strong> {selectedRowData.password}</p>
+              <p><strong>Email:</strong> {selectedRowData.email}</p>
+              <p><strong>Role:</strong> {selectedRowData.role}</p>
+            </div>
+            <button
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={() => document.getElementById('row_modal').close()}
+            >
+              Close
+            </button>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('row_modal').close()}>
+              Close
+            </button>
+          </form>
+        </dialog>
+      )}
 </>
 
   )

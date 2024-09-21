@@ -21,16 +21,27 @@ import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom"
 
 
+
+
 const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+ const [notifications, setNotifications] = useState({
+  hasNotifications: true, 
+  createInvoice: 3 // Notif count
+});
 
+const [isCollapsed, setIsCollapsed] = useState(false);
+const toggleSidebar = () => {
+  setIsCollapsed((prev) => !prev);
+};
 
-  const toggleSidebar = () => {
-    setIsCollapsed((prev) => !prev);
-  };
-
-  
-
+const handleCreateInvoiceClick = () => {
+  const hasNotifications = notifications.createInvoice > 0 ? false : notifications.hasNotifications;
+  setNotifications((prevState) => ({
+    ...prevState,
+    createInvoice: 0, // 0 Notif when clicked
+    hasNotifications: hasNotifications
+  }));
+};
 
   return (
     <div
@@ -116,30 +127,57 @@ const Sidebar = () => {
         </ul>
 
             {/* Accounts Receivable */}
-        <ul className="menu  rounded-box w-56">
-          {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}   
-          {!isCollapsed && 
-            <li>
-            <details open>
-              <summary><RiUserReceived2Fill className="w-5 h-5" /> Accounts Receivable</summary>
-                <ul>
-                 <li>
-                    <details open>
-                      <summary><FaFileInvoiceDollar/>Invoice Generation</summary>
-                          <ul>
-                            <Link to="createInvoice"><li className="hover:text-blue-500"><a>● Create Invoice</a></li></Link>
-                            <Link to="pendingInvoice"><li className="hover:text-blue-500"><a>● View Pending Invoice</a></li></Link>
-                            <Link to="paidInvoice"><li className="hover:text-blue-500"><a>● Paid/Closed Invoices</a></li></Link>
-                          </ul>
-                    </details>
-                </li>
-                
-              </ul>
+            <ul className="menu rounded-box w-56">
+      {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}
+      {!isCollapsed && (
+        <li>
+          <details open>
+            <summary>
+              <RiUserReceived2Fill className="w-5 h-5" />
+              Accounts Receivable
+               {notifications.hasNotifications && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              )}
+            </summary>
+            <ul>
+              <li>
+                <details open>
+                  <summary>
+                    <FaFileInvoiceDollar />
+                    Invoice Generation
+                    {notifications.hasNotifications && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              )}
+                  </summary>
+                  <ul>
+                    <Link to="createInvoice">
+                      <li className="hover:text-blue-500" onClick={handleCreateInvoiceClick}>
+                        <a>
+                          ● Create Invoice
+                          {notifications.createInvoice > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{notifications.createInvoice}</span>
+                          )}
+                        </a>
+                      </li>
+                    </Link>
+                    <Link to="pendingInvoice">
+                      <li className="hover:text-blue-500">
+                        <a>● View Pending Invoice</a>
+                      </li>
+                    </Link>
+                    <Link to="paidInvoice">
+                      <li className="hover:text-blue-500">
+                        <a>● Paid/Closed Invoices</a>
+                      </li>
+                    </Link>
+                  </ul>
+                </details>
+              </li>
+            </ul>
           </details>
-          </li>
-          }
-        </ul>
-
+        </li>
+      )}
+    </ul>
         {/* Accounts Payable */}
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <SiAmazonpay className="w-5 h-5" />}   
