@@ -36,13 +36,12 @@ import ViewAuditHistory from '../Components/viewAuditHistory';
 import ViewCollection from '../Components/viewCollection';
 import InvoiceDownload from '../Components/invoiceDownload';
 import { getProfile } from '../authentication/auth';
-import { useSocket } from '../context/SocketContext'
 
 function AdminPage() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const socket = useSocket()
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -53,14 +52,14 @@ function AdminPage() {
             } catch (error) {
                 console.error('Error fetching profile', error);
                 localStorage.removeItem('token');
-                navigate('/');
+                navigate('/', { state: { expired: true } });
             } finally {
                 setLoading(false);
             }
         };
 
         fetchProfile();
-    }, [navigate]);
+    }, []);
 
    
 

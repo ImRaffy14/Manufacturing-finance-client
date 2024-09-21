@@ -1,7 +1,8 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { Link, useNavigate} from 'react-router-dom'
+import { useNavigate, useLocation} from 'react-router-dom'
 import { login } from '../authentication/auth'
+import { toast } from 'react-toastify'
 
 
 
@@ -9,8 +10,23 @@ function Login () {
     const [userName , setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('')
-    
+
+    const location = useLocation();
+    const expired = location.state?.expired;
     const navigate = useNavigate();
+
+    //CHECKS IF SESSION TOKEN IS EXPIRED
+    useEffect(() => {
+        const checkSession = () => {
+            if(expired){
+                toast.error("Session Expired", {
+                    position: "top-right"
+                  });
+            }
+        }
+
+        checkSession()
+    }, [expired])
 
     useEffect(() => {
         const isAuthenticated = () => {

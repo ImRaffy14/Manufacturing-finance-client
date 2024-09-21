@@ -613,7 +613,7 @@ useEffect(() => {
               <p><strong>DISCOUNTS:</strong></p>
             </div>
             <div className="text-right">
-              <p>{formatCurrency(formData.subTotal || 0)}</p>
+              <p>{formatCurrency(formData.subtotal || 0)}</p>
               <p>{formatCurrency(formData.discounts || 0)}</p>
             </div>
           </div>
