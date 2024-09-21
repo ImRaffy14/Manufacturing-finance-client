@@ -153,7 +153,7 @@ const handleCreateInvoiceClick = () => {
                     <Link to="createInvoice">
                       <li className="hover:text-blue-500" onClick={handleCreateInvoiceClick}>
                         <a>
-                          ● Create Invoice
+                          ● Invoice Request
                           {notifications.createInvoice > 0 && (
                             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{notifications.createInvoice}</span>
                           )}
@@ -263,7 +263,6 @@ const handleCreateInvoiceClick = () => {
                           <ul>
                           <Link to="accountCreation"><li className="hover:text-blue-500"><a>● Account Requests</a></li></Link>
                           <Link to="viewAllAccounts"><li className="hover:text-blue-500"><a>● View All Accounts</a></li></Link>
-                          <Link to=""><li className="hover:text-blue-500"><a>● Manage Roles & Permissions</a></li></Link>
                           </ul>
                     </details>
                 </li>
