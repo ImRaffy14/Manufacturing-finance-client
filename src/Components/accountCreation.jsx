@@ -64,7 +64,6 @@ function accountCreation({ userData }) {
                         {/* head */}
                         <thead>
                             <tr>
-                                <th>Picture</th>
                                 <th>Full Name</th>
                                 <th>Email Address</th>
                                 <th>Request Form</th>
@@ -74,17 +73,6 @@ function accountCreation({ userData }) {
                             {/* row 1 */}
                             <tr>
                                 <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
                                     <div>
                                         <div className="font-bold">Hart Hagerty</div>
                                     </div>
@@ -103,17 +91,6 @@ function accountCreation({ userData }) {
                             {/* row 1 */}
                             <tr>
                                 <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
                                     <div>
                                         <div className="font-bold">Hart Hagerty</div>
                                     </div>
@@ -127,22 +104,12 @@ function accountCreation({ userData }) {
                                 </td>
                             </tr>
                         </tbody>
+
 
                         <tbody>
                             {/* row 1 */}
                             <tr>
                                 <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
                                     <div>
                                         <div className="font-bold">Hart Hagerty</div>
                                     </div>
@@ -156,50 +123,11 @@ function accountCreation({ userData }) {
                                 </td>
                             </tr>
                         </tbody>
+
 
                         <tbody>
                             {/* row 1 */}
                             <tr>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <div className="font-bold">Hart Hagerty</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>harthagerty@gmail.com</div>
-                                </td>
-                                <td>
-                                    {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
-                                </td>
-                            </tr>
-                        </tbody>
-
-                                                <tbody>
-                            {/* row 1 */}
-                            <tr>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
                                 <td>
                                     <div>
                                         <div className="font-bold">Hart Hagerty</div>
