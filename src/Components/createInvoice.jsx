@@ -5,6 +5,8 @@ import { toPng } from "html-to-image";
 import { IoCreateOutline } from "react-icons/io5";
 import InvoiceDownload from './invoiceDownload';
 import { useSocket } from '../context/SocketContext';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 function CreateInvoice({ userData }) {
   const [isPreview, setIsPreview] = useState(false); // State to manage the preview modal
@@ -178,7 +180,10 @@ useEffect(() => {
     if (validateForm()) {
       document.getElementById('preview_modal').showModal();
     } else {
-      alert('Please fill out all required fields before viewing the preview.');
+      toast.error("Please fill out all required fields before viewing the preview.", {
+        position: "top-center",
+      });
+      
     }
   };
 
@@ -201,7 +206,10 @@ useEffect(() => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateItems()) {
-      alert('Please select a valid item for all fields before submitting.');
+      toast.error("Please select a valid item for all fields before submitting.", {
+        position: "top-center"
+      });
+
       return;
     }
     setIsPreview(true);
@@ -239,6 +247,8 @@ useEffect(() => {
     socket.off("trails_error");
   };
 }, []);
+
+
 
   //INVOICE DOWNLOAD COMPONENT
   if (isSubmitted) {
@@ -278,9 +288,9 @@ useEffect(() => {
         </div>
 
 
-   {/* Open the modal using document.getElementById('ID').showModal() method */}
-   
+   {/* Open the modal */}
    <dialog id="invoice_modal" className="modal">
+   <ToastContainer/>
        <div className="modal-box w-full max-w-7xl ">
        <div ref={invoiceRef} className="invoice-container bg-white p-8 rounded-lg shadow-md">
      <h2 className="text-center text-2xl font-bold mb-6">Create Invoice</h2>
