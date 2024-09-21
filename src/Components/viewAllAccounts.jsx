@@ -1,9 +1,12 @@
 import React from 'react'
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
+import { useSocket } from '../context/SocketContext';
 
 function viewAllAccounts() {
     const [searchText, setSearchText] = useState('');
+
+    const socket = useSocket()
     
     const columns = [
         { name: 'Username', selector: row => row.username },
