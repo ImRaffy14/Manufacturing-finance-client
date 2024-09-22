@@ -13,6 +13,7 @@ function ViewAllAccounts({ userData }) {
   const [isLoading, setIsLoading] = useState(true);
   const [tableData, setTableData] = useState([]); // State to hold table data
   const [invalidChange, setInvalidChange] = useState(false)
+  
 
 
   const socket = useSocket();
@@ -240,15 +241,29 @@ function ViewAllAccounts({ userData }) {
               />
             </div>
             <div>
-              <label className="block text-gray-600 font-medium mb-1">Role:</label>
-              <input
-                name="role"
-                value={editData.role}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            {invalidChange && <h1 className='text-red-500 font-medium'>No input changes</h1>}
+            <label className="block text-gray-600 font-medium mb-1">Role:</label>
+            <select
+              name="role"
+              value={editData.role}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            >
+              {/* Placeholder showing the current role */}
+              <option value="" disabled>
+                {editData.role || 'Select a role'}
+              </option>
+              {/* Role options */}
+              <option value="ADMIN">ADMIN</option>
+              <option value="HR 1">HR 1</option>
+              <option value="HR 2">HR 2</option>
+              <option value="HR 3">HR 3</option>
+              <option value="HR 4">HR 4</option>
+              <option value="CORE">CORE</option>
+            </select>
+          </div>
+
+          {/* Error message for invalid change */}
+          {invalidChange && <h1 className='text-red-500 font-medium'>No input changes</h1>}
           </>
         ) : (
           <>
@@ -295,13 +310,69 @@ function ViewAllAccounts({ userData }) {
           </button>
         )}
 
-        {!isEditing &&         
+{!isEditing && (
+  <button
+    className="px-4 py-2 bg-red-600 text-white font-medium rounded hover:bg-red-700"
+    onClick={() => document.getElementById('login_modal').showModal()}
+  >
+    Delete
+  </button>
+)}
+
+{/* Login Modal */}
+<dialog id="login_modal" className="modal">
+  <div className="modal-box flex flex-col mr-5">
+    <h3 className="font-bold text-lg text-center">Login to Confirm Deletion</h3>
+    <p className="py-4 text-center text-gray-600">
+      Please enter your login credentials to confirm the deletion of this account.
+    </p>
+
+    {/* Login Form */}
+    <form className="space-y-4">
+      <div>
+        <label className="block text-gray-600 font-medium mb-1">Username</label>
+        <input
+          type="text"
+          placeholder="Enter your username"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-gray-600 font-medium mb-1">Password</label>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          required
+        />
+      </div>
+
+      <div className="flex justify-between mt-4">
         <button
-        className="px-4 py-2 bg-red-600 text-white font-medium rounded hover:bg-red-700"
-        onClick={handleDelete}
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-        Delete
-        </button>}
+          Confirm Deletion
+        </button>
+        <button
+          type="button"
+          className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+          onClick={() => document.getElementById('login_modal').close()}
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <form method="dialog" className="modal-backdrop">
+    <button type="button" onClick={() => document.getElementById('login_modal').close()}>
+      Close
+    </button>
+  </form>
+</dialog>
 
       </div>
     </div>

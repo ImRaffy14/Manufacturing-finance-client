@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import layout from '../assets/layout.png';
 import { MdOutlineScreenshotMonitor } from "react-icons/md";
 import { RiUserReceived2Fill } from "react-icons/ri";
@@ -6,7 +6,6 @@ import { TbBrandCashapp } from "react-icons/tb";
 import { MdAccountCircle } from "react-icons/md";
 import { SiAmazonpay } from "react-icons/si";
 import { FaList } from "react-icons/fa";
-
 import { MdOutlineCallReceived } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 import { FaFileInvoiceDollar } from "react-icons/fa";
@@ -16,32 +15,73 @@ import { AiOutlineAudit } from "react-icons/ai";
 import { TbReportSearch } from "react-icons/tb";
 import { MdManageAccounts } from "react-icons/md";
 import { MdSpatialTracking } from "react-icons/md";
-
-import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom"
 
 
 
 
 const Sidebar = () => {
- const [notifications, setNotifications] = useState({
-  hasNotifications: true, 
-  createInvoice: 3 // Notif count
-});
+  const [notifications, setNotifications] = useState({
+    hasNotifications: true, 
+    createInvoice: 0,
+    accountRequest: 0, 
+  });
+
+const initialData = [
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 2, customerId: 2, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 3, customerId: 3, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem  : 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  // Add more data as needed
+];
+
+const initialAccountRequestData = [
+  { requestId: 1, accountName: 'John Doe', requestType: 'Account Creation' },
+  { requestId: 2, accountName: 'Jane Smith', requestType: 'Password Reset' },
+  // Add more data as needed
+];
+
+const fetchNotificationData = () => {
+  const createInvoiceCount = initialData.length; //DATA LENGTH
+  const accountRequestCount = initialAccountRequestData.length; // ACCOUNT REQ DATA LENGTH
+
+  // UPDATE
+  setNotifications((prevState) => ({
+    ...prevState,
+    createInvoice: createInvoiceCount,
+    accountRequest: accountRequestCount,
+    hasNotifications: createInvoiceCount > 0 || accountRequestCount > 0,
+  }));
+};
+
+useEffect(() => {
+  fetchNotificationData();
+}, []);
+
+// REMOVE NOTIFICATION
+const handleCreateInvoiceClick = () => {
+  setNotifications((prevState) => ({
+    ...prevState,
+    createInvoice: 0, // SET COUNT 0 WHEN CLICKED
+    hasNotifications: prevState.accountRequest > 0, // UPDATE
+  }));
+};
+
+// REMOVE NOTIFICATION
+const handleAccountRequestClick = () => {
+  setNotifications((prevState) => ({
+    ...prevState,
+    accountRequest: 0, // SET COUNT 0 WHEN CLICKED
+    hasNotifications: prevState.createInvoice > 0, // UPDATE
+  }));
+};
 
 const [isCollapsed, setIsCollapsed] = useState(false);
 const toggleSidebar = () => {
   setIsCollapsed((prev) => !prev);
 };
 
-const handleCreateInvoiceClick = () => {
-  const hasNotifications = notifications.createInvoice > 0 ? false : notifications.hasNotifications;
-  setNotifications((prevState) => ({
-    ...prevState,
-    createInvoice: 0, // 0 Notif when clicked
-    hasNotifications: hasNotifications
-  }));
-};
+
+
 
   return (
     <div
@@ -135,20 +175,22 @@ const handleCreateInvoiceClick = () => {
             <summary>
               <RiUserReceived2Fill className="w-5 h-5" />
               Accounts Receivable
-               {notifications.hasNotifications && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              {notifications.createInvoice > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}
             </summary>
+
             <ul>
               <li>
                 <details open>
                   <summary>
                     <FaFileInvoiceDollar />
                     Invoice Generation
-                    {notifications.hasNotifications && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              {notifications.createInvoice > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}
                   </summary>
+
                   <ul>
                     <Link to="createInvoice">
                       <li className="hover:text-blue-500" onClick={handleCreateInvoiceClick}>
@@ -255,13 +297,28 @@ const handleCreateInvoiceClick = () => {
           {!isCollapsed && 
             <li>
             <details open>
-              <summary><MdAccountCircle className="w-5 h-5" />Accounts Management</summary>
+              <summary><MdAccountCircle className="w-5 h-5" />Accounts Management
+                    {notifications.accountRequest > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                    )}
+              </summary>
                 <ul>
                  <li>
                     <details open>
-                      <summary><MdManageAccounts/>Manage Accounts</summary>
+                      <summary><MdManageAccounts/>Manage Accounts
+                          {notifications.accountRequest > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                          )}
+                      </summary>
+                            {/* Account Request */}
                           <ul>
-                          <Link to="accountCreation"><li className="hover:text-blue-500"><a>● Account Requests</a></li></Link>
+                          <Link to="accountCreation"><li className="hover:text-blue-500" onClick={handleAccountRequestClick}><a>● Account Requests
+                          {notifications.accountRequest > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] rounded-full w-3 h-3 flex items-center justify-center ml-2">
+                              {notifications.accountRequest}
+                            </span>
+                          )}
+                          </a></li></Link>
                           <Link to="viewAllAccounts"><li className="hover:text-blue-500"><a>● View All Accounts</a></li></Link>
                           </ul>
                     </details>
