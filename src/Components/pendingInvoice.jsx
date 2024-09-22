@@ -4,6 +4,8 @@ import { IoCreateOutline } from "react-icons/io5";
 
 function pendingInvoice() {
   const [searchText, setSearchText] = useState('');
+  const [accumulatedAmount, setAccumulatedAmount] = useState(0);
+  const [pendingInvoicesCount, setPendingInvoicesCount] = useState(0);
   const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
 
   const columns = [
@@ -21,11 +23,26 @@ function pendingInvoice() {
   ];
   
   const data = [
-    { invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Pending'},
-    { invoiceNumber: 2, invoiceDate: '2024/05/30', dueDate: '2024/06/30', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Pending'},
-    { invoiceNumber: 3, invoiceDate: '2024/01/24', dueDate: '2024/02/24', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Pending'},
+    { invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'Terms 1', totalAmount: 1209, status: 'Pending' },
+    { invoiceNumber: 2, invoiceDate: '2024/05/30', dueDate: '2024/06/30', paymentTerms: 'Terms 2', totalAmount: 1500, status: 'Pending' },
+    { invoiceNumber: 3, invoiceDate: '2024/01/24', dueDate: '2024/02/24', paymentTerms: 'Terms 3', totalAmount: 1100, status: 'Pending' },
     // Add more data as needed
   ];
+
+
+  useEffect(() => {
+    calculateAccumulatedAmountAndPendingInvoices();
+  }, [data]);
+
+  // Function to calculate the accumulated amount and pending invoices count
+  const calculateAccumulatedAmountAndPendingInvoices = () => {
+    const totalAmount = data.reduce((acc, row) => acc + row.totalAmount, 0);
+    const pendingCount = data.filter(row => row.status === 'Pending').length;
+
+    setAccumulatedAmount(totalAmount);
+    setPendingInvoicesCount(pendingCount);
+  };
+
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
@@ -110,11 +127,28 @@ function pendingInvoice() {
 
     <>
     
-      
-      <div className="max-w-screen-2xl mx-auto mt-4">
+
+      <div className="max-w-screen-2xl mx-auto mt-[80px]">
+      <div className="flex space-x-5">
+         <div className="stats h-[150px] w-[270px] shadow mb-3">
+          <div className="stat">
+             <div className="stat-title">Accumulated Amount</div>
+              <div className="stat-value">{accumulatedAmount}</div>
+            </div>
+        </div>
+
+        <div className="stats shadow mb-3">
+          <div className="stat">
+            <div className="stat-title">Pending Invoice</div>
+            <div className="stat-value">{pendingInvoicesCount}</div>
+          </div>
+        </div>
+        </div>
             <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
                 <div className="mx-4">
                     <div className="overflow-x-auto w-full">
+                      <div className="flex p-2">
+                      </div>
                         <DataTable
                             title="Pending Invoices"
                             columns={columns}

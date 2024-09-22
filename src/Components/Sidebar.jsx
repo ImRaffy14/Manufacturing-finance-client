@@ -193,7 +193,7 @@ const toggleSidebar = () => {
 
                   <ul>
                     <Link to="createInvoice">
-                      <li className="hover:text-blue-500" onClick={handleCreateInvoiceClick}>
+                      <li className="hover:text-blue-500" >
                         <a>
                           ● Invoice Request
                           {notifications.createInvoice > 0 && (
@@ -312,9 +312,9 @@ const toggleSidebar = () => {
                       </summary>
                             {/* Account Request */}
                           <ul>
-                          <Link to="accountCreation"><li className="hover:text-blue-500" onClick={handleAccountRequestClick}><a>● Account Requests
+                          <Link to="accountCreation"><li className="hover:text-blue-500"><a>● Account Requests
                           {notifications.accountRequest > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] rounded-full w-3 h-3 flex items-center justify-center ml-2">
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
                               {notifications.accountRequest}
                             </span>
                           )}
