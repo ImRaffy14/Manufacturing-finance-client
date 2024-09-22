@@ -80,8 +80,6 @@ function CreateInvoice({ userData }) {
     notes: '',
   });
 
-  
-
 
   const itemOptions = [
     { label: 'Soap A', value: 'soap_a', price: 10 },
@@ -89,6 +87,7 @@ function CreateInvoice({ userData }) {
     { label: 'Soap C', value: 'soap_c', price: 20 }
   ];
 
+  
 useEffect(() => {
   calculateTotal();  // Recalculate total whenever items, taxes, or discounts change
 }, [formData.items, formData.taxes, formData.discounts]);
@@ -249,10 +248,14 @@ useEffect(() => {
 }, []);
 
 
+  //Callback function from invoice download
+  const callBackFunction = (newValue) => {
+    setIsSubmitted(newValue)
+  }
 
   //INVOICE DOWNLOAD COMPONENT
   if (isSubmitted) {
-    return <InvoiceDownload invoiceData={responseData} />;
+    return <InvoiceDownload invoiceData={responseData} isSubmitted={callBackFunction}/>;
   }
 
   return (

@@ -4,7 +4,7 @@ import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
 
-function InvoiceDownload({ invoiceData }) {
+function InvoiceDownload({ invoiceData, isSubmitted }) {
   const invoiceRef = useRef(null);
 
   const handleGeneratePdf = async () => {
@@ -27,6 +27,7 @@ function InvoiceDownload({ invoiceData }) {
 
       pdf.addImage(imgData, "PNG", 0, 0, width, height);
       pdf.save(`${invoiceData.customerName} ${invoiceData._id}`);
+      isSubmitted(false)
     } catch (error) {
       console.log(error);
     }

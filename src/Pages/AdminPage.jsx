@@ -108,7 +108,7 @@ function AdminPage() {
                     <Route path="reviewSupplierInvoice" element={<ReviewSupplierInvoice />} />
                     <Route path="supplierPaymentHistory" element={<RupplierPaymentHistory />} />
                     <Route path="transactionRecords" element={<TransactionRecords />} />
-                    <Route path="viewAllAccounts" element={<ViewAllAccounts />} />
+                    <Route path="viewAllAccounts" element={<ViewAllAccounts userData={user}/>} />
                     <Route path="viewAuditHistory" element={<ViewAuditHistory />} />
                     <Route path="viewCollection" element={<ViewCollection />} />
                     <Route path="invoiceDownload" element={<InvoiceDownload />} />

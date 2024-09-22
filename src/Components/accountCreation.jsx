@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from "axios"
 const API_URL = import.meta.env.VITE_SERVER_URL;
 import { toast } from "react-toastify"
+import { useSocket } from '../context/SocketContext';
+
 
 function accountCreation({ userData }) {
     const [username, setUsername] = useState('');
@@ -13,7 +15,7 @@ function accountCreation({ userData }) {
     const [response, setResponse] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
-
+    const socket = useSocket()
 
     // Form submission handler
   const handleSubmit = async (e) => {
@@ -41,6 +43,18 @@ function accountCreation({ userData }) {
             position: "top-right"
           });
         document.getElementById('account_modal').close();
+        
+        const accountCreationTrails = {
+            userId: userData._id,
+            userName: userData.userName,
+            role: userData.role,
+            action: "CREATED AN ACCOUNT",
+            description: `Created an account for ${res.data.dataUser.userName}. ACCOUNT ID ${res.data.dataUser.user_id}`,
+      
+          };
+      
+          socket.emit("addAuditTrails", accountCreationTrails);
+
       } catch (err) {
         if (err.response) {
             setIsLoading(false)
@@ -217,7 +231,7 @@ function accountCreation({ userData }) {
                         </div>
 
                         <div className="w-full">
-                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setImage(e.target.files[0])} />
+                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setImage(e.target.files[0])} required />
                             </div>
                         {response && <h1 className="text-red-500 font-bold">{response}</h1>}
                         <div className="w-full">

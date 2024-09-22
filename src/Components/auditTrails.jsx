@@ -32,7 +32,7 @@ function AuditTrails() {
     });
 
     return () => {
-      socket.off('receive_audit_trails'); // Cleanup listener on component unmount
+      socket.off('receive_audit_trails'); 
     };
   }, [socket]);
 
@@ -56,7 +56,7 @@ function AuditTrails() {
   if (isLoading) {
     return (
       <div className="flex w-full flex-col gap-4">
-        <div className="skeleton h-[270px] w-full"></div>
+        <div className="skeleton h-[520px] w-full"></div>
         <div className="skeleton h-20 w-full"></div>
         <div className="skeleton h-20 w-full"></div>
         <div className="skeleton h-20 w-full"></div>
