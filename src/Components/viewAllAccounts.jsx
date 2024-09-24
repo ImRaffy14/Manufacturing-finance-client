@@ -13,6 +13,7 @@ function ViewAllAccounts({ userData }) {
   const [isLoading, setIsLoading] = useState(true);
   const [tableData, setTableData] = useState([]); // State to hold table data
   const [invalidChange, setInvalidChange] = useState(false)
+  const [password, setPassword] = useState('')
   
 
 
@@ -109,11 +110,15 @@ function ViewAllAccounts({ userData }) {
 
 
   //HANDLES DELETE
-  const handleDelete = async () => {
-
+  const handleDelete = async (e) => {
+    
+  e.preventDefault();
+    
    try{
     const response = await axios.post(`${API_URL}/API/Account/DeleteAccount`, {
       userId: selectedRowData._id,
+      userName: userData.userName,
+      password: password
       });
 
       if(response){
@@ -130,13 +135,20 @@ function ViewAllAccounts({ userData }) {
         toast.success(response.data.message, {
           position: "top-right"
         })
+
+        document.getElementById('row_modal').close();
+        document.getElementById('login_modal').close();
       }
    }
    catch(error){
-    console.error(error)
+    if(error.response){
+      console.log(error.response.data.msg)
+    }
+    else{
+      console.error(error)
+    }
    }
 
-    document.getElementById('row_modal').close();
   };
 
   const filteredData = tableData.filter(row =>
@@ -325,7 +337,7 @@ function ViewAllAccounts({ userData }) {
     <h3 className="font-bold text-lg text-center">Enter Password to Confirm Deletion</h3>
 
     {/* Login Form */}
-    <form className="space-y-4">
+    <form className="space-y-4" onSubmit={handleDelete}>
       <div>
         <label className="block text-gray-600 font-medium mb-1">Password</label>
         <input
@@ -333,6 +345,8 @@ function ViewAllAccounts({ userData }) {
           placeholder="Enter your password"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
           required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </div>
 
