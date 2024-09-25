@@ -14,6 +14,7 @@ function ViewAllAccounts({ userData }) {
   const [tableData, setTableData] = useState([]); // State to hold table data
   const [invalidChange, setInvalidChange] = useState(false)
   const [password, setPassword] = useState('')
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false)
   
 
 
@@ -115,8 +116,11 @@ function ViewAllAccounts({ userData }) {
   e.preventDefault();
     
    try{
+
+    setIsSubmitLoading(true)
     const response = await axios.post(`${API_URL}/API/Account/DeleteAccount`, {
       userId: selectedRowData._id,
+      public_id: selectedRowData.image.public_id,
       userName: userData.userName,
       password: password
       });
@@ -136,6 +140,7 @@ function ViewAllAccounts({ userData }) {
           position: "top-right"
         })
 
+        setIsSubmitLoading(true)
         document.getElementById('row_modal').close();
         document.getElementById('login_modal').close();
       }
@@ -143,9 +148,11 @@ function ViewAllAccounts({ userData }) {
    catch(error){
     if(error.response){
       console.log(error.response.data.msg)
+      setIsSubmitLoading(false)
     }
     else{
       console.error(error)
+      setIsSubmitLoading(false)
     }
    }
 
@@ -357,6 +364,14 @@ function ViewAllAccounts({ userData }) {
         >
           Confirm Deletion
         </button>
+        {isSubmitLoading && 
+          <button
+          type="submit"
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-blue-700"
+        >
+          <span className="loading loading-spinner loading-md"></span>  
+        </button>
+        }
         <button
           type="button"
           className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"

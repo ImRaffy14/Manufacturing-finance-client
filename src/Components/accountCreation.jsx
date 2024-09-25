@@ -39,9 +39,13 @@ function accountCreation({ userData }) {
           },
         });
         setIsLoading(false)
-        toast.success(res.data.msg, {
-            position: "top-right"
-          });
+        
+        if(res){
+            toast.success(res.data.msg, {
+                position: "top-right"
+              });
+        }
+
         document.getElementById('account_modal').close();
         
         const accountCreationTrails = {
