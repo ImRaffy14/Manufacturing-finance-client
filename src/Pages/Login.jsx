@@ -10,7 +10,7 @@ function Login () {
     const [userName , setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('')
-
+    const [isLoading, setIsLoading] = useState(false)
     const location = useLocation();
     const expired = location.state?.expired;
     const navigate = useNavigate();
@@ -41,8 +41,9 @@ function Login () {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-       
+
         try{
+            setIsLoading(true)
             const userData = { userName, password }
             const response = await login(userData)
 
@@ -55,10 +56,13 @@ function Login () {
                 setErrorMessage(err.response.data.msg);
                 setUserName("")
                 setPassword("") 
+                setIsLoading(false)
             } else if (err.request) {
                 setErrorMessage('No response from server');
+                setIsLoading(false)
             } else {
                 setErrorMessage('Error during login');
+                setIsLoading(false)
             }
         }
     }
@@ -101,10 +105,15 @@ function Login () {
                         {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage}</h1>}
                         
                         <div className="form-control ">
-                            <button className="btn btn-primary w-full py-3 text-lg font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg">
+                            {!isLoading && <button className="btn btn-primary w-full py-3 text-lg font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg">
                                 Login
-                            </button>
-                        </div>
+                            </button>}
+                        </div>   
+                                 
+                            {isLoading && <button className="btn btn-primary w-full py-3 text-lg font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg">
+                                <span className="loading loading-spinner loading-md"></span>
+                            </button>}
+                        
                     </form>
                 </div>
                         
