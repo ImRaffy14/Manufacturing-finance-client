@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import DataTable from 'react-data-table-component';
 import axios from "axios"
 const API_URL = import.meta.env.VITE_SERVER_URL;
 import { toast } from "react-toastify"
 import { useSocket } from '../context/SocketContext';
+import { CiSquareQuestion } from "react-icons/ci";
 
 
 function accountCreation({ userData }) {
@@ -14,8 +16,37 @@ function accountCreation({ userData }) {
     const [image, setImage] = useState(null)
     const [response, setResponse] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
+    const [searchText, setSearchText] = useState('');
+    
 
     const socket = useSocket()
+
+    const columns = [
+        { name: 'Full Name', selector: row => row.fullName },
+        { name: 'Email Address', selector: row => row.email },
+        { name: 'Request Form', selector: row => (<a className="text-4xl"><CiSquareQuestion className="  hover:cursor-pointer" 
+            onClick={() => document.getElementById('account_modal').showModal()}/></a>
+              
+          ) },
+      ];
+      
+      const data = [
+        {fullName: 'Muhammed Sahklahami', email: 'suwqkeqen@gmail.com', createInvoice: '' },
+        {fullName: 'Sumbul Almuete', email: 'Sumbul@gmail.com', createInvoice: '' },
+        {fullName: 'Daniel Akhmalahibi', email: 'suwqDanielkeqen@gmail.com', createInvoice: '' },
+        // Add more data as needed
+      ];
+
+      const handleSearch = (event) => {
+        setSearchText(event.target.value);
+      };
+  // Filter data based on search text
+  const filteredData = data.filter(row =>
+    Object.values(row).some(value =>
+      value.toString().toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
+
 
     // Form submission handler
   const handleSubmit = async (e) => {
@@ -74,97 +105,33 @@ function accountCreation({ userData }) {
 
     return (
         <>
-        
-            <div className="max-w-screen-2xl mx-auto mt-4">
-                <div className="flex flex-col items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
+              <div className="max-w-screen-2xl mx-auto mt-4">
+            <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
+                <div className="mx-4">
                     <div className="overflow-x-auto w-full">
-                    <table className="table w-full">
-                        {/* head */}
-                        <thead>
-                            <tr>
-                                <th>Full Name</th>
-                                <th>Email Address</th>
-                                <th>Request Form</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* row 1 */}
-                            <tr>
-                                <td>
-                                    <div>
-                                        <div className="font-bold">Hart Hagerty</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>harthagerty@gmail.com</div>
-                                </td>
-                                <td>
-                                    {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
-                                </td>
-                            </tr>
-                        </tbody>
-
-                        <tbody>
-                            {/* row 1 */}
-                            <tr>
-                                <td>
-                                    <div>
-                                        <div className="font-bold">Hart Hagerty</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>harthagerty@gmail.com</div>
-                                </td>
-                                <td>
-                                    {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
-                                </td>
-                            </tr>
-                        </tbody>
-
-
-                        <tbody>
-                            {/* row 1 */}
-                            <tr>
-                                <td>
-                                    <div>
-                                        <div className="font-bold">Hart Hagerty</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>harthagerty@gmail.com</div>
-                                </td>
-                                <td>
-                                    {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
-                                </td>
-                            </tr>
-                        </tbody>
-
-
-                        <tbody>
-                            {/* row 1 */}
-                            <tr>
-                                <td>
-                                    <div>
-                                        <div className="font-bold">Hart Hagerty</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>harthagerty@gmail.com</div>
-                                </td>
-                                <td>
-                                    {/* Modal Button */}
-                                    <button className="btn btn-outline" onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <DataTable
+                            title="Invoice Creation"
+                            columns={columns}
+                            data={filteredData}
+                            pagination
+                            defaultSortField="name"
+                            highlightOnHover
+                            subHeader
+                            subHeaderComponent={
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchText}
+                                onChange={handleSearch}
+                                className="mb-2 p-2 border border-gray-400 rounded-lg"
+                            />
+                            }
+                        />
+                    </div>
                 </div>
             </div>
-            </div>
-
+        </div>
+        
             {/* Modal */}
             <dialog id="account_modal" className="modal">
                 <div className="modal-box shadow-xl">
