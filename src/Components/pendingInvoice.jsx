@@ -1,9 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import logo from '../assets/JJM.jfif';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas-pro';
 import DataTable from 'react-data-table-component';
 import { IoCreateOutline } from "react-icons/io5";
 import { useSocket } from '../context/SocketContext';
 
 function pendingInvoice() {
+  const invoiceRef = useRef(null);
+
+  const handleGeneratePdf = async () => {
+    const inputData = invoiceRef.current;
+    try {
+      const canvas = await html2canvas(inputData);
+      const imgData = canvas.toDataURL("image/png");
+
+      const customWidth = 500;  // Adjust this value to set your custom width
+      const customHeight =700; // Adjust this value to set your custom height
+
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [customWidth, customHeight],
+      });
+
+      const width = pdf.internal.pageSize.getWidth();
+      const height = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(imgData, "PNG", 0, 0, width, height);
+      pdf.save(`${selectedRowData.customerName} ${selectedRowData._id}`);
+      isSubmitted(false)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Function to format the price with Philippine Peso and commas
+  const formatCurrency = (value) => {
+    return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  };
+
   const [searchText, setSearchText] = useState('');
   const [accumulatedAmount, setAccumulatedAmount] = useState(0);
   const [pendingInvoicesCount, setPendingInvoicesCount] = useState(0);
@@ -14,10 +50,17 @@ function pendingInvoice() {
   const socket = useSocket()
 
   const columns = [
-    { name: 'Invoice Number', selector: row => row._id },
+    { name: 'Invoice ID ', selector: row => row._id },
+    { name: 'Customer ID', selector: row => row.customerId },
+    { name: 'Customer Name', selector: row => row.customerName },
+    { name: 'Contact Details', selector: row => row.customerContact },
     { name: 'Invoice Date', selector: row => row.invoiceDate },
     { name: 'DueDate', selector: row => row.dueDate },
     { name: 'Payment Terms', selector: row => row.paymentTerms },
+    { name: 'Items', selector: row => row.items.map
+      (item => `${item.itemName} (Qty: ${item.quantity}, Price: ₱${item.price})`).join(', '), 
+                  wrap: true // Optional: wrap text to avoid overflow
+    },
     { name: 'Total Amount', selector: row => row.totalAmount },
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.Status === 'Pending' ? 'red' : 'inherit',
@@ -25,27 +68,11 @@ function pendingInvoice() {
                                  }}>
                                 {row.Status}
                                 </span>) },
+                                
   ];
   
   const data = pendingInvoiceData;
-
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
-  //TANGINAMO ANGELO AYUSIN MO TONG PART NA TO, LAHAT PALABASIN MO SA ROW IKAW NA MAG KABIT
+  console.log(pendingInvoiceData);
 
   //FETCHING PENDING INVOICE DATA
   useEffect(() => {
@@ -67,7 +94,7 @@ function pendingInvoice() {
   // Function to calculate the accumulated amount and pending invoices count
   const calculateAccumulatedAmountAndPendingInvoices = () => {
     const totalAmount = data.reduce((acc, row) => acc + row.totalAmount, 0);
-    const pendingCount = data.filter(row => row.status === 'Pending').length;
+    const pendingCount = data.filter(row => row.Status === 'Pending').length;
 
     setAccumulatedAmount(totalAmount);
     setPendingInvoicesCount(pendingCount);
@@ -84,6 +111,10 @@ function pendingInvoice() {
       value.toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
+  const confirmSubmission = () => {
+    socket.emit("create_invoice", pendingInvoiceData);
+  };
+
   
   // Handle row click to show modal
   const handleRowClick = (row) => {
@@ -154,18 +185,78 @@ function pendingInvoice() {
             </div>
         </div> 
 
+        
+
          {/* Modal for displaying row data */}
       {selectedRowData && (
         <dialog id="row_modal" className="modal">
           <div className="modal-box">
-            <h3 className="font-bold text-lg">Details for Invoice: {selectedRowData.invoiceNumber}</h3>
-            <div className="py-4">
-              <p><strong>Invoice Number:</strong> {selectedRowData._id}</p>
-              <p><strong>Invoice Date:</strong> {selectedRowData.invoiceDate}</p>
-              <p><strong>Due Date:</strong> {selectedRowData.dueDate}</p>
-              <p><strong>Total Amount:</strong> {selectedRowData.totalAmount}</p>
-              <p><strong>Status:</strong> {selectedRowData.status}</p>
+            
+          <div ref={invoiceRef} className="invoice-container bg-white p-8 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold mb-4">Pending Invoice</h2>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">Customer Information</h3>
+          <p><strong>Customer ID:</strong> {selectedRowData.customerId}</p>
+          <p><strong>Name:</strong> {selectedRowData.customerName}</p>
+          <p><strong>Contact:</strong> {selectedRowData.customerContact}</p>
+        </div>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">Invoice Information</h3>
+          <p><strong>Invoice ID:</strong> {selectedRowData._id}</p>
+          <p><strong>Invoice Date:</strong> {selectedRowData.invoiceDate}</p>
+          <p><strong>Due Date:</strong> {selectedRowData.dueDate}</p>
+        </div>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">Additional Information</h3>
+          <p><strong>Payment Terms:</strong> {selectedRowData.paymentTerms}</p>
+        </div>
+        <div className="mt-10">
+          <table className="w-full text-left table-auto border-collapse">
+            <thead>
+              <tr className="border-b">
+                <th className="py-2">DESCRIPTION</th>
+                <th className="py-2 text-right">UNIT PRICE</th>
+                <th className="py-2 text-right">QTY</th>
+                <th className="py-2 text-right">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedRowData.items && selectedRowData.items.map((item, index) => (
+                <tr key={index} className="border-b">
+                  <td className="py-2">{item.itemName}</td>
+                  <td className="py-2 text-right">{formatCurrency(item.price)}</td>
+                  <td className="py-2 text-right">{item.quantity}</td>
+                  <td className="py-2 text-right">
+                    {formatCurrency(item.price * item.quantity)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Subtotal, Discounts, and Total */}
+        <div className="mt-8">
+          <div className="border-t-2 border-gray-300 my-2"></div>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-right">
+              <p className="text-lg font-bold"><strong>TOTAL AMOUNT:</strong></p>
             </div>
+            <div className="text-right">
+              <p className="text-lg font-bold">{formatCurrency(selectedRowData.totalAmount || 0)}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="text-center mt-4">
+          <button
+            type="button"
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
+            onClick={confirmSubmission} // Trigger submission
+          >
+            Submit Invoice
+          </button>
+      </div>
             <button
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               onClick={() => document.getElementById('row_modal').close()}
@@ -179,6 +270,8 @@ function pendingInvoice() {
             </button>
           </form>
         </dialog>
+
+
       )}
    </>
   );

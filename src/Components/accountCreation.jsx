@@ -225,8 +225,11 @@ function accountCreation({ userData }) {
                             onChange={(e) => setRole(e.target.value)}>
                                 <option selected>Select Role</option>
                                 <option>ADMIN</option>
-                                <option>Financial Officer</option>
-                                <option>Auditor</option>
+                                <option>CHIEF FINANCIAL OFFICER</option>
+                                <option>FINANCE MANAGER</option>
+                                <option>ACCOUNTANT</option>
+                                <option>FINANCIAL ANALYST</option>
+                                <option>TREASURER</option>
                             </select>
                         </div>
 

@@ -266,11 +266,11 @@ function ViewAllAccounts({ userData }) {
               </option>
               {/* Role options */}
               <option value="ADMIN">ADMIN</option>
-              <option value="HR 1">HR 1</option>
-              <option value="HR 2">HR 2</option>
-              <option value="HR 3">HR 3</option>
-              <option value="HR 4">HR 4</option>
-              <option value="CORE">CORE</option>
+              <option value="CHIEF FINANCIAL OFFICER">CHIEF FINANCIAL OFFICER</option>
+              <option value="FINANCE MANAGER">FINANCE MANAGER</option>
+              <option value="ACCOUNTANT">ACCOUNTANT</option>
+              <option value="FINANCIAL ANALYST">FINANCIAL ANALYST</option>
+              <option value="TREASURER">TREASURER</option>
             </select>
           </div>
 

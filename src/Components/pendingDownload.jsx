@@ -4,7 +4,7 @@ import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
 
-function InvoiceDownload({ invoiceData, isSubmitted }) {
+function pendingDownload({ invoiceData, isSubmitted }) {
   const invoiceRef = useRef(null);
 
   const handleGeneratePdf = async () => {
@@ -147,4 +147,4 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
   );
 }
 
-export default InvoiceDownload;
+export default pendingDownload;
