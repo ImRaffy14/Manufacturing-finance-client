@@ -1,94 +1,192 @@
 import React, { useState, useEffect } from "react";
-import { FaUserCheck, FaFileInvoiceDollar, FaCheckCircle, FaTimesCircle } from "react-icons/fa"; 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'; 
+import { FaUserCheck, FaFileInvoiceDollar, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaUsers } from 'react-icons/fa';
+import { MdError } from "react-icons/md";
+import { HiOutlineCurrencyDollar } from "react-icons/hi";
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
+import { RiPassPendingLine } from "react-icons/ri";
+import { MdOutlinePeopleAlt, MdRemoveRedEye } from "react-icons/md";
+import { GrMoney } from "react-icons/gr";
+import { IoCodeDownloadOutline } from "react-icons/io5";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { CiTrash } from "react-icons/ci";
+import { MdOutlineChat } from "react-icons/md";
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
-const Dashboard = () => {
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+function Dashboard() {
+   // Sample data for financial chart
+   const financialChartData = {
+    labels: ["January", "February", "March", "April", "May", "June"],
+    datasets: [
+      {
+        label: "Revenue",
+        data: [500, 700, 800, 600, 900, 1100],
+        borderColor: "#10B981", // Emerald green line color
+        backgroundColor: "rgba(16, 185, 129, 0.1)", // Light green background
+        fill: true,
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
+
+  
   // sample data
   const [dashboardData, setDashboardData] = useState({
     accountRequests: 50,
     invoiceRequests: 120,
     approvedInvoices: 100,
     rejectedInvoices: 20,
-    marketTrendsData: [
-      { name: "Page A", uv: 4000, pv: 2400 },
-      { name: "Page B", uv: 3000, pv: 1398 },
-      { name: "Page C", uv: 2000, pv: 9800 },
-      { name: "Page D", uv: 2780, pv: 3908 },
-      { name: "Page E", uv: 1890, pv: 4800 },
-      { name: "Page F", uv: 2390, pv: 3800 },
-      { name: "Page G", uv: 3490, pv: 4300 },
-    ],
+    detectedAnomalies: 10,
   });
 
   useEffect(() => {
     const fetchDashboardData = () => {
+      // Fetch and set data here
     };
 
     fetchDashboardData();
   }, []);
 
   return (
-    <div className="dashboard p-6">
-      <h2 className="text-3xl font-bold mb-4">Dashboard Overview</h2>
-      <div className="overview grid grid-cols-4 gap-6 mb-10">
-        <Card
-          icon={<FaUserCheck className="text-blue-500 text-4xl" />}
-          title="Account Requests"
-          value={dashboardData.accountRequests}
-        />
-        <Card
-          icon={<FaFileInvoiceDollar className="text-green-500 text-4xl" />}
-          title="Invoice Requests"
-          value={dashboardData.invoiceRequests}
-        />
-        <Card
-          icon={<FaCheckCircle className="text-green-500 text-4xl" />}
-          title="Approved Invoices"
-          value={dashboardData.approvedInvoices}
-        />
-        <Card
-          icon={<FaTimesCircle className="text-red-500 text-4xl" />}
-          title="Rejected Invoices"
-          value={dashboardData.rejectedInvoices}
-        />
+    <>
+
+    <div className="flex items-center justify-center gap-4 p-4 overflow-x-auto flex-wrap">
+          {/* Account Requests*/}
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-md">Account Requests</p>
+            </div>
+            <div className="flex gap-3 my-3">
+            <FaUsers className="text-gray-600 text-2xl my-2" />
+              <p className="text-4xl font-bold">{dashboardData.accountRequests}</p>
+            </div>
+          </div>
+
+           {/* Invoice Requests*/}
+           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-md">Invoice Requests</p>
+            </div>
+            <div className="flex gap-3 my-3">
+            <FaFileInvoiceDollar  className="text-gray-600 text-2xl my-2" />
+              <p className="text-4xl font-bold">{dashboardData.invoiceRequests}</p>
+            </div>
+          </div>
+
+           {/* Approved Invoices*/}
+           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-md">Approved Invoices</p>
+            </div>
+            <div className="flex gap-3 my-3">
+            <FaCheckCircle   className="text-gray-600 text-2xl my-2" />
+              <p className="text-4xl font-bold">{dashboardData.approvedInvoices}</p>
+            </div>
+          </div>
+
+          {/* Rejected Invoices*/}
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-md">Invoice Requests</p>
+            </div>
+            <div className="flex gap-3 my-3">
+            <FaTimesCircle    className="text-gray-600 text-2xl my-2" />
+              <p className="text-4xl font-bold">{dashboardData.rejectedInvoices}</p>
+            </div>
+          </div>
+
+           {/* Detected Anomalies*/}
+           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-md">Detected Anomalies</p>
+            </div>
+            <div className="flex gap-3 my-3">
+            <MdError className="text-gray-600 text-2xl my-2" />
+              <p className="text-4xl font-bold">{dashboardData.rejectedInvoices}</p>
+            </div>
+          </div>
       </div>
 
-      <h2 className="text-2xl font-semibold mb-4">Market Trends</h2>
-      <div className="market-trends-section bg-white rounded-xl shadow-xl p-6">
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart
-            data={dashboardData.marketTrendsData}
-            margin={{
-              top: 5, right: 30, left: 20, bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-          </LineChart>
-        </ResponsiveContainer>
-        
-      </div>
-    </div>
-  );
-};
+      <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
+          {/* Sales Card */}
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-sm">Sales</p>
+              <GrMoney className="text-gray-600 text-xl" />
+            </div>
+            <div className="flex gap-3 my-3">
+              <p className="text-3xl font-bold">4859</p>
+              <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
+                <IoIosArrowUp className="text-green-700" /> 18.2%
+              </p>
+            </div>
+            <div className="my-3">
+              <p className="text-green-700 font-semibold">
+                +47 <span className="text-gray-500">than past week</span>
+              </p>
+            </div>
+          </div>
 
+          {/* Revenue Card */}
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-sm">Revenue</p>
+              <HiOutlineCurrencyDollar className="text-gray-600 text-xl" />
+            </div>
+            <div className="flex gap-3 my-3">
+              <p className="text-3xl font-bold">$537.83</p>
+              <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
+                <IoIosArrowUp className="text-green-700" /> 10.8%
+              </p>
+            </div>
+            <div className="my-3">
+              <p className="text-green-700 font-semibold">
+                +$128.58 <span className="text-gray-500">than past week</span>
+              </p>
+            </div>
+          </div>
 
-const Card = ({ icon, title, value }) => {
-  return (
-    <div className="card bg-white p-6 rounded-lg shadow-xl hover:shadow-lg transition-shadow duration-300">
-      <div className="flex items-center">
-        <div className="mr-4">{icon}</div>
-        <div>
-          <h3 className="font-semibold text-lg">{title}</h3>
-          <p className="text-3xl font-bold mt-2">{value}</p>
+          {/* Spending Card */}
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-sm">Spending</p>
+              <RiPassPendingLine className="text-gray-600 text-xl" />
+            </div>
+            <div className="flex gap-3 my-3">
+              <p className="text-3xl font-bold">$219.65</p>
+              <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
+                <IoIosArrowUp className="text-green-700" /> 9.1%
+              </p>
+            </div>
+            <div className="my-3">
+              <p className="text-green-700 font-semibold">
+                +$88.67 <span className="text-gray-500">than past week</span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+        <div className="p-4">
+        {/* Financial chart */}
+        <div className="bg-white shadow-lg rounded-lg p-6">
+          <h3 className="text-xl font-semibold text-gray-700 mb-4">Financial Overview</h3>
+          <Line data={financialChartData} options={chartOptions} />
         </div>
       </div>
-    </div>
+    </>
   );
-};
+}
 
 export default Dashboard;

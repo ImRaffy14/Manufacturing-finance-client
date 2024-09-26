@@ -56,7 +56,6 @@ function pendingInvoice() {
     { name: 'Contact Details', selector: row => row.customerContact },
     { name: 'Invoice Date', selector: row => row.invoiceDate },
     { name: 'DueDate', selector: row => row.dueDate },
-    { name: 'Payment Terms', selector: row => row.paymentTerms },
     { name: 'Items', selector: row => row.items.map
       (item => `${item.itemName} (Qty: ${item.quantity}, Price: ₱${item.price})`).join(', '), 
                   wrap: true // Optional: wrap text to avoid overflow
@@ -294,7 +293,7 @@ function pendingInvoice() {
         {/* Logo and Invoice Title */}
         <div className="flex justify-between items-center mb-4">
           <img src={logo} alt="Company Logo" className="w-32 h-auto" /> {/* Adjust size as necessary */}
-          <h1 className="text-4xl font-bold tracking-wide text-right">PENDING INVOICE</h1>
+          <h1 className="text-4xl font-bold tracking-wide text-right">INVOICE</h1>
         </div>
 
         {/* Customer Information */}
