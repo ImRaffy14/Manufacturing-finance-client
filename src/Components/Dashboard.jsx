@@ -62,7 +62,7 @@ function Dashboard() {
   return (
     <>
 
-    <div className="flex items-center justify-center gap-4 p-4 overflow-x-auto flex-wrap">
+    <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
           {/* Account Requests*/}
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
