@@ -111,7 +111,7 @@ function accountCreation({ userData }) {
                 <div className="mx-4">
                     <div className="overflow-x-auto w-full">
                         <DataTable
-                            title="Invoice Creation"
+                            title="Account Requests"
                             columns={columns}
                             data={filteredData}
                             pagination
