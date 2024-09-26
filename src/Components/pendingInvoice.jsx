@@ -233,7 +233,7 @@ function pendingInvoice() {
         <div className="mt-10">
           
           {/* Order Info */}
-          <h3 className="text-lg font-bold mt-5 font-semibold"><strong>Order Information</strong></h3>
+          <h3 className="text-lg mt-5 font-semibold"><strong>Order Information</strong></h3>
           <div className="flex flex-col">
             <p><strong>Order Number:</strong> {selectedRowData.orderNumber || '01234'}</p>
             <p><strong>Order Date:</strong> {selectedRowData.orderDate || '11.02.2030'}</p>

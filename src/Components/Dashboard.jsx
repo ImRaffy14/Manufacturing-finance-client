@@ -54,7 +54,7 @@ const Dashboard = () => {
       </div>
 
       <h2 className="text-2xl font-semibold mb-4">Market Trends</h2>
-      <div className="market-trends-section bg-white rounded shadow p-6">
+      <div className="market-trends-section bg-white rounded-xl shadow-xl p-6">
         <ResponsiveContainer width="100%" height={400}>
           <LineChart
             data={dashboardData.marketTrendsData}
@@ -70,6 +70,7 @@ const Dashboard = () => {
             <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
           </LineChart>
         </ResponsiveContainer>
+        
       </div>
     </div>
   );
@@ -78,7 +79,7 @@ const Dashboard = () => {
 
 const Card = ({ icon, title, value }) => {
   return (
-    <div className="card bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+    <div className="card bg-white p-6 rounded-lg shadow-xl hover:shadow-lg transition-shadow duration-300">
       <div className="flex items-center">
         <div className="mr-4">{icon}</div>
         <div>
