@@ -24,8 +24,9 @@ function accountCreation({ userData }) {
     const columns = [
         { name: 'Full Name', selector: row => row.fullName },
         { name: 'Email Address', selector: row => row.email },
-        { name: 'Request Form', selector: row => (<a className="text-4xl"><CiSquareQuestion className="  hover:cursor-pointer" 
-            onClick={() => document.getElementById('account_modal').showModal()}/></a>
+        { name: 'Request Form', selector: row => (
+            <button className="btn btn-outline hover:cursor-pointer m-2"
+            onClick={() => document.getElementById('account_modal').showModal()}>View Form</button>
               
           ) },
       ];
