@@ -27,7 +27,7 @@ function Dashboard() {
         borderColor: "#10B981", // Emerald green line color
         backgroundColor: "rgba(16, 185, 129, 0.1)", // Light green background
         fill: true,
-        tension: 0.4,
+        tension: 0,
       },
     ],
   };
@@ -180,7 +180,7 @@ function Dashboard() {
         </div>
         <div className="p-4">
         {/* Financial chart */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
+        <div className="bg-white shadow-xl rounded-lg p-6">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">Financial Overview</h3>
           <Line data={financialChartData} options={chartOptions} />
         </div>
