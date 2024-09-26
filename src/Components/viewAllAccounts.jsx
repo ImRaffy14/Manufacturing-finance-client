@@ -15,6 +15,7 @@ function ViewAllAccounts({ userData }) {
   const [invalidChange, setInvalidChange] = useState(false)
   const [password, setPassword] = useState('')
   const [isSubmitLoading, setIsSubmitLoading] = useState(false)
+  const [error, setError] = useState("")
   
 
 
@@ -140,19 +141,22 @@ function ViewAllAccounts({ userData }) {
           position: "top-right"
         })
 
-        setIsSubmitLoading(true)
+        setIsSubmitLoading(false)
+        setPassword("")
         document.getElementById('row_modal').close();
         document.getElementById('login_modal').close();
       }
    }
    catch(error){
     if(error.response){
-      console.log(error.response.data.msg)
+      setError(error.response.data.msg)
       setIsSubmitLoading(false)
+      setPassword("")
     }
     else{
-      console.error(error)
+      setError(error)
       setIsSubmitLoading(false)
+      setPassword("")
     }
    }
 
@@ -357,17 +361,19 @@ function ViewAllAccounts({ userData }) {
         />
       </div>
 
+      {error && <h1 className="text-red-500">{error}</h1>}
+
       <div className="flex justify-between mt-4">
-        <button
-          type="submit"
+      {!isSubmitLoading && 
+          <button
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-blue-700"
         >
-          Confirm Deletion
+          Confirm Deletion  
         </button>
+        }
         {isSubmitLoading && 
           <button
-          type="submit"
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-blue-700"
+          className="px-4 py-2 w-[150px] bg-red-600 text-white rounded hover:bg-blue-700"
         >
           <span className="loading loading-spinner loading-md"></span>  
         </button>

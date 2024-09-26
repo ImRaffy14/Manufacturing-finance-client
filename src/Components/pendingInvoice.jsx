@@ -72,7 +72,6 @@ function pendingInvoice() {
   ];
   
   const data = pendingInvoiceData;
-  console.log(pendingInvoiceData);
 
   //FETCHING PENDING INVOICE DATA
   useEffect(() => {
@@ -81,24 +80,14 @@ function pendingInvoice() {
     socket.emit("get_pending_invoice", {msg: "get pending invoice"})
 
     socket.on("receive_pending_invoice", (response) => {
-      setPendingInvoiceData(response)
+      setPendingInvoiceData(response.pendingSales)
+      setAccumulatedAmount(response.pendingSalesCount.totalAmount);
+      setPendingInvoicesCount(response.pendingSalesCount.totalCount);
+      console.log(response.pendingSalesCount)
       setIsLoading(false)
     })
 
   }, [socket])
-
-  useEffect(() => {
-    calculateAccumulatedAmountAndPendingInvoices();
-  }, [data]);
-
-  // Function to calculate the accumulated amount and pending invoices count
-  const calculateAccumulatedAmountAndPendingInvoices = () => {
-    const totalAmount = data.reduce((acc, row) => acc + row.totalAmount, 0);
-    const pendingCount = data.filter(row => row.Status === 'Pending').length;
-
-    setAccumulatedAmount(totalAmount);
-    setPendingInvoicesCount(pendingCount);
-  };
 
 
   const handleSearch = (event) => {
@@ -219,12 +208,12 @@ function pendingInvoice() {
             </div>
 
              {/* Shipping Information */}
-          <h3 className="text-lg font-bold mt-5 font-semibold"><strong>Delivery Information</strong></h3>
+          <h3 className="text-lg font-bold mt-5"><strong>Delivery Information</strong></h3>
             <p><strong>Shipping Method:</strong> {selectedRowData.shippingMethod || '01234'}</p>
             <p><strong>Delivery Date:</strong> {selectedRowData.deliveryDate || '11.02.2030'}</p>
 
             {/* TERMS AND NOTES */}
-          <h3 className="text-lg font-bold mt-5 font-semibold"><strong>Payment Terms</strong></h3>
+          <h3 className="text-lg font-bold mt-5"><strong>Payment Terms</strong></h3>
             <p><strong>Payment Terms:</strong> {selectedRowData.terms || '01234'}</p>
             <p><strong>Note:</strong> {selectedRowData.note || 'Dilaan mo ang burat kong makatas'}</p>
         </div>

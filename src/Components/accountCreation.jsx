@@ -71,13 +71,12 @@ function accountCreation({ userData }) {
         });
         setIsLoading(false)
         
+
         if(res){
             toast.success(res.data.msg, {
                 position: "top-right"
               });
         }
-
-        document.getElementById('account_modal').close();
         
         const accountCreationTrails = {
             userId: userData._id,
@@ -89,6 +88,8 @@ function accountCreation({ userData }) {
           };
       
           socket.emit("addAuditTrails", accountCreationTrails);
+          
+          document.getElementById('account_modal').close();
 
       } catch (err) {
         if (err.response) {
