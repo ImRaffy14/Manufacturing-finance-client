@@ -4,13 +4,17 @@ import { IoCreateOutline } from "react-icons/io5";
 
 function approveRejectInvoice() {
   const [searchText, setSearchText] = useState('');
-  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
+  const [selectedRowData, setSelectedRowData] = useState(null); 
+  const formatCurrency = (value) => {
+    return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  };
+
 
   const columns = [
     { name: 'Request ID', selector: row => row.requestNumber },
     { name: 'Requested by', selector: row => row.name },
     { name: 'Invoice Number', selector: row => row.invoiceNumber },
-    { name: 'Total Amount', selector: row => row.totalAmount },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
     { name: 'Status',
                     selector: row => (
                       <span style={{ 

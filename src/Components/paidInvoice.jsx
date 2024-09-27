@@ -10,6 +10,12 @@ function paidInvoice() {
 
   const socket = useSocket()
 
+    // Function to format the price with Philippine Peso and commas
+    const formatCurrency = (value) => {
+      return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    };
+  
+
   const columns = [
     { name: 'Invoice ID ', selector: row => row._id },
     { name: 'Customer ID', selector: row => row.customerId },
@@ -21,7 +27,7 @@ function paidInvoice() {
       (item => `${item.itemName} (Qty: ${item.quantity}, Price: ₱${item.price})`).join(', '), 
                   wrap: true // Optional: wrap text to avoid overflow
     },
-    { name: 'Total Amount', selector: row => row.totalAmount },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.Status === 'Paid' ? 'green' : 'red',
                                   fontWeight: 'bold' 

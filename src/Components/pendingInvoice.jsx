@@ -4,8 +4,10 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
 import DataTable from 'react-data-table-component';
 import { IoCreateOutline } from "react-icons/io5";
+import { GrMoney } from "react-icons/gr";
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { useSocket } from '../context/SocketContext';
-
+import { FaUserCheck, FaFileInvoiceDollar, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 function pendingInvoice() {
   const invoiceRef = useRef(null);
 
@@ -60,7 +62,8 @@ function pendingInvoice() {
       (item => `${item.itemName} (Qty: ${item.quantity}, Price: ₱${item.price})`).join(', '), 
                   wrap: true // Optional: wrap text to avoid overflow
     },
-    { name: 'Total Amount', selector: row => row.totalAmount },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
+
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.Status === 'Pending' ? 'red' : 'inherit',
                                   fontWeight: 'bold' 
@@ -124,19 +127,27 @@ function pendingInvoice() {
 
       <div className="max-w-screen-2xl mx-auto mt-[50px]">
       <div className="flex space-x-4 mb-[15px]">
-        <div className="stats shadow mb-3">
-          <div className="stat">
-            <div className="stat-title">Pending Invoice</div>
-            <div className="stat-value">{pendingInvoicesCount}</div>
-          </div>
-        </div>
 
-        <div className="stats h-[150px] w-[270px] shadow mb-3">
-          <div className="stat">
-             <div className="stat-title">Accumulated Amount</div>
-              <div className="stat-value">{accumulatedAmount}</div>
+         {/* Pending Invoice */}
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-md">Pending Invoices</p>
             </div>
-        </div>
+            <div className="flex gap-3 my-3">
+            <FaFileInvoiceDollar className="text-gray-600 text-2xl my-2" />
+              <p className="text-4xl font-bold">{pendingInvoicesCount}</p>
+            </div>
+          </div>
+
+        <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-sm">Accumulated Amount</p>
+              <GrMoney className="text-gray-600 text-xl" />
+            </div>
+            <div className="flex gap-3 my-3">
+              <p className="text-3xl font-bold">{formatCurrency(accumulatedAmount)}</p>
+            </div>
+          </div>
 
         </div>
             <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 mb-[15px]">

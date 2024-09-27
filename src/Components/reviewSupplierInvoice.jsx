@@ -4,15 +4,18 @@ import { IoCreateOutline } from "react-icons/io5";
 
 function reviewSupplierInvoice() {
   const [searchText, setSearchText] = useState('');
-  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
-
+  const [selectedRowData, setSelectedRowData] = useState(null); 
+  const formatCurrency = (value) => {
+      return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    };
+  
   const columns = [
     { name: 'Supplier ID', selector: row => row.supplierNumber },
     { name: 'Invoice Number', selector: row => row.invoiceNumber },
     { name: 'Invoice Date', selector: row => row.invoiceDate },
     { name: 'DueDate', selector: row => row.dueDate },
     { name: 'Payment Terms', selector: row => row.paymentTerms },
-    { name: 'Total Amount', selector: row => row.totalAmount },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.status === 'Pending' ? 'red' : 'inherit',
                                   fontWeight: 'bold' 
