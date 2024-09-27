@@ -1,30 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { IoCreateOutline } from "react-icons/io5";
-
+import { useSocket } from '../context/SocketContext';
 function paidInvoice() {
   const [searchText, setSearchText] = useState('');
   const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
+  const [nonPendingInvoice, setNonPendingInvoice] = useState([]) // non pending invoice
+  const [isLoading, setIsLoading] = useState(true)
+
+  const socket = useSocket()
 
   const columns = [
-    { name: 'Invoice Number', selector: row => row.invoiceNumber },
+    { name: 'Invoice ID ', selector: row => row._id },
+    { name: 'Customer ID', selector: row => row.customerId },
+    { name: 'Customer Name', selector: row => row.customerName },
+    { name: 'Contact Details', selector: row => row.customerContact },
     { name: 'Invoice Date', selector: row => row.invoiceDate },
     { name: 'DueDate', selector: row => row.dueDate },
+    { name: 'Items', selector: row => row.items.map
+      (item => `${item.itemName} (Qty: ${item.quantity}, Price: ₱${item.price})`).join(', '), 
+                  wrap: true // Optional: wrap text to avoid overflow
+    },
     { name: 'Total Amount', selector: row => row.totalAmount },
     { name: 'Status', selector: row => ( 
-                                        <span style={{ color: row.status === 'Paid' ? 'green' : 'inherit',
-                                          fontWeight: 'bold' 
-                                         }}>
-                                        {row.status}
-                                        </span>) },
+                                <span style={{ color: row.Status === 'Paid' ? 'green' : 'red',
+                                  fontWeight: 'bold' 
+                                 }}>
+                                {row.Status}
+                                </span>) },
+                                
   ];
   
-  const data = [
-    { invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', status: 'Paid', totalAmount: 1209,},
-    { invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', status: 'Paid', totalAmount: 1209,},
-    { invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', status: 'Paid', totalAmount: 1209,},
-    // Add more data as needed
-  ];
+  const data = nonPendingInvoice;
+
+  //FETCHING NON PENDING INVOICE DATA
+  useEffect(() => {
+    if(!socket) return;
+
+    socket.emit("get_non_pending_invoice", {msg: "get non pending invoice"})
+
+    socket.on("receive_non_pending_invoice", (response) => {
+      setNonPendingInvoice(response)
+      setIsLoading(false)
+  })
+
+  }, [socket])
+
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
@@ -38,64 +59,22 @@ function paidInvoice() {
   );
 
 
-  //modal data
-  const [formData, setFormData] = useState({
-    customerName: '',
-    customerAddress: '',
-    customerContact: '',
-    customerId: '',
-    orderNumber: '',
-    orderDate: '',
-    shippingMethod: '',
-    deliveryDate: '',
-    invoiceNumber: '',
-    invoiceDate: '',
-    dueDate: '',
-    paymentTerms: '',
-    subtotal: 0,
-    taxes: 0,
-    discounts: 0,
-    totalAmount: 0,
-    terms: '',
-    notes: '',
-  });
-
-  
-
-  const [items, setItems] = useState([{ itemName: '', quantity: 1, price: 0 }]);
-
-  const itemOptions = [
-    { label: 'Soap A', value: 'soap_a', price: 10 },
-    { label: 'Soap B', value: 'soap_b', price: 15 },
-    { label: 'Soap C', value: 'soap_c', price: 20 }
-  ];
-
-  useEffect(() => {
-    calculateTotal();
-  }, [items, formData.taxes, formData.discounts]);
-
-
-  const calculateTotal = () => {
-    const subtotal = items.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-    const taxes = parseFloat(formData.taxes || 0);
-    const discounts = parseFloat(formData.discounts || 0);
-    const totalAmount = subtotal + taxes - discounts;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      subtotal,
-      totalAmount,
-    }));
-  };
-
  // Handle row click to show modal
  const handleRowClick = (row) => {
   setSelectedRowData(row);
   document.getElementById('row_modal').showModal();
 };
+
+if (isLoading) {
+  return (
+    <div className="flex w-full flex-col gap-4">
+      <div className="skeleton h-[520px] w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+    </div>
+  );
+}
 
   return (
 
@@ -141,7 +120,9 @@ function paidInvoice() {
               <p><strong>Invoice Date:</strong> {selectedRowData.invoiceDate}</p>
               <p><strong>Due Date:</strong> {selectedRowData.dueDate}</p>
               <p><strong>Total Amount:</strong> {selectedRowData.totalAmount}</p>
-              <p><strong>Status:</strong> {selectedRowData.status}</p>
+              <p><strong>Items:</strong> {selectedRowData.items.map
+              (item => `${item.itemName} (Qty: ${item.quantity}, Price: ₱${item.price})`)}</p>
+              <p><strong>Status:</strong> {selectedRowData.Status}</p>
             </div>
             <button
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

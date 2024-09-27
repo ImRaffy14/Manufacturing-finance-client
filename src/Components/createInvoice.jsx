@@ -155,10 +155,10 @@ useEffect(() => {
   };
 
   const validateForm = () => {
-    const { customerName, customerAddress, customerContact, orderNumber, orderDate, shippingMethod, deliveryDate, items } = formData;
+    const { customerName, customerAddress, customerContact, orderNumber, orderDate, shippingMethod, deliveryDate, items, invoiceDate, dueDate } = formData;
   
     // Check basic fields
-    if (!customerName || !customerAddress || !customerContact || !orderNumber || !orderDate || !shippingMethod || !deliveryDate) {
+    if (!customerName || !customerAddress || !customerContact || !orderNumber || !orderDate || !shippingMethod || !deliveryDate, !invoiceDate, !dueDate) {
       return false;
     }
   
