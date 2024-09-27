@@ -120,7 +120,7 @@ const toggleSidebar = () => {
   {!isCollapsed && (
     <li>
       <NavLink
-        to="/"
+        to="/Dashboard/overview"
         className="relative flex items-center hover:text-blue-500"
         activeClassName="bg-gray-200"
       >

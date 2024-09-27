@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Dashboard from '../Components/Dashboard';
 import Search from '../Components/Search';
 import Sidebar from '../Components/Sidebar';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import PageNotFound from '../Pages/pageNotFound';
 import AccountCreation from '../Components/accountCreation';
 import ApprovedBudgets from '../Components/approvedBudgets';
@@ -78,9 +78,10 @@ function AdminPage() {
         <div className="h-screen flex">
             <Sidebar />
             <div className="flex-col w-full overflow-auto bg-gray-200">
-                {user && <Search userData={user} />}
+                {user && <Search userData={user} />}    
                 <Routes>
-                    <Route path="/" element={<Dashboard />} />
+                    <Route path="overview" element={<Dashboard />} />
+                    <Route path="/" element={<Navigate to="/Dashboard/overview" />} />
                     <Route path="*" element={<PageNotFound />} />
                     <Route path="accountCreation" element={<AccountCreation userData={user}/>} />
                     <Route path="approvedBudgets" element={<ApprovedBudgets />} />

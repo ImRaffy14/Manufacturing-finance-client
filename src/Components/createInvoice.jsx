@@ -13,7 +13,8 @@ function CreateInvoice({ userData }) {
   const [isSubmitted, setIsSubmitted] = useState(false);  // Track form submission
   const [searchText, setSearchText] = useState('');
   const [items, setItems] = useState([{ itemName: '', quantity: 1, price: 0 }]);
-  const [ responseData, setResponseData] = useState(null)
+  const [responseData, setResponseData] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
@@ -216,6 +217,7 @@ useEffect(() => {
 
   const confirmSubmission = () => {
     socket.emit("create_invoice", formData);
+    setIsLoading(true)
   };
 
   //RESPONSE FROM SUBMITTED INVOICE RECORD
@@ -224,6 +226,7 @@ useEffect(() => {
     setResponseData(response);
     setIsSubmitted(true); // Only set this to true once the response is received
     setIsPreview(false); // Close the modal after submission
+    setIsLoading(false)
 
     socket.on("trails_error", (response) => {
       console.error(response);
@@ -633,13 +636,23 @@ useEffect(() => {
           </div>
         </div>
         <div className="text-center mt-4">
-          <button
+          {!isLoading && 
+            <button
             type="button"
             className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
-            onClick={confirmSubmission} // Trigger submission
+            onClick={confirmSubmission}
           >
             Submit Invoice
           </button>
+          }
+          {isLoading &&
+            <button
+            type="button"
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
+          >
+           <span className="loading loading-spinner loading-md"></span>
+          </button>
+           }
         </div>
       </div>
   </div>
@@ -647,16 +660,10 @@ useEffect(() => {
     <button>close</button>
   </form>
 </dialog>
-
-
-
-   
    </>
   );
 
     
 }
-
-
 
 export default CreateInvoice;
