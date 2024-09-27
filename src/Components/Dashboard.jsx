@@ -13,6 +13,7 @@ import { CiTrash } from "react-icons/ci";
 import { MdOutlineChat } from "react-icons/md";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Link } from "react-router-dom";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -64,6 +65,7 @@ function Dashboard() {
 
     <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
           {/* Account Requests*/}
+          <Link to="accountCreation">
           <div className="bg-blue-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Account Requests</p>
@@ -73,7 +75,9 @@ function Dashboard() {
               <p className="text-4xl text-black font-bold">{dashboardData.accountRequests}</p>
             </div>
           </div>
+          </Link>
 
+          <Link to="createInvoice">
            {/* Invoice Requests*/}
            <div className="bg-sky-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
@@ -84,7 +88,9 @@ function Dashboard() {
               <p className="text-4xl text-black font-bold">{dashboardData.invoiceRequests}</p>
             </div>
           </div>
+          </Link>
 
+          <Link to="approveRejectInvoice">
            {/* Approved Invoices*/}
            <div className="bg-emerald-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
@@ -95,7 +101,9 @@ function Dashboard() {
               <p className="text-4xl text-black font-bold">{dashboardData.approvedInvoices}</p>
             </div>
           </div>
+          </Link>
 
+          <Link to="approveRejectInvoice">
           {/* Rejected Invoices*/}
           <div className="bg-orange-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
@@ -106,7 +114,9 @@ function Dashboard() {
               <p className="text-4xl text-black font-bold">{dashboardData.rejectedInvoices}</p>
             </div>
           </div>
+          </Link>
 
+          <Link to="anomalyDetection">
            {/* Detected Anomalies*/}
            <div className="bg-red-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
@@ -117,8 +127,9 @@ function Dashboard() {
               <p className="text-4xl text-black font-bold">{dashboardData.rejectedInvoices}</p>
             </div>
           </div>
+          </Link>
       </div>
-
+            
       <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
           {/* Sales Card */}
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">

@@ -15,7 +15,9 @@ import { AiOutlineAudit } from "react-icons/ai";
 import { TbReportSearch } from "react-icons/tb";
 import { MdManageAccounts } from "react-icons/md";
 import { MdSpatialTracking } from "react-icons/md";
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
+import { VscBracketError } from "react-icons/vsc";
+import { SiAdobeaudition } from "react-icons/si";
 
 
 
@@ -112,14 +114,27 @@ const toggleSidebar = () => {
         {!isCollapsed && <Link to="" ><p className="text-xl font-bold">Dashboard</p></Link>}
       </div>
 
-      {/* Dashboard */}
-      <Link to=""><div
-        className="flex items-center gap-2 hover:bg-gray-300 transition-all duration-300 p-2 rounded-md mb-4 cursor-pointer"
-        aria-label="Dashboard"
+    {/* DASHBOARD PUTANGINAMO */}
+    <ul className="menu rounded-box w-56">
+  {isCollapsed && <MdOutlineScreenshotMonitor className="w-5 h-5" />}
+  {!isCollapsed && (
+    <li>
+      <NavLink
+        to="/"
+        className="relative flex items-center hover:text-blue-500"
+        activeClassName="bg-gray-200"
       >
-        <MdOutlineScreenshotMonitor className="w-5 h-5" />
-        {!isCollapsed && <p className="text-sm font-semibold">Dashboard</p>}
-      </div></Link>
+        <summary className="flex items-center">
+          <MdOutlineScreenshotMonitor className="w-5 h-5 mr-2" /> 
+          Dashboard
+        </summary>
+      </NavLink>
+    </li>
+  )}
+</ul>
+
+
+
 
       {/* Apps */}
       <div className="mb-2">
@@ -141,12 +156,20 @@ const toggleSidebar = () => {
               <summary><TbBrandCashapp className="w-5 h-5" /> Cash Management</summary>
                 <ul>
                  <li>
-                    <details open>
+                    <details open>  
                       <summary><MdOutlineCallReceived/>Cash Collection</summary>
-                          <ul>
-                            <Link to="viewCollection"><li className="flex hover:text-blue-500"><a>● ViewCollection</a></li></Link>
-                            <Link to="collectionReports"><li className="hover:text-blue-500"><a>● Collection Reports</a></li></Link>
-                          </ul>
+                            <ul>
+                              <li className="flex hover:text-blue-500">
+                                <NavLink to="viewCollection" activeClassName="text-blue-500">
+                                  ● ViewCollection
+                                </NavLink>
+                              </li>
+                              <li className="hover:text-blue-500">
+                                <NavLink to="collectionReports" activeClassName="text-blue-500">
+                                  ● Collection Reports
+                                </NavLink>
+                              </li>
+                           </ul>
                     </details>
                 </li>
 
@@ -154,9 +177,21 @@ const toggleSidebar = () => {
                     <details open>
                       <summary><BsCash/>Budgeting</summary>
                           <ul>
-                            <Link to="createBudget"><li className="hover:text-blue-500"><a>● Create Budget</a></li></Link>
-                            <Link to="editBudget"><li className="hover:text-blue-500"><a>● View/Edit Budgets</a></li></Link>
-                            <Link to="budgetReports"><li className="hover:text-blue-500"><a>● Budget Reports</a></li></Link>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="createBudget" activeClassName="text-blue-500">
+                                ● Create Budget
+                              </NavLink>
+                           </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="editBudget" activeClassName="text-blue-500">
+                                ● View/Edit Budget
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="budgetReports" activeClassName="text-blue-500">
+                                ● Budget Reports
+                              </NavLink>
+                            </li>
                           </ul>
                     </details>
                 </li>
@@ -192,26 +227,24 @@ const toggleSidebar = () => {
                   </summary>
 
                   <ul>
-                    <Link to="createInvoice">
-                      <li className="hover:text-blue-500" >
-                        <a>
+                    <li className="hover:text-blue-500">
+                        <NavLink to="createInvoice" activeClassName="text-blue-500">
                           ● Invoice Request
-                          {notifications.createInvoice > 0 && (
+                            {notifications.createInvoice > 0 && (
                             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{notifications.createInvoice}</span>
-                          )}
-                        </a>
-                      </li>
-                    </Link>
-                    <Link to="pendingInvoice">
-                      <li className="hover:text-blue-500">
-                        <a>● View Pending Invoice</a>
-                      </li>
-                    </Link>
-                    <Link to="paidInvoice">
-                      <li className="hover:text-blue-500">
-                        <a>● Paid/Closed Invoices</a>
-                      </li>
-                    </Link>
+                           )}
+                        </NavLink>
+                    </li>
+                    <li className="hover:text-blue-500">
+                      <NavLink to="pendingInvoice" activeClassName="text-blue-500">
+                        ● View Pending Invoice
+                      </NavLink>
+                    </li>
+                    <li className="hover:text-blue-500">
+                      <NavLink to="paidInvoice" activeClassName="text-blue-500">
+                        ● Paid/Closed Invoice
+                      </NavLink>
+                    </li>
                   </ul>
                 </details>
               </li>
@@ -232,22 +265,57 @@ const toggleSidebar = () => {
                     <details open>
                       <summary><LiaFileInvoiceDollarSolid/>Manage Invoices</summary>
                           <ul>
-                          <Link to="reviewSupplierInvoice"><li className="hover:text-blue-500"><a>● Review Supplier Invoices</a></li></Link>
-                          <Link to="approveRejectInvoice"><li className="hover:text-blue-500"><a>● Approve/Reject Invoices</a></li></Link>
-                          <Link to="paymentStatus"><li className="hover:text-blue-500"><a>● Payment Status</a></li></Link>
-                          <Link to="supplierPaymentHistory"><li className="hover:text-blue-500"><a>● Supplier Payment History</a></li></Link>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="reviewSupplierInvoice" activeClassName="text-blue-500">
+                                ● Review Supplier Invoice
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="approveRejectInvoice" activeClassName="text-blue-500">
+                                ● Approve/Reject Invoice
+                              </NavLink>
+                            </li>
                           </ul>
                     </details>
                 </li>
+              </ul>
+          </details>
+          </li>
+          }
+        </ul>
 
-                <li>
+         {/* Budget Management */}
+         <ul className="menu  rounded-box w-56">
+          {isCollapsed && <SiAmazonpay className="w-5 h-5" />}   
+          {!isCollapsed && 
+            <li>
+            <details open>
+              <summary><SiAmazonpay className="w-5 h-5" />Budget Management</summary>
+                <ul>
+                 <li>
                     <details open>
-                      <summary><FaCodePullRequest/>Request of Funds</summary>
+                      <summary><LiaFileInvoiceDollarSolid/>Manage Budget</summary>
                           <ul>
-                          <Link to="budgetRequest"><li className="hover:text-blue-500"><a>● Budget Requests</a></li></Link>
-                          <Link to="budgetApproval"><li className="hover:text-blue-500"><a>● Budget Approval</a></li></Link>
-                          <Link to="pendingApproval"><li className="hover:text-blue-500"><a>● Pending Approvals</a></li></Link>
-                          <Link to="approvedBudgets"><li className="hover:text-blue-500"><a>● Approved Budgets</a></li></Link>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="budgetRequest" activeClassName="text-blue-500">
+                                ● Budget Requests
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="budgetApproval" activeClassName="text-blue-500">
+                                ● Budget Approval
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="pendingApproval" activeClassName="text-blue-500">
+                                ● Pending Approvals
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="approvedBudgets" activeClassName="text-blue-500">
+                                ● Approved Budgets
+                              </NavLink>
+                            </li>
                           </ul>
                     </details>
                 </li>
@@ -269,9 +337,21 @@ const toggleSidebar = () => {
                     <details open>
                       <summary><AiOutlineAudit/>Internal Audit and Controls</summary>
                           <ul>
-                          <Link to="auditRecords"><li className="hover:text-blue-500"><a>● Audit Records</a></li></Link>
-                          <Link to="reviewPaymentTransactions"><li className="hover:text-blue-500"><a>● Review Payment Transactions</a></li></Link>
-                          <Link to="viewAuditHistory"><li className="hover:text-blue-500"><a>● View Audit History</a></li></Link>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="auditRecords" activeClassName="text-blue-500">
+                                ● Audit Records
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="reviewPaymentTransactions" activeClassName="text-blue-500">
+                                ● Review Payment Transactions
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="viewAuditHistory" activeClassName="text-blue-500">
+                                ● View Audit History
+                              </NavLink>
+                            </li>
                           </ul>
                     </details>
                 </li>
@@ -280,8 +360,16 @@ const toggleSidebar = () => {
                     <details open>
                       <summary><TbReportSearch/>Financial Reporting</summary>
                           <ul>
-                          <Link to="financialReports"><li className="hover:text-blue-500"><a>● Financial Reports</a></li></Link>
-                          <Link to="transactionRecords"><li className="hover:text-blue-500"><a>● Transaction Records</a></li></Link>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="financialReports" activeClassName="text-blue-500">
+                                ● Financial Reports
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="transactionRecords" activeClassName="text-blue-500">
+                                ● Transaction Records
+                              </NavLink>
+                            </li>
                           </ul>
                     </details>
                 </li>
@@ -312,33 +400,67 @@ const toggleSidebar = () => {
                       </summary>
                             {/* Account Request */}
                           <ul>
-                          <Link to="accountCreation"><li className="hover:text-blue-500"><a>● Account Requests
-                          {notifications.accountRequest > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
-                              {notifications.accountRequest}
-                            </span>
-                          )}
-                          </a></li></Link>
-                          <Link to="viewAllAccounts"><li className="hover:text-blue-500"><a>● View All Accounts</a></li></Link>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="accountCreation" activeClassName="text-blue-500">
+                                ● Account Requests
+                                  {notifications.accountRequest > 0 && (
+                                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
+                                    {notifications.accountRequest}
+                                  </span>)}
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="viewAllAccounts" activeClassName="text-blue-500">
+                                ● View All Accounts
+                              </NavLink>
+                            </li>
                           </ul>
                     </details>
                 </li>
-                
-                <Link to="auditTrails">
-                  <li>
-                    <summary><MdSpatialTracking/>Audit Trails</summary>
-                  </li>
-                </Link>  
               </ul>
           </details>
           </li>
           }
         </ul>
+          
+      {/* Audit putanginamo raffy */}
+<ul className="menu rounded-box w-56">
+  {isCollapsed && <SiAdobeaudition className="w-5 h-5" />}
+  {!isCollapsed && (
+    <li>
+      <NavLink
+        to="auditTrails"
+        className="relative flex items-center hover:text-blue-500"
+        activeClassName="bg-gray-200"
+      >
+        <summary className="flex items-center">
+          <SiAdobeaudition className="w-5 h-5 mr-2" />
+          Audit Trails
+        </summary>
+      </NavLink>
+    </li>
+  )}
+</ul>
 
-        
+        {/* Nagdedetect ng burat */}
+        <ul className="menu rounded-box w-56">
+  {isCollapsed && <VscBracketError className="w-5 h-5" />}
+  {!isCollapsed && (
+    <li>
+      <NavLink
+        to="anomalyDetection"
+        className="relative flex items-center hover:text-blue-500"
+        activeClassName="bg-gray-200"
+      >
+        <summary className="flex items-center">
+          <VscBracketError className="w-5 h-5 mr-2" /> 
+          Anomaly Detection
+        </summary>
+      </NavLink>
+    </li>
+  )}
+</ul>
       </div>
-
-      
     </div>
   );
 };
