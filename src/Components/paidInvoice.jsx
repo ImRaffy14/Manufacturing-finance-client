@@ -120,14 +120,17 @@ if (isLoading) {
 {selectedRowData && (
         <dialog id="row_modal" className="modal">
           <div className="modal-box">
-            <h3 className="font-bold text-lg">Details for Invoice: {selectedRowData.invoiceNumber}</h3>
+            <h3 className="font-bold text-lg">Details for Customer: {selectedRowData.customerName}</h3>
             <div className="py-4">
-              <p><strong>Invoice Number:</strong> {selectedRowData.invoiceNumber}</p>
+              <p><strong>Invoice Number:</strong> {selectedRowData._id}</p>
               <p><strong>Invoice Date:</strong> {selectedRowData.invoiceDate}</p>
               <p><strong>Due Date:</strong> {selectedRowData.dueDate}</p>
               <p><strong>Total Amount:</strong> {selectedRowData.totalAmount}</p>
               <p><strong>Items:</strong> {selectedRowData.items.map
               (item => `${item.itemName} (Qty: ${item.quantity}, Price: ₱${item.price})`)}</p>
+              <p><strong>Customer ID:</strong> {selectedRowData.customerId}</p>
+              <p><strong>Customer Name:</strong> {selectedRowData.customerName}</p>
+              <p><strong>Customer Contact:</strong> {selectedRowData.customerContact}</p>
               <p><strong>Status:</strong> {selectedRowData.Status}</p>
             </div>
             <button
