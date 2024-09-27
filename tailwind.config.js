@@ -9,7 +9,6 @@ export default {
       backgroundImage: {
         'BG': "url('/src/assets/BG2.jpg')",
       },
-      
     },
     
   },

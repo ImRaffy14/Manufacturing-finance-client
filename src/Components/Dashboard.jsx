@@ -64,57 +64,57 @@ function Dashboard() {
 
     <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
           {/* Account Requests*/}
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-blue-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-md">Account Requests</p>
+              <p className="text-black font-semibold text-md">Account Requests</p>
             </div>
             <div className="flex gap-3 my-3">
-            <FaUsers className="text-gray-600 text-2xl my-2" />
-              <p className="text-4xl font-bold">{dashboardData.accountRequests}</p>
+            <FaUsers className="text-black text-2xl my-2" />
+              <p className="text-4xl text-black font-bold">{dashboardData.accountRequests}</p>
             </div>
           </div>
 
            {/* Invoice Requests*/}
-           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-sky-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-md">Invoice Requests</p>
+              <p className="text-black font-semibold text-md">Invoice Requests</p>
             </div>
             <div className="flex gap-3 my-3">
-            <FaFileInvoiceDollar  className="text-gray-600 text-2xl my-2" />
-              <p className="text-4xl font-bold">{dashboardData.invoiceRequests}</p>
+            <FaFileInvoiceDollar  className="text-black text-2xl my-2" />
+              <p className="text-4xl text-black font-bold">{dashboardData.invoiceRequests}</p>
             </div>
           </div>
 
            {/* Approved Invoices*/}
-           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-emerald-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-md">Approved Invoices</p>
+              <p className="text-black font-semibold text-md">Approved Invoices</p>
             </div>
             <div className="flex gap-3 my-3">
-            <FaCheckCircle   className="text-gray-600 text-2xl my-2" />
-              <p className="text-4xl font-bold">{dashboardData.approvedInvoices}</p>
+            <FaCheckCircle   className="text-black text-2xl my-2" />
+              <p className="text-4xl text-black font-bold">{dashboardData.approvedInvoices}</p>
             </div>
           </div>
 
           {/* Rejected Invoices*/}
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-orange-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-md">Invoice Requests</p>
+              <p className="text-black font-semibold text-md">Rejected Invoices</p>
             </div>
             <div className="flex gap-3 my-3">
-            <FaTimesCircle    className="text-gray-600 text-2xl my-2" />
-              <p className="text-4xl font-bold">{dashboardData.rejectedInvoices}</p>
+            <FaTimesCircle    className="text-black text-2xl my-2" />
+              <p className="text-4xl text-black font-bold">{dashboardData.rejectedInvoices}</p>
             </div>
           </div>
 
            {/* Detected Anomalies*/}
-           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-red-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-md">Detected Anomalies</p>
+              <p className="text-black font-semibold text-md">Detected Anomalies</p>
             </div>
             <div className="flex gap-3 my-3">
-            <MdError className="text-gray-600 text-2xl my-2" />
-              <p className="text-4xl font-bold">{dashboardData.rejectedInvoices}</p>
+            <MdError className="text-black text-2xl my-2" />
+              <p className="text-4xl text-black font-bold">{dashboardData.rejectedInvoices}</p>
             </div>
           </div>
       </div>
