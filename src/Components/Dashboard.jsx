@@ -10,7 +10,9 @@ import { GrMoney } from "react-icons/gr";
 import { IoCodeDownloadOutline } from "react-icons/io5";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { CiTrash } from "react-icons/ci";
+import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { MdOutlineChat } from "react-icons/md";
+import { FiRepeat } from "react-icons/fi";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Link } from "react-router-dom";
@@ -62,16 +64,19 @@ function Dashboard() {
 
   return (
     <>
-
+    <div className="p-4">
+ <div className="bg-white/75 shadow-xl rounded-lg p-6">
+  <h1 className="text-xl font-bold">Overview</h1>
     <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
+      
           {/* Account Requests*/}
           <Link to="accountCreation">
-          <div className="bg-blue-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Account Requests</p>
             </div>
             <div className="flex gap-3 my-3">
-            <FaUsers className="text-black text-2xl my-2" />
+            <FaUsers className="text-blue-600 text-2xl my-2" />
               <p className="text-4xl text-black font-bold">{dashboardData.accountRequests}</p>
             </div>
           </div>
@@ -79,25 +84,25 @@ function Dashboard() {
 
           <Link to="createInvoice">
            {/* Invoice Requests*/}
-           <div className="bg-sky-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Invoice Requests</p>
             </div>
             <div className="flex gap-3 my-3">
-            <FaFileInvoiceDollar  className="text-black text-2xl my-2" />
+            <FaFileInvoiceDollar  className="text-blue-600 text-2xl my-2" />
               <p className="text-4xl text-black font-bold">{dashboardData.invoiceRequests}</p>
             </div>
           </div>
           </Link>
 
-          <Link to="approveRejectInvoice">
-           {/* Approved Invoices*/}
-           <div className="bg-emerald-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <Link to="budgetRequest">
+           {/* Budget Requests*/}
+           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-black font-semibold text-md">Approved Invoices</p>
+              <p className="text-black font-semibold text-md">Budget Requests</p>
             </div>
             <div className="flex gap-3 my-3">
-            <FaCheckCircle   className="text-black text-2xl my-2" />
+            <FaMoneyCheckDollar className="text-blue-600 text-2xl my-2" />
               <p className="text-4xl text-black font-bold">{dashboardData.approvedInvoices}</p>
             </div>
           </div>
@@ -105,12 +110,12 @@ function Dashboard() {
 
           <Link to="approveRejectInvoice">
           {/* Rejected Invoices*/}
-          <div className="bg-orange-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-black font-semibold text-md">Rejected Invoices</p>
+              <p className="text-black font-semibold text-md">On Process Invoice</p>
             </div>
             <div className="flex gap-3 my-3">
-            <FaTimesCircle    className="text-black text-2xl my-2" />
+            <FiRepeat className="text-green-600 text-2xl my-2" />
               <p className="text-4xl text-black font-bold">{dashboardData.rejectedInvoices}</p>
             </div>
           </div>
@@ -118,20 +123,26 @@ function Dashboard() {
 
           <Link to="anomalyDetection">
            {/* Detected Anomalies*/}
-           <div className="bg-red-200 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Detected Anomalies</p>
             </div>
             <div className="flex gap-3 my-3">
-            <MdError className="text-black text-2xl my-2" />
+            <MdError className="text-red-600 text-2xl my-2" />
               <p className="text-4xl text-black font-bold">{dashboardData.rejectedInvoices}</p>
             </div>
           </div>
           </Link>
       </div>
-            
-      <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
-          {/* Sales Card */}
+     </div>
+
+        </div>
+        <div className="p-4">
+        {/* Financial chart */}
+        <div className="bg-white/75 shadow-xl rounded-lg p-6">
+          <h3 className="text-xl font-semibold text-gray-700 mb-4">Analytics</h3>
+          <div className="flex gap-4">
+            {/* Sales Card */}
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Sales</p>
@@ -150,8 +161,8 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Revenue Card */}
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           {/* Revenue Card */}
+           <div className="bg-white/75 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Revenue</p>
               <HiOutlineCurrencyDollar className="text-gray-600 text-xl" />
@@ -187,13 +198,15 @@ function Dashboard() {
               </p>
             </div>
           </div>
-
-        </div>
-        <div className="p-4">
-        {/* Financial chart */}
-        <div className="bg-white shadow-xl rounded-lg p-6">
-          <h3 className="text-xl font-semibold text-gray-700 mb-4">Financial Overview</h3>
+          </div>
+          <div className="flex gap-4">
+          <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg mt-3  hover:shadow-xl">
           <Line data={financialChartData} options={chartOptions} />
+          </div>
+          <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg mt-3  hover:shadow-xl">
+          <Line data={financialChartData} options={chartOptions} />
+          </div>
+          </div>
         </div>
       </div>
     </>
