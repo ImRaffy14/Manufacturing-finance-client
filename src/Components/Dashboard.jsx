@@ -70,7 +70,7 @@ function Dashboard() {
     <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
       
           {/* Account Requests*/}
-          <Link to="accountCreation">
+          <Link to="/Dashboard/accountCreation">
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Account Requests</p>
@@ -82,7 +82,7 @@ function Dashboard() {
           </div>
           </Link>
 
-          <Link to="createInvoice">
+          <Link to="/Dashboard/createInvoice">
            {/* Invoice Requests*/}
            <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
@@ -95,7 +95,7 @@ function Dashboard() {
           </div>
           </Link>
 
-          <Link to="budgetRequest">
+          <Link to="/Dashboard/budgetRequest">
            {/* Budget Requests*/}
            <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
@@ -108,7 +108,7 @@ function Dashboard() {
           </div>
           </Link>
 
-          <Link to="approveRejectInvoice">
+          <Link to="/Dashboard/approveRejectInvoice">
           {/* Rejected Invoices*/}
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
@@ -121,7 +121,7 @@ function Dashboard() {
           </div>
           </Link>
 
-          <Link to="anomalyDetection">
+          <Link to="/Dashboard/anomalyDetection">
            {/* Detected Anomalies*/}
            <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
