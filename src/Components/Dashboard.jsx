@@ -20,7 +20,14 @@ import { Link } from "react-router-dom";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function Dashboard() {
-   // Sample data for financial chart
+  const [salesAmount, setSalesAmount] = useState(0);
+  const [revenueAmount, setRevenueAmount] = useState(0);
+  const [spendingAmount, setSpendingAmount] = useState(0);
+  const formatCurrency = (value) => {
+    return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  };
+
+
    const financialChartData = {
     labels: ["January", "February", "March", "April", "May", "June"],
     datasets: [
@@ -28,6 +35,20 @@ function Dashboard() {
         label: "Revenue",
         data: [500, 700, 800, 600, 900, 1100],
         borderColor: "#10B981", // Emerald green line color
+        backgroundColor: "rgba(16, 185, 129, 0.1)", // Light green background
+        fill: true,
+        tension: 0,
+      },
+    ],
+  };
+
+  const spendingChartData = {
+    labels: ["January", "February", "March", "April", "May", "June"],
+    datasets: [
+      {
+        label: "Revenue",
+        data: [500, 700, 800, 600, 900, 1100],
+        borderColor: "#D22B2B", // Emerald green line color
         backgroundColor: "rgba(16, 185, 129, 0.1)", // Light green background
         fill: true,
         tension: 0,
@@ -53,6 +74,7 @@ function Dashboard() {
     rejectedInvoices: 20,
     detectedAnomalies: 10,
   });
+
 
   useEffect(() => {
     const fetchDashboardData = () => {
@@ -149,14 +171,14 @@ function Dashboard() {
               <GrMoney className="text-gray-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">4859</p>
+              <p className="text-3xl font-bold">{formatCurrency(salesAmount)}</p>
               <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
                 <IoIosArrowUp className="text-green-700" /> 18.2%
               </p>
             </div>
             <div className="my-3">
               <p className="text-green-700 font-semibold">
-                +47 <span className="text-gray-500">than past week</span>
+              +{formatCurrency(231)} <span className="text-gray-500">than past month</span>
               </p>
             </div>
           </div>
@@ -168,14 +190,14 @@ function Dashboard() {
               <HiOutlineCurrencyDollar className="text-gray-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">$537.83</p>
+              <p className="text-3xl font-bold">{formatCurrency(revenueAmount)}</p>
               <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
                 <IoIosArrowUp className="text-green-700" /> 10.8%
               </p>
             </div>
             <div className="my-3">
               <p className="text-green-700 font-semibold">
-                +$128.58 <span className="text-gray-500">than past week</span>
+              +{formatCurrency(12313)}<span className="text-gray-500"> than past month</span>
               </p>
             </div>
           </div>
@@ -187,24 +209,26 @@ function Dashboard() {
               <RiPassPendingLine className="text-gray-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">$219.65</p>
-              <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                <IoIosArrowUp className="text-green-700" /> 9.1%
+              <p className="text-3xl font-bold">{formatCurrency(spendingAmount)}</p>
+              <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
+                <IoIosArrowUp className="text-red-700" /> 9.1%
               </p>
             </div>
             <div className="my-3">
-              <p className="text-green-700 font-semibold">
-                +$88.67 <span className="text-gray-500">than past week</span>
+              <p className="text-red-700 font-semibold">
+                +{formatCurrency(3213)} <span className="text-gray-500">than past month</span>
               </p>
             </div>
           </div>
           </div>
           <div className="flex gap-4">
           <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg mt-3  hover:shadow-xl">
+          <h1 className="text-2xl font-bold p-4">Revenue</h1>
           <Line data={financialChartData} options={chartOptions} />
           </div>
           <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg mt-3  hover:shadow-xl">
-          <Line data={financialChartData} options={chartOptions} />
+          <h1 className="text-2xl font-bold p-4">Spending</h1>
+          <Line data={spendingChartData} options={chartOptions} />
           </div>
           </div>
         </div>

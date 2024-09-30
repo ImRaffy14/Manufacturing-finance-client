@@ -113,7 +113,7 @@ const toggleSidebar = () => {
         className="flex items-center gap-2 cursor-pointer mb-8 justify-center"
         aria-label="Dashboard Logo"
       >
-        <img src={JJM} alt="Dashboard logo" className="w-10 h-10" />
+        <img src={JJM} alt="Dashboard logo" className="w-20 h-20" />
         {!isCollapsed && <Link to="" ><p className="text-xl font-bold">Dashboard</p></Link>}
       </div>
 
