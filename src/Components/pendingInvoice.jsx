@@ -134,7 +134,7 @@ function pendingInvoice() {
               <p className="text-gray-600 font-semibold text-md">Pending Invoices</p>
             </div>
             <div className="flex gap-3 my-3">
-            <FaFileInvoiceDollar className="text-gray-600 text-2xl my-2" />
+            <FaFileInvoiceDollar className="text-blue-600 text-2xl my-2" />
               <p className="text-4xl font-bold">{pendingInvoicesCount}</p>
             </div>
           </div>
@@ -142,7 +142,7 @@ function pendingInvoice() {
         <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Accumulated Amount</p>
-              <GrMoney className="text-gray-600 text-xl" />
+              <GrMoney className="text-yellow-500 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(accumulatedAmount)}</p>

@@ -131,7 +131,7 @@ function reviewPayables() {
     
       
       <div className="max-w-screen-2xl mx-auto mt-4">
-      <div className="flex space-x-4 mb-[50px]">
+      <div className="flex space-x-4 mb-[20px]">
 
 {/* Pending Invoice */}
  <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
@@ -139,7 +139,7 @@ function reviewPayables() {
      <p className="text-gray-600 font-semibold text-md">Pending Payables</p>
    </div>
    <div className="flex gap-3 my-3">
-   <TbCreditCardPay className="text-gray-600 text-2xl my-2" />
+   <TbCreditCardPay className="text-blue-600 text-2xl my-2" />
      <p className="text-4xl font-bold">{pendingPayablesCount}</p>
    </div>
  </div>
@@ -147,21 +147,21 @@ function reviewPayables() {
 <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
    <div className="flex items-center justify-between">
      <p className="text-gray-600 font-semibold text-sm">Accumulated Amount</p>
-     <GrMoney className="text-gray-600 text-xl" />
+     <GrMoney className="text-yellow-500 text-xl" />
    </div>
    <div className="flex gap-3 my-3">
      <p className="text-3xl font-bold">{formatCurrency(accumulatedAmount)}</p>
    </div>
  </div>
 
- <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:cursor-pointer hover:shadow-xl">
+ <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105  hover:shadow-xl">
    <div className="flex items-center justify-between">
-     <p className="text-gray-600 font-semibold text-sm">Create Payable</p>
+     <p className="text-gray-600 font-semibold text-sm">Add Payable</p>
      <IoCreateOutline className="text-gray-600 text-xl" />
    </div>
-   <div className="flex gap-1 my-3" onClick={() => document.getElementById('payable_modal').showModal()}>
-   <FaRegPlusSquare className="text-gray-600 text-4xl  hover:cursor-pointer" />
-     <p className="text-xl my-1 ">Create</p>
+   <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('payable_modal').showModal()}>
+   <FaRegPlusSquare className="text-blue-600 text-2xl my-2" />
+     <p className="text-3xl font-bold">Create</p>
    </div>
  </div>
 

@@ -30,6 +30,8 @@ const Sidebar = () => {
     hasNotifications: true, 
     createInvoice: 0,
     accountRequest: 0, 
+    reviewPayable: 0,
+    reviewPaymentHistory: 0,
   });
 
 const initialData = [
@@ -45,16 +47,39 @@ const initialAccountRequestData = [
   // Add more data as needed
 ];
 
+const initialReviewPayableData = [
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  // Add more data as needed
+];
+
+const initialReviewPaymentTransactions = [
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
+  // Add more data as needed
+];
+
+
 const fetchNotificationData = () => {
   const createInvoiceCount = initialData.length; //DATA LENGTH
   const accountRequestCount = initialAccountRequestData.length; // ACCOUNT REQ DATA LENGTH
+  const reviewPayableCount = initialReviewPayableData.length; // ACCOUNT REQ DATA LENGTH
+  const reviewPaymentTransactionsCount = initialReviewPaymentTransactions.length;
 
   // UPDATE
   setNotifications((prevState) => ({
     ...prevState,
     createInvoice: createInvoiceCount,
     accountRequest: accountRequestCount,
-    hasNotifications: createInvoiceCount > 0 || accountRequestCount > 0,
+    reviewPayable: reviewPayableCount,
+    reviewPaymentTransactions: reviewPaymentTransactionsCount,
+    hasNotifications: createInvoiceCount > 0 || accountRequestCount > 0 || reviewPayableCount > 0 || reviewPaymentTransactionsCount > 0,
   }));
 };
 
@@ -113,8 +138,8 @@ const toggleSidebar = () => {
         className="flex items-center gap-2 cursor-pointer mb-8 justify-center"
         aria-label="Dashboard Logo"
       >
-        <img src={JJM} alt="Dashboard logo" className="w-20 h-20" />
-        {!isCollapsed && <Link to="" ><p className="text-xl font-bold">Dashboard</p></Link>}
+        <img src={JJM} alt="Dashboard logo" className="w-[100px] h-[100px]" />
+        {!isCollapsed && <Link to="" ></Link>}
       </div>
 
     {/* DASHBOARD PUTANGINAMO */}
@@ -175,24 +200,42 @@ const toggleSidebar = () => {
                            </ul>
                     </details>
                 </li>
+              </ul>
+          </details>
+          </li>
+          }
+        </ul>
 
-                <li>
+           {/* Budget Management */}
+         <ul className="menu  rounded-box w-56">
+          {isCollapsed && <TbPigMoney className="w-5 h-5" />}   
+          {!isCollapsed && 
+            <li>
+            <details open>
+              <summary><TbPigMoney className="w-5 h-5" />Budget Management</summary>
+                <ul>
+                 <li>
                     <details open>
-                      <summary><BsCash/>Budgeting</summary>
+                      <summary><TbZoomMoney/>Manage Budget</summary>
                           <ul>
                             <li className="hover:text-blue-500">
-                              <NavLink to="createBudget" activeClassName="text-blue-500">
-                                ● Create Budget
-                              </NavLink>
-                           </li>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="editBudget" activeClassName="text-blue-500">
-                                ● View/Edit Budget
+                              <NavLink to="budgetRequest" activeClassName="text-blue-500">
+                                ● Budget Requests
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
-                              <NavLink to="budgetReports" activeClassName="text-blue-500">
-                                ● Budget Reports
+                              <NavLink to="budgetApproval" activeClassName="text-blue-500">
+                                ● Budget Approval
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="pendingApproval" activeClassName="text-blue-500">
+                                ● Pending Approvals
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="approvedBudgets" activeClassName="text-blue-500">
+                                ● Approved Budgets
                               </NavLink>
                             </li>
                           </ul>
@@ -203,7 +246,7 @@ const toggleSidebar = () => {
           </li>
           }
         </ul>
-
+        
             {/* Accounts Receivable */}
             <ul className="menu rounded-box w-56">
       {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}
@@ -262,15 +305,24 @@ const toggleSidebar = () => {
           {!isCollapsed && 
             <li>
             <details open>
-              <summary><TbCreditCardPay className="w-5 h-5" /> Accounts Payable</summary>
+              <summary><TbCreditCardPay className="w-5 h-5" /> Accounts Payable
+              {notifications.reviewPayable > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              )}</summary>
                 <ul>
                  <li>
                     <details open>
-                      <summary><MdOutlinePayments/>Manage Payables</summary>
+                      <summary><MdOutlinePayments/>Manage Payables
+                      {notifications.reviewPayable > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              )}</summary>
                           <ul>
                             <li className="hover:text-blue-500">
                               <NavLink to="reviewPayables" activeClassName="text-blue-500">
                                 ● Review Payables
+                                {notifications.reviewPayable > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{notifications.reviewPayable}</span>
+                           )}
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
@@ -287,46 +339,7 @@ const toggleSidebar = () => {
           }
         </ul>
 
-         {/* Budget Management */}
-         <ul className="menu  rounded-box w-56">
-          {isCollapsed && <TbPigMoney className="w-5 h-5" />}   
-          {!isCollapsed && 
-            <li>
-            <details open>
-              <summary><TbPigMoney className="w-5 h-5" />Budget Management</summary>
-                <ul>
-                 <li>
-                    <details open>
-                      <summary><TbZoomMoney/>Manage Budget</summary>
-                          <ul>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="budgetRequest" activeClassName="text-blue-500">
-                                ● Budget Requests
-                              </NavLink>
-                            </li>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="budgetApproval" activeClassName="text-blue-500">
-                                ● Budget Approval
-                              </NavLink>
-                            </li>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="pendingApproval" activeClassName="text-blue-500">
-                                ● Pending Approvals
-                              </NavLink>
-                            </li>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="approvedBudgets" activeClassName="text-blue-500">
-                                ● Approved Budgets
-                              </NavLink>
-                            </li>
-                          </ul>
-                    </details>
-                </li>
-              </ul>
-          </details>
-          </li>
-          }
-        </ul>
+        
 
         {/* General Ledger */}
         <ul className="menu  rounded-box w-56">
@@ -334,20 +347,25 @@ const toggleSidebar = () => {
           {!isCollapsed && 
             <li>
             <details open>
-              <summary><FaList className="w-5 h-5" />General Ledger</summary>
+              <summary><FaList className="w-5 h-5" />General Ledger
+              {notifications.reviewPaymentTransactions > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              )}</summary>
                 <ul>
                  <li>
                     <details open>
-                      <summary><AiOutlineAudit/>Internal Audit and Controls</summary>
+                      <summary><AiOutlineAudit/>Internal Audit and Controls
+                      {notifications.reviewPaymentTransactions > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              )}</summary>
                           <ul>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="auditRecords" activeClassName="text-blue-500">
-                                ● Audit Records
-                              </NavLink>
-                            </li>
-                            <li className="hover:text-blue-500">
+                          <li className="hover:text-blue-500">
                               <NavLink to="reviewPaymentTransactions" activeClassName="text-blue-500">
                                 ● Review Payment Transactions
+                                {notifications.reviewPaymentTransactions > 0 && (
+                                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
+                                    {notifications.reviewPaymentTransactions}
+                                  </span>)}
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">

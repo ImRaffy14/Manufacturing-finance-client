@@ -223,11 +223,11 @@ function Dashboard() {
           </div>
           <div className="flex gap-4">
           <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg mt-3  hover:shadow-xl">
-          <h1 className="text-2xl font-bold p-4">Revenue</h1>
+          <h1 className="text-gray-600 font-semibold text-xl p-4">Revenue</h1>
           <Line data={financialChartData} options={chartOptions} />
           </div>
           <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg mt-3  hover:shadow-xl">
-          <h1 className="text-2xl font-bold p-4">Spending</h1>
+          <h1 className="text-gray-600 font-semibold text-xl p-4">Spending</h1>
           <Line data={spendingChartData} options={chartOptions} />
           </div>
           </div>
