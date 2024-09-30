@@ -2,32 +2,36 @@ import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { IoCreateOutline } from "react-icons/io5";
 
-function reviewSupplierInvoice() {
+function approveRejectPayables() {
   const [searchText, setSearchText] = useState('');
   const [selectedRowData, setSelectedRowData] = useState(null); 
   const formatCurrency = (value) => {
-      return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-    };
-  
+    return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  };
+
+
   const columns = [
-    { name: 'Supplier ID', selector: row => row.supplierNumber },
+    { name: 'Request ID', selector: row => row.requestNumber },
+    { name: 'Requested by', selector: row => row.name },
     { name: 'Invoice Number', selector: row => row.invoiceNumber },
-    { name: 'Invoice Date', selector: row => row.invoiceDate },
-    { name: 'DueDate', selector: row => row.dueDate },
-    { name: 'Payment Terms', selector: row => row.paymentTerms },
     { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
-    { name: 'Status', selector: row => ( 
-                                <span style={{ color: row.status === 'Pending' ? 'red' : 'inherit',
-                                  fontWeight: 'bold' 
-                                 }}>
-                                {row.status}
-                                </span>) },
+    { name: 'Status',
+                    selector: row => (
+                      <span style={{ 
+                        color: row.status === 'Rejected' ? 'red' : row.status === 'Approved' ? 'green' : 'inherit',
+                        fontWeight: 'bold' 
+                      }}>
+                        {row.status}
+                      </span>)
+                      },
+    { name: 'Reason', selector: row => row.reason },
+    
   ];
   
   const data = [
-    { supplierNumber: 1, invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Pending'},
-    { supplierNumber: 2, invoiceNumber: 2, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Pending'},
-    { supplierNumber: 3, invoiceNumber: 3, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Pending'},
+    { requestNumber: 1, name: 'Muhammad Sumbul', invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Approved', reason:'Complete Documents'},
+    { requestNumber: 44, name: 'Usman Abdal Jaleel Shisha', invoiceNumber: 300, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Rejected', reason:'Makapal mukha'},
+    { requestNumber: 120, name: 'Khalid Khasmiri', invoiceNumber: 200, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Approved', reason:'Complete Documents'},
     // Add more data as needed
   ];
 
@@ -120,7 +124,7 @@ function reviewSupplierInvoice() {
                 <div className="mx-4">
                     <div className="overflow-x-auto w-full">
                         <DataTable
-                            title="Supplier Invoice"
+                            title="Approved/Rejected Payables"
                             columns={columns}
                             data={filteredData}
                             pagination
@@ -150,11 +154,12 @@ function reviewSupplierInvoice() {
           <div className="modal-box">
             <h3 className="font-bold text-lg">Details for Supplier ID: {selectedRowData.supplierNumber}</h3>
             <div className="py-4">
+              <p><strong>Request ID:</strong> {selectedRowData.requestNumber}</p>
+              <p><strong>Requested by:</strong> {selectedRowData.name}</p>
               <p><strong>Invoice Number:</strong> {selectedRowData.invoiceNumber}</p>
-              <p><strong>Invoice Date:</strong> {selectedRowData.invoiceDate}</p>
-              <p><strong>Due Date:</strong> {selectedRowData.dueDate}</p>
               <p><strong>Total Amount:</strong> {selectedRowData.totalAmount}</p>
               <p><strong>Status:</strong> {selectedRowData.status}</p>
+              <p><strong>Reason:</strong> {selectedRowData.reason}</p>
             </div>
             <button
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -178,4 +183,4 @@ function reviewSupplierInvoice() {
 
 
 
-export default reviewSupplierInvoice;
+export default approveRejectPayables;

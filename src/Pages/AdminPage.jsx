@@ -6,7 +6,7 @@ import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import PageNotFound from '../Pages/pageNotFound';
 import AccountCreation from '../Components/accountCreation';
 import ApprovedBudgets from '../Components/approvedBudgets';
-import ApproveRejectInvoice from '../Components/approveRejectInvoice';
+import ApproveRejectPayables from '../Components/approveRejectPayables';
 import AuditRecords from '../Components/auditRecords';
 import AuditTrails from '../Components/auditTrails';
 import BudgetApproval from '../Components/budgetApproval';
@@ -28,7 +28,7 @@ import PaymentStatus from '../Components/paymentStatus';
 import PendingApproval from '../Components/pendingApproval';
 import PendingInvoice from '../Components/pendingInvoice';
 import ReviewPaymentTransactions from '../Components/reviewPaymentTransactions';
-import ReviewSupplierInvoice from '../Components/reviewSupplierInvoice';
+import ReviewPayables from '../Components/reviewPayables';
 import RupplierPaymentHistory from '../Components/supplierPaymentHistory';
 import TransactionRecords from '../Components/transactionRecords';
 import ViewAllAccounts from '../Components/viewAllAccounts';
@@ -85,7 +85,7 @@ function AdminPage() {
                     <Route path="*" element={<PageNotFound />} />
                     <Route path="accountCreation" element={<AccountCreation userData={user}/>} />
                     <Route path="approvedBudgets" element={<ApprovedBudgets />} />
-                    <Route path="approveRejectInvoice" element={<ApproveRejectInvoice />} />
+                    <Route path="approveRejectPayables" element={<ApproveRejectPayables />} />
                     <Route path="auditRecords" element={<AuditRecords />} />
                     <Route path="auditTrails" element={<AuditTrails />} />
                     <Route path="budgetApproval" element={<BudgetApproval />} />
@@ -107,7 +107,7 @@ function AdminPage() {
                     <Route path="pendingApproval" element={<PendingApproval />} />
                     <Route path="pendingInvoice" element={<PendingInvoice />} />
                     <Route path="reviewPaymentTransactions" element={<ReviewPaymentTransactions />} />
-                    <Route path="reviewSupplierInvoice" element={<ReviewSupplierInvoice />} />
+                    <Route path="reviewPayables" element={<ReviewPayables />} />
                     <Route path="supplierPaymentHistory" element={<RupplierPaymentHistory />} />
                     <Route path="transactionRecords" element={<TransactionRecords />} />
                     <Route path="viewAllAccounts" element={<ViewAllAccounts userData={user}/>} />

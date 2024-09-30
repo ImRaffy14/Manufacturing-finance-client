@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import layout from '../assets/layout.png';
+import JJM from '../assets/JJM.jfif';
 import { MdOutlineScreenshotMonitor } from "react-icons/md";
 import { RiUserReceived2Fill } from "react-icons/ri";
 import { TbBrandCashapp } from "react-icons/tb";
@@ -18,8 +19,10 @@ import { MdSpatialTracking } from "react-icons/md";
 import { Link, NavLink } from "react-router-dom"
 import { VscBracketError } from "react-icons/vsc";
 import { SiAdobeaudition } from "react-icons/si";
-
-
+import { TbCreditCardPay } from "react-icons/tb";
+import { MdOutlinePayments } from "react-icons/md";
+import { TbPigMoney } from "react-icons/tb";
+import { TbZoomMoney } from "react-icons/tb";
 
 
 const Sidebar = () => {
@@ -110,7 +113,7 @@ const toggleSidebar = () => {
         className="flex items-center gap-2 cursor-pointer mb-8 justify-center"
         aria-label="Dashboard Logo"
       >
-        <img src={layout} alt="Dashboard logo" className="w-10 h-10" />
+        <img src={JJM} alt="Dashboard logo" className="w-10 h-10" />
         {!isCollapsed && <Link to="" ><p className="text-xl font-bold">Dashboard</p></Link>}
       </div>
 
@@ -255,24 +258,24 @@ const toggleSidebar = () => {
     </ul>
         {/* Accounts Payable */}
         <ul className="menu  rounded-box w-56">
-          {isCollapsed && <SiAmazonpay className="w-5 h-5" />}   
+          {isCollapsed && <TbCreditCardPay className="w-5 h-5" />}   
           {!isCollapsed && 
             <li>
             <details open>
-              <summary><SiAmazonpay className="w-5 h-5" /> Accounts Payable</summary>
+              <summary><TbCreditCardPay className="w-5 h-5" /> Accounts Payable</summary>
                 <ul>
                  <li>
                     <details open>
-                      <summary><LiaFileInvoiceDollarSolid/>Manage Invoices</summary>
+                      <summary><MdOutlinePayments/>Manage Payables</summary>
                           <ul>
                             <li className="hover:text-blue-500">
-                              <NavLink to="reviewSupplierInvoice" activeClassName="text-blue-500">
-                                ● Review Supplier Invoice
+                              <NavLink to="reviewPayables" activeClassName="text-blue-500">
+                                ● Review Payables
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
-                              <NavLink to="approveRejectInvoice" activeClassName="text-blue-500">
-                                ● Approve/Reject Invoice
+                              <NavLink to="approveRejectPayables" activeClassName="text-blue-500">
+                                ● Approve/Reject Payables
                               </NavLink>
                             </li>
                           </ul>
@@ -286,15 +289,15 @@ const toggleSidebar = () => {
 
          {/* Budget Management */}
          <ul className="menu  rounded-box w-56">
-          {isCollapsed && <SiAmazonpay className="w-5 h-5" />}   
+          {isCollapsed && <TbPigMoney className="w-5 h-5" />}   
           {!isCollapsed && 
             <li>
             <details open>
-              <summary><SiAmazonpay className="w-5 h-5" />Budget Management</summary>
+              <summary><TbPigMoney className="w-5 h-5" />Budget Management</summary>
                 <ul>
                  <li>
                     <details open>
-                      <summary><LiaFileInvoiceDollarSolid/>Manage Budget</summary>
+                      <summary><TbZoomMoney/>Manage Budget</summary>
                           <ul>
                             <li className="hover:text-blue-500">
                               <NavLink to="budgetRequest" activeClassName="text-blue-500">
