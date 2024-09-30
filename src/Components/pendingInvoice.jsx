@@ -7,7 +7,7 @@ import { IoCreateOutline } from "react-icons/io5";
 import { GrMoney } from "react-icons/gr";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { useSocket } from '../context/SocketContext';
-import { FaUserCheck, FaFileInvoiceDollar, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaFileInvoiceDollar } from "react-icons/fa";
 function pendingInvoice() {
   const invoiceRef = useRef(null);
 

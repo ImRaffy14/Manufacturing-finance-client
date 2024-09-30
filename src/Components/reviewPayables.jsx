@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { IoCreateOutline } from "react-icons/io5";
+import { FaFileInvoiceDollar } from "react-icons/fa";
+import { GrMoney } from "react-icons/gr";
+import { MdOutlinePayments } from "react-icons/md";
+import { TbCreditCardPay } from "react-icons/tb";
+import { FaRegPlusSquare } from "react-icons/fa";
 
 function reviewPayables() {
   const [searchText, setSearchText] = useState('');
+  const [accumulatedAmount, setAccumulatedAmount] = useState(0);
+  const [pendingPayablesCount, setPendingPayablesCount] = useState(0);
   const [selectedRowData, setSelectedRowData] = useState(null); 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [role, setRole] = useState('');
+  const [image, setImage] = useState(null)
+  const [response, setResponse] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const formatCurrency = (value) => {
       return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
     };
@@ -116,6 +131,41 @@ function reviewPayables() {
     
       
       <div className="max-w-screen-2xl mx-auto mt-4">
+      <div className="flex space-x-4 mb-[50px]">
+
+{/* Pending Invoice */}
+ <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+   <div className="flex items-center justify-between">
+     <p className="text-gray-600 font-semibold text-md">Pending Payables</p>
+   </div>
+   <div className="flex gap-3 my-3">
+   <TbCreditCardPay className="text-gray-600 text-2xl my-2" />
+     <p className="text-4xl font-bold">{pendingPayablesCount}</p>
+   </div>
+ </div>
+
+<div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+   <div className="flex items-center justify-between">
+     <p className="text-gray-600 font-semibold text-sm">Accumulated Amount</p>
+     <GrMoney className="text-gray-600 text-xl" />
+   </div>
+   <div className="flex gap-3 my-3">
+     <p className="text-3xl font-bold">{formatCurrency(accumulatedAmount)}</p>
+   </div>
+ </div>
+
+ <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:cursor-pointer hover:shadow-xl">
+   <div className="flex items-center justify-between">
+     <p className="text-gray-600 font-semibold text-sm">Create Payable</p>
+     <IoCreateOutline className="text-gray-600 text-xl" />
+   </div>
+   <div className="flex gap-1 my-3" onClick={() => document.getElementById('payable_modal').showModal()}>
+   <FaRegPlusSquare className="text-gray-600 text-4xl  hover:cursor-pointer" />
+     <p className="text-xl my-1 ">Create</p>
+   </div>
+ </div>
+
+</div>
             <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
                 <div className="mx-4">
                     <div className="overflow-x-auto w-full">
@@ -170,6 +220,90 @@ function reviewPayables() {
           </form>
         </dialog>
       )}
+
+       {/* Modal */}
+       <dialog id="payable_modal" className="modal">
+                <div className="modal-box shadow-xl">
+
+                
+                <form >
+                    <div className="flex flex-col justify-center items-center gap-4">
+                        <h1 className="font-bold mb-4 text-lg">CREATE PAYABLE</h1>
+
+                        <div className="flex gap-4 w-full">
+                            <div className="w-full">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                                    Username
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username"
+                                type="text" 
+                                placeholder="Username"
+                                value={username}
+                                required />
+                            </div>
+
+                            <div className="w-full">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                                    Password
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" 
+                                type="password" 
+                                placeholder="******************" 
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)} required/>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-4 w-full">
+                            <div className="w-full">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                    Email Address
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" 
+                                type="email" 
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)} required/> 
+                            </div>
+
+                            <div className="w-full">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                                    Full Name
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="name" 
+                                type="text" 
+                                placeholder="Full Name"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)} required/> 
+                            </div>
+                        </div>
+
+                        <div className="mt-2 w-full flex">
+                            <select className="select select-bordered w-[230px]"
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}>
+                                <option selected>Select Category</option>
+                                <option>Operational Expenses</option>
+                                <option>Capital Expenditure</option>
+                            </select>
+                        </div>
+
+                        <div className="w-full">
+                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setImage(e.target.files[0])} required />
+                            </div>
+                        {response && <h1 className="text-red-500 font-bold">{response}</h1>}
+                        <div className="w-full">
+                            {!isLoading && <button className="btn btn-primary w-full font-bold">Submit</button>}
+                        </div>
+                    </div>
+                    </form>
+                        {isLoading && <button className="btn btn-primary w-full font-bold"><span className="loading loading-spinner loading-md"></span></button>}
+                </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>Close</button>
+                </form>
+            </dialog>
    </>
   );
 
