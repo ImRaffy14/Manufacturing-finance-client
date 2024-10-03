@@ -6,6 +6,9 @@ import { GrMoney } from "react-icons/gr";
 import { MdOutlinePayments } from "react-icons/md";
 import { TbCreditCardPay } from "react-icons/tb";
 import { FaRegPlusSquare } from "react-icons/fa";
+import { useSocket } from "../context/SocketContext"
+import CryptoJS from 'crypto-js';
+import axios from 'axios';
 
 function reviewPayables() {
   const [searchText, setSearchText] = useState('');
@@ -18,19 +21,23 @@ function reviewPayables() {
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState('');
   const [image, setImage] = useState(null)
-  const [response, setResponse] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState([])
+  const [response, setResponse] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+
+  const socket = useSocket()
+
   const formatCurrency = (value) => {
       return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
     };
   
   const columns = [
-    { name: 'Supplier ID', selector: row => row.supplierNumber },
-    { name: 'Invoice Number', selector: row => row.invoiceNumber },
-    { name: 'Invoice Date', selector: row => row.invoiceDate },
-    { name: 'DueDate', selector: row => row.dueDate },
-    { name: 'Payment Terms', selector: row => row.paymentTerms },
-    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
+    { name: 'Request ID', selector: row => row._id },
+    { name: 'Invoice Number', selector: row => row.category },
+    { name: 'Invoice Date', selector: row => row.reason },
+    { name: 'DueDate', selector: row => row.documents },
+    { name: 'Payment Terms', selector: row => row.comments },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.status === 'Pending' ? 'red' : 'inherit',
                                   fontWeight: 'bold' 
@@ -39,12 +46,35 @@ function reviewPayables() {
                                 </span>) },
   ];
   
-  const data = [
-    { supplierNumber: 1, invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Pending'},
-    { supplierNumber: 2, invoiceNumber: 2, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Pending'},
-    { supplierNumber: 3, invoiceNumber: 3, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Pending'},
-    // Add more data as needed
-  ];
+
+  const API_URL = import.meta.env.VITE_SERVER_URL;
+
+  //DECRYPTION
+  const decryptData = (encryptedData, secretKey) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey); // Decrypt the data
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8); // Convert decrypted bytes to string
+    return JSON.parse(decrypted); // Parse the decrypted string into JSON
+  };
+
+  //FETCHING DATA
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(`${API_URL}/API/BudgetRequests`)
+      if(response){
+        const decryptedData = decryptData(response.data.result, import.meta.env.VITE_ENCRYPT_KEY)
+        setData(decryptedData)
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    if(!socket) return;
+
+
+  }, [socket])
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
@@ -57,79 +87,29 @@ function reviewPayables() {
     )
   );
 
-
-  //modal data
-  const [formData, setFormData] = useState({
-    customerName: '',
-    customerAddress: '',
-    customerContact: '',
-    customerId: '',
-    orderNumber: '',
-    orderDate: '',
-    shippingMethod: '',
-    deliveryDate: '',
-    invoiceNumber: '',
-    invoiceDate: '',
-    dueDate: '',
-    paymentTerms: '',
-    subtotal: 0,
-    taxes: 0,
-    discounts: 0,
-    totalAmount: 0,
-    terms: '',
-    notes: '',
-  });
-
   
-
-  const [items, setItems] = useState([{ itemName: '', quantity: 1, price: 0 }]);
-
-  const itemOptions = [
-    { label: 'Soap A', value: 'soap_a', price: 10 },
-    { label: 'Soap B', value: 'soap_b', price: 15 },
-    { label: 'Soap C', value: 'soap_c', price: 20 }
-  ];
-
-  useEffect(() => {
-    calculateTotal();
-  }, [items, formData.taxes, formData.discounts]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-
-
-  const calculateTotal = () => {
-    const subtotal = items.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-    const taxes = parseFloat(formData.taxes || 0);
-    const discounts = parseFloat(formData.discounts || 0);
-    const totalAmount = subtotal + taxes - discounts;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      subtotal,
-      totalAmount,
-    }));
-  };
   // Handle row click to show modal
   const handleRowClick = (row) => {
     setSelectedRowData(row);
     document.getElementById('row_modal').showModal();
   };
 
+  //LOADER
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-[520px] w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+      </div>
+    );
+  }
+
   return (
 
     <>
-    
-      
+       
       <div className="max-w-screen-2xl mx-auto mt-4">
       <div className="flex space-x-4 mb-[20px]">
 

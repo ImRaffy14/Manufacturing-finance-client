@@ -125,8 +125,8 @@ function pendingInvoice() {
     <>
     
 
-      <div className="max-w-screen-2xl mx-auto mt-[50px]">
-      <div className="flex space-x-4 mb-[50px]">
+      <div className="max-w-screen-2xl mx-auto mt-[20px]">
+      <div className="flex space-x-4 mb-[20px]">
 
          {/* Pending Invoice */}
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
