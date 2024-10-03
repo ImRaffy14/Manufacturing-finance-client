@@ -83,9 +83,10 @@ function CreateInvoice({ userData }) {
 
 
   const itemOptions = [
-    { label: 'Soap A', value: 'soap_a', price: 10 },
-    { label: 'Soap B', value: 'soap_b', price: 15 },
-    { label: 'Soap C', value: 'soap_c', price: 20 }
+    { label: 'JJM Calamansi Dishwashing Liquid', value: 'soap_a', price: 28 },
+    { label: 'JJM Lemon Dishwashing Liquid', value: 'soap_b', price: 25 },
+    { label: 'JJM Antibac Fabric Conditioner', value: 'soap_c', price: 35 },
+    { label: 'JJM Calamansi Dishwashing Past', value: 'soap_d', price: 55 }
   ];
 
   
@@ -565,7 +566,7 @@ useEffect(() => {
 
 {/* Modal for confirming invoice details */}
 <dialog id="preview_modal" className="modal">
-  <div className="modal-box">
+  <div className="modal-box w-full h-full max-w-[1000px] ">
   <div className="invoice-container bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Confirm Your Invoice</h2>
         <div className="mb-4">

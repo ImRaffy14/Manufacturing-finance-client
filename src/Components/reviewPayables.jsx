@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { IoCreateOutline } from "react-icons/io5";
 import { FaFileInvoiceDollar } from "react-icons/fa";
@@ -11,15 +12,16 @@ import CryptoJS from 'crypto-js';
 import axios from 'axios';
 
 function reviewPayables() {
+  const navigate = useNavigate();
   const [searchText, setSearchText] = useState('');
   const [accumulatedAmount, setAccumulatedAmount] = useState(0);
   const [pendingPayablesCount, setPendingPayablesCount] = useState(0);
   const [selectedRowData, setSelectedRowData] = useState(null); 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState('');
+  const [typeOfRequest, setTypeOfRequest] = useState('');
+  const [totalRequest, setTotalRequest] = useState('');
+  const [documents, setDocuments] = useState('');
+  const [reason, setReason] = useState('');
+  const [category, setCategory] = useState('');
   const [image, setImage] = useState(null)
   const [data, setData] = useState([])
   const [response, setResponse] = useState('')
@@ -33,17 +35,18 @@ function reviewPayables() {
   
   const columns = [
     { name: 'Request ID', selector: row => row._id },
-    { name: 'Invoice Number', selector: row => row.category },
-    { name: 'Invoice Date', selector: row => row.reason },
-    { name: 'DueDate', selector: row => row.documents },
-    { name: 'Payment Terms', selector: row => row.comments },
-    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},
+    { name: 'Category', selector: row => row.category },
+    { name: 'Type of Request', selector: row => row.typeOfRequest },
+    { name: 'Documents', selector: row => row.documents },
+    { name: 'Reason', selector: row => row.reason || 'Burat'},
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.status === 'Pending' ? 'red' : 'inherit',
                                   fontWeight: 'bold' 
                                  }}>
                                 {row.status}
                                 </span>) },
+                             
   ];
   
 
@@ -88,12 +91,9 @@ function reviewPayables() {
   );
 
   
-  // Handle row click to show modal
   const handleRowClick = (row) => {
-    setSelectedRowData(row);
-    document.getElementById('row_modal').showModal();
-  };
-
+    navigate('/Dashboard/viewRequestPayable', { state: { rowData: row } });
+};
   //LOADER
   if (isLoading) {
     return (
@@ -212,66 +212,60 @@ function reviewPayables() {
 
                         <div className="flex gap-4 w-full">
                             <div className="w-full">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                                    Username
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="typeOfRequest">
+                                    Request Type
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username"
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="typeOfRequest"
                                 type="text" 
-                                placeholder="Username"
-                                value={username}
-                                required />
+                                placeholder="Request Type"
+                                value='BUDGET'
+                                readOnly
+                                   />
                             </div>
 
                             <div className="w-full">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                                    Password
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalRequest">
+                                    Total Amount
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" 
-                                type="password" 
-                                placeholder="******************" 
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)} required/>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="totalRequest" 
+                                type="number" 
+                                value={totalRequest}
+                                onChange={(e) => setTotalRequest(e.target.value)} required/>
                             </div>
                         </div>
 
                         <div className="flex gap-4 w-full">
                             <div className="w-full">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                                    Email Address
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="documents">
+                                    Documents
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" 
-                                type="email" 
-                                placeholder="Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)} required/> 
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="documents" 
+                                type="documents" 
+                                value={documents}
+                                onChange={(e) => setDocuments(e.target.value)} required/> 
                             </div>
 
                             <div className="w-full">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                                    Full Name
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="reason">
+                                    Reason
                                 </label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                                id="name" 
-                                type="text" 
-                                placeholder="Full Name"
-                                value={fullName}
-                                onChange={(e) => setFullName(e.target.value)} required/> 
+                                id="reason" 
+                                type="text"   
+                                value={reason}
+                                onChange={(e) => setReason(e.target.value)} required/> 
                             </div>
                         </div>
 
                         <div className="mt-2 w-full flex">
                             <select className="select select-bordered w-[230px]"
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}>
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}>
                                 <option selected>Select Category</option>
                                 <option>Operational Expenses</option>
                                 <option>Capital Expenditure</option>
                             </select>
                         </div>
-
-                        <div className="w-full">
-                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setImage(e.target.files[0])} required />
-                            </div>
                         {response && <h1 className="text-red-500 font-bold">{response}</h1>}
                         <div className="w-full">
                             {!isLoading && <button className="btn btn-primary w-full font-bold">Submit</button>}

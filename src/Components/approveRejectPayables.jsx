@@ -6,15 +6,20 @@ function approveRejectPayables() {
   const [searchText, setSearchText] = useState('');
   const [selectedRowData, setSelectedRowData] = useState(null); 
   const formatCurrency = (value) => {
+    if (value === undefined || value === null) {
+      return `₱0.00`; // or return an appropriate placeholder
+    }
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
 
   const columns = [
-    { name: 'Request ID', selector: row => row.requestNumber },
-    { name: 'Requested by', selector: row => row.name },
-    { name: 'Invoice Number', selector: row => row.invoiceNumber },
-    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
+    { name: 'Request ID', selector: row => row._id },
+  { name: 'Category', selector: row => row.category },
+  { name: 'Type of Request', selector: row => row.typeOfRequest },
+  { name: 'Documents', selector: row => row.documents },
+  { name: 'Commets', selector: row => row.comments || 'Burat'},
+  { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},
     { name: 'Status',
                     selector: row => (
                       <span style={{ 
@@ -24,9 +29,10 @@ function approveRejectPayables() {
                         {row.status}
                       </span>)
                       },
-    { name: 'Reason', selector: row => row.reason },
     
   ];
+
+
   
   const data = [
     { requestNumber: 1, name: 'Muhammad Sumbul', invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Approved', reason:'Complete Documents'},
@@ -47,67 +53,11 @@ function approveRejectPayables() {
   );
 
 
-  //modal data
-  const [formData, setFormData] = useState({
-    customerName: '',
-    customerAddress: '',
-    customerContact: '',
-    customerId: '',
-    orderNumber: '',
-    orderDate: '',
-    shippingMethod: '',
-    deliveryDate: '',
-    invoiceNumber: '',
-    invoiceDate: '',
-    dueDate: '',
-    paymentTerms: '',
-    subtotal: 0,
-    taxes: 0,
-    discounts: 0,
-    totalAmount: 0,
-    terms: '',
-    notes: '',
-  });
-
+ 
   
 
-  const [items, setItems] = useState([{ itemName: '', quantity: 1, price: 0 }]);
-
-  const itemOptions = [
-    { label: 'Soap A', value: 'soap_a', price: 10 },
-    { label: 'Soap B', value: 'soap_b', price: 15 },
-    { label: 'Soap C', value: 'soap_c', price: 20 }
-  ];
-
-  useEffect(() => {
-    calculateTotal();
-  }, [items, formData.taxes, formData.discounts]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
 
 
-
-  const calculateTotal = () => {
-    const subtotal = items.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-    const taxes = parseFloat(formData.taxes || 0);
-    const discounts = parseFloat(formData.discounts || 0);
-    const totalAmount = subtotal + taxes - discounts;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      subtotal,
-      totalAmount,
-    }));
-  };
   // Handle row click to show modal
   const handleRowClick = (row) => {
     setSelectedRowData(row);
@@ -152,14 +102,13 @@ function approveRejectPayables() {
       {selectedRowData && (
         <dialog id="row_modal" className="modal">
           <div className="modal-box">
-            <h3 className="font-bold text-lg">Details for Supplier ID: {selectedRowData.supplierNumber}</h3>
+            <h3 className="font-bold text-lg">Details for Request ID: {selectedRowData._id}</h3>
             <div className="py-4">
-              <p><strong>Request ID:</strong> {selectedRowData.requestNumber}</p>
-              <p><strong>Requested by:</strong> {selectedRowData.name}</p>
-              <p><strong>Invoice Number:</strong> {selectedRowData.invoiceNumber}</p>
-              <p><strong>Total Amount:</strong> {selectedRowData.totalAmount}</p>
+              <p><strong>Category:</strong> {selectedRowData.category}</p>
+              <p><strong>Request Type:</strong> {selectedRowData.typeOfRequest}</p>
+              <p><strong>Documents:</strong> {selectedRowData.documents}</p>
+              <p><strong>Coments:</strong> {selectedRowData.comments}</p>
               <p><strong>Status:</strong> {selectedRowData.status}</p>
-              <p><strong>Reason:</strong> {selectedRowData.reason}</p>
             </div>
             <button
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

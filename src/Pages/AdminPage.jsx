@@ -36,6 +36,7 @@ import ViewAuditHistory from '../Components/viewAuditHistory';
 import ViewCollection from '../Components/viewCollection';
 import InvoiceDownload from '../Components/invoiceDownload';
 import AnomalyDetection from '../Components/anomalyDetection';
+import ViewRequestPayable from '../Components/viewRequestPayable';
 import { getProfile } from '../authentication/auth';
 
 function AdminPage() {
@@ -115,6 +116,7 @@ function AdminPage() {
                     <Route path="viewCollection" element={<ViewCollection />} />
                     <Route path="invoiceDownload" element={<InvoiceDownload />} />
                     <Route path="anomalyDetection" element={<AnomalyDetection />} />
+                    <Route path="viewRequestPayable" element={<ViewRequestPayable />} />
                 </Routes>
             </div>
         </div>
