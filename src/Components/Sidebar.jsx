@@ -135,7 +135,7 @@ const toggleSidebar = () => {
       </div>
       {/* Logo */}
       <div
-        className="flex items-center gap-2 cursor-pointer mb-8 justify-center"
+        className="flex items-center gap-2 cursor-pointer mb-4 justify-center"
         aria-label="Dashboard Logo"
       >
         <img src={JJM} alt="Dashboard logo" className="w-[100px] h-[100px]" />

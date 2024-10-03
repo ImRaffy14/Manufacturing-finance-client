@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { IoCreateOutline } from "react-icons/io5";
+import { useSocket } from '../context/SocketContext';
+import CryptoJS from 'crypto-js';
+import axios from 'axios';
 
 function approveRejectPayables() {
   const [searchText, setSearchText] = useState('');
   const [selectedRowData, setSelectedRowData] = useState(null); 
+  const [data, setData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const formatCurrency = (value) => {
     if (value === undefined || value === null) {
       return `₱0.00`; // or return an appropriate placeholder
@@ -13,17 +18,19 @@ function approveRejectPayables() {
   };
 
 
+  const socket = useSocket()
+
   const columns = [
     { name: 'Request ID', selector: row => row._id },
-  { name: 'Category', selector: row => row.category },
-  { name: 'Type of Request', selector: row => row.typeOfRequest },
-  { name: 'Documents', selector: row => row.documents },
-  { name: 'Commets', selector: row => row.comments || 'Burat'},
-  { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},
+    { name: 'Category', selector: row => row.category },
+    { name: 'Type of Request', selector: row => row.typeOfRequest },
+    { name: 'Documents', selector: row => row.documents },
+    { name: 'Commets', selector: row => row.comments || 'Burat'},
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},
     { name: 'Status',
                     selector: row => (
                       <span style={{ 
-                        color: row.status === 'Rejected' ? 'red' : row.status === 'Approved' ? 'green' : 'inherit',
+                        color: row.status === 'Rejected' ? 'red' : row.status === 'Approved' ? 'green' : 'red',
                         fontWeight: 'bold' 
                       }}>
                         {row.status}
@@ -32,15 +39,38 @@ function approveRejectPayables() {
     
   ];
 
-
   
-  const data = [
-    { requestNumber: 1, name: 'Muhammad Sumbul', invoiceNumber: 1, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Approved', reason:'Complete Documents'},
-    { requestNumber: 44, name: 'Usman Abdal Jaleel Shisha', invoiceNumber: 300, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Rejected', reason:'Makapal mukha'},
-    { requestNumber: 120, name: 'Khalid Khasmiri', invoiceNumber: 200, invoiceDate: '2024/05/19', dueDate: '2024/06/19', paymentTerms: 'lagyan ng puday', totalAmount: 1209, status: 'Approved', reason:'Complete Documents'},
-    // Add more data as needed
-  ];
+  const API_URL = import.meta.env.VITE_SERVER_URL;
 
+  //DECRYPTION
+  const decryptData = (encryptedData, secretKey) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey); // Decrypt the data
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8); // Convert decrypted bytes to string
+    return JSON.parse(decrypted); // Parse the decrypted string into JSON
+  };
+
+  //FETCHING DATA
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(`${API_URL}/API/BudgetRequests/processed`)
+      if(response){
+        const decryptedData = decryptData(response.data.result, import.meta.env.VITE_ENCRYPT_KEY)
+        setData(decryptedData)
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    if(!socket) return;
+
+
+  }, [socket])
+
+
+  //Handles search from datatables
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
@@ -52,23 +82,28 @@ function approveRejectPayables() {
     )
   );
 
-
- 
-  
-
-
-
   // Handle row click to show modal
   const handleRowClick = (row) => {
     setSelectedRowData(row);
     document.getElementById('row_modal').showModal();
   };
 
+  //LOADER
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-[520px] w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+      </div>
+    );
+  }
+
   return (
 
     <>
-    
-      
+
       <div className="max-w-screen-2xl mx-auto mt-4">
             <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
                 <div className="mx-4">

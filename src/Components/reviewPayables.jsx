@@ -22,7 +22,6 @@ function reviewPayables() {
   const [documents, setDocuments] = useState('');
   const [reason, setReason] = useState('');
   const [category, setCategory] = useState('');
-  const [image, setImage] = useState(null)
   const [data, setData] = useState([])
   const [response, setResponse] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -34,14 +33,15 @@ function reviewPayables() {
     };
   
   const columns = [
-    { name: 'Request ID', selector: row => row._id },
+    { name: 'Payble ID', selector: row => row._id },
+    { name: 'Request ID', selector: row => row.requestId || 'Burat' },
     { name: 'Category', selector: row => row.category },
     { name: 'Type of Request', selector: row => row.typeOfRequest },
     { name: 'Documents', selector: row => row.documents },
     { name: 'Reason', selector: row => row.reason || 'Burat'},
     { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
     { name: 'Status', selector: row => ( 
-                                <span style={{ color: row.status === 'Pending' ? 'red' : 'inherit',
+                                <span style={{ color: row.status === 'Pending' ? 'red' : 'blue',
                                   fontWeight: 'bold' 
                                  }}>
                                 {row.status}
@@ -65,7 +65,9 @@ function reviewPayables() {
       const response = await axios.get(`${API_URL}/API/BudgetRequests`)
       if(response){
         const decryptedData = decryptData(response.data.result, import.meta.env.VITE_ENCRYPT_KEY)
-        setData(decryptedData)
+        setData(decryptedData.pendingRequestBudget)
+        setAccumulatedAmount(decryptedData.pendingBudgetRequestsCount.totalAmount)
+        setPendingPayablesCount(decryptedData.pendingBudgetRequestsCount.totalCount)
         setIsLoading(false)
       }
     }
@@ -79,6 +81,8 @@ function reviewPayables() {
 
   }, [socket])
 
+
+  //Handles Search from datatables
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
@@ -218,8 +222,9 @@ function reviewPayables() {
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="typeOfRequest"
                                 type="text" 
                                 placeholder="Request Type"
-                                value='BUDGET'
+                                value='Budget'
                                 readOnly
+                                onChange={(e) => setTypeOfRequest(e.target.value)}
                                    />
                             </div>
 
@@ -235,15 +240,6 @@ function reviewPayables() {
                         </div>
 
                         <div className="flex gap-4 w-full">
-                            <div className="w-full">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="documents">
-                                    Documents
-                                </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="documents" 
-                                type="documents" 
-                                value={documents}
-                                onChange={(e) => setDocuments(e.target.value)} required/> 
-                            </div>
 
                             <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="reason">
@@ -254,6 +250,16 @@ function reviewPayables() {
                                 type="text"   
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)} required/> 
+                            </div>
+
+                            <div className="w-full">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="documents">
+                                    Documents
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="documents" 
+                                type="documents" 
+                                value={documents}
+                                onChange={(e) => setDocuments(e.target.value)} required/> 
                             </div>
                         </div>
 
