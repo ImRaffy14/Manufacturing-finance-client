@@ -405,6 +405,9 @@ const handleRowClick = (row) => {
                                 <option>Capital Expenditure</option>
                             </select>
                         </div>
+                        <div className="w-full">
+                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setImage(e.target.files[0])} required />
+                            </div>
                         {response && <h1 className="text-red-500 font-bold">{response}</h1>}
                         <div className="w-full">
                             {!isLoading && <button className="btn btn-primary w-full font-bold">Submit</button>}
