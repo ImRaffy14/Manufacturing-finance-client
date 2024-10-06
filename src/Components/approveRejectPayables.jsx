@@ -40,6 +40,8 @@ function approveRejectPayables() {
   ];
 
   
+
+  
   const API_URL = import.meta.env.VITE_SERVER_URL;
 
   //DECRYPTION
@@ -136,7 +138,7 @@ function approveRejectPayables() {
          {/* Modal for displaying row data */}
       {selectedRowData && (
         <dialog id="row_modal" className="modal">
-          <div className="modal-box">
+          <div className="modal-box w-full  max-w-[900px]">
             <h3 className="font-bold text-lg">Details for Request ID: {selectedRowData._id}</h3>
             <div className="py-4">
               <p><strong>Category:</strong> {selectedRowData.category}</p>

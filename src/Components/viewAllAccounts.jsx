@@ -216,7 +216,7 @@ function ViewAllAccounts({ userData }) {
      {/* Modal for displaying and editing row data */}
 {selectedRowData && (
   <dialog id="row_modal" className="modal">
-    <div className="modal-box p-6 bg-white rounded-lg shadow-lg w-full max-w-lg">
+    <div className="modal-box p-6 bg-white rounded-lg shadow-lg w-full max-w-xl ">
       <h3 className="font-bold text-xl text-gray-800 mb-4">
         Details for User: {selectedRowData.userName}
       </h3>
@@ -316,7 +316,7 @@ function ViewAllAccounts({ userData }) {
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-end space-x-3 mt-6">
+      <div className="flex justify-end gap-4 mt-6">
         <button
           className={`px-4 py-2 font-medium text-white rounded ${isEditing ? 'bg-gray-600 hover:bg-gray-700' : 'bg-blue-600 hover:bg-blue-700'}`}
           onClick={handleEditToggle}
