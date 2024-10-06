@@ -85,7 +85,6 @@ function pendingInvoice() {
       setPendingInvoiceData(response.pendingSales)
       setAccumulatedAmount(response.pendingSalesCount.totalAmount);
       setPendingInvoicesCount(response.pendingSalesCount.totalCount);
-      console.log(response.pendingSalesCount)
       setIsLoading(false)
     })
 

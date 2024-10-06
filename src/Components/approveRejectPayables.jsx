@@ -68,6 +68,9 @@ function approveRejectPayables() {
   useEffect(() => {
     if(!socket) return;
 
+    socket.on("receive_budget_request_processed", (response) => {
+      setData(response)
+    })
 
   }, [socket])
 

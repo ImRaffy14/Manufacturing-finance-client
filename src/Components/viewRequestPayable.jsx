@@ -1,8 +1,20 @@
+import React from 'react'
+import { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';   
 import JJM  from '../assets/JJM.jfif'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import { useSocket } from '../context/SocketContext'
 
-function ViewRequestPayable() {
+function ViewRequestPayable({ userData }) {
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [status, setStatus] = useState("")
+  const [comment, setComment] = useState("")
+  const [required, setRequired] = useState(false)
+
+  const socket = useSocket()
   const location = useLocation();
   const { rowData } = location.state || {};
 
@@ -12,22 +24,129 @@ function ViewRequestPayable() {
 
   const API_URL = import.meta.env.VITE_SERVER_URL;
 
+  //HANDLES PROCESS BUDGET
   const handleProcess = async () => {
-    const submitData = {
-      _id: rowData._id,
-      requestId: rowData.requestId,
-      department: rowData.department,
-      typeOfRequest: rowData.typeOfRequest,
-      category: rowData.category,
-      reason: rowData.reason,
-      totalRequest: rowData.totalRequest,
-      documents: rowData.documents,
-      status: "On process",
-      comment: "Your request for budget is now on process",
-    }
+
+    try{
+
+      setIsLoading(true)
+
+      const submitData = {
+        _id: rowData._id,
+        requestId: rowData.requestId,
+        department: rowData.department,
+        typeOfRequest: rowData.typeOfRequest,
+        category: rowData.category,
+        reason: rowData.reason,
+        totalRequest: rowData.totalRequest,
+        documents: rowData.documents,
+        status: "On process",
+        comment: "Your request for budget is now on process",
+      }
+      
+      const response = await axios.post(`${API_URL}/API/BudgetRequests/UpdateRequest`, submitData);
+      if(response){
+        toast.success(response.data.msg, {
+          position: "top-right"
+        });
+
+        setIsLoading(false)
+        setIsSubmitted(!isSubmitted)
+        setStatus("Submitted")
+        document.getElementById("approve_modal").close()
+
+        const invoiceTrails = {
+          userId: userData._id,
+          userName: userData.userName,
+          role: userData.role,
+          action: "APPROVED BUDGET REQUEST TO PROCESS",
+          description: `${userData.userName} approved the budget request for ${submitData.department} to process it to the budgeting management. Request ID: ${submitData.requestId} Payable ID: ${submitData._id}`,
+        };
     
-    const response = await axios.post(`${API_URL}/API/BudgetRequests/UpdateRequest`, submitData);
-    console.log(response.data.msg)
+        socket.emit("addAuditTrails", invoiceTrails);
+
+      }
+
+    }
+    catch(err){
+      if(err.response){
+        toast.error(err.response.data.msg, {
+          position: "top-right"
+        });
+
+        setIsLoading(false)
+        document.getElementById("approve_modal").close()
+      }
+      else{
+        toast.error("Server Error", {
+          position: "top-right"
+        });
+        setIsLoading(false)
+      }
+    }
+  }
+
+  //HANDLES DECLINE BUDGETS
+  const handleDecline = async () =>{
+
+    try{
+      if(comment === ""){
+        setRequired(true)
+        return
+      }
+
+      const submitData = {
+        _id: rowData._id,
+        requestId: rowData.requestId,
+        department: rowData.department,
+        typeOfRequest: rowData.typeOfRequest,
+        category: rowData.category,
+        reason: rowData.reason,
+        totalRequest: rowData.totalRequest,
+        documents: rowData.documents,
+        status: "Declined",
+        comment: comment,
+      }
+
+      const response = await axios.post(`${API_URL}/API/BudgetRequests/UpdateRequest`, submitData);
+      if(response){
+        toast.success(response.data.msg, {
+          position: "top-right"
+        });
+
+        setIsLoading(false)
+        setIsSubmitted(!isSubmitted)
+        setStatus("Declined")
+        document.getElementById("decline_modal").close()
+
+        const invoiceTrails = {
+          userId: userData._id,
+          userName: userData.userName,
+          role: userData.role,
+          action: "DECLINED BUDGET REQUEST",
+          description: `${userData.userName} declined the budget request for ${submitData.department} with the reason of ${submitData.comment} Request ID: ${submitData.requestId} Payable ID: ${submitData._id}`,
+        };
+    
+        socket.emit("addAuditTrails", invoiceTrails);
+
+      }
+    }
+    catch(err){
+      if(err.response){
+        toast.error(err.response.data.msg, {
+          position: "top-right"
+        });
+
+        setIsLoading(false)
+        document.getElementById("decline_modal").close()
+      }
+      else{
+        toast.error("Server Error", {
+          position: "top-right"
+        });
+        setIsLoading(false)
+      }
+    }
   }
 
   return (
@@ -46,7 +165,7 @@ function ViewRequestPayable() {
 
       <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Request Payable Preview</h1>
 
-        <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Request ID: {rowData._id}</h2>
+        <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Request ID: {rowData.requestId}</h2>
         
         <div className="space-y-4">
           <div className="flex justify-between">
@@ -66,7 +185,7 @@ function ViewRequestPayable() {
 
           <div className="flex justify-between">
             <p className="font-medium"><strong>Reason:</strong></p>
-            <p className="text-gray-700">{rowData.reason || 'KUMAIN NG PUDAY'}</p>
+            <p className="text-gray-700">{rowData.reason}</p>
           </div>
 
           <div className="flex justify-between">
@@ -118,8 +237,9 @@ function ViewRequestPayable() {
           </div>
         </div>
           <div className="flex items-center justify-center mt-4 gap-10">
-          <button className="btn btn-lg bg-green-400 hover:bg-green-700" onClick={() => document.getElementById("approve_modal").showModal()}>Process</button>
-          <button className="btn btn-lg bg-red-400 hover:bg-red-700" onClick={() => document.getElementById("decline_modal").showModal()}>Decline</button>
+          {!isSubmitted && <button className="btn btn-lg bg-green-400 hover:bg-green-700" onClick={() => document.getElementById("approve_modal").showModal()}>Process</button>}
+          {!isSubmitted && <button className="btn btn-lg bg-red-400 hover:bg-red-700" onClick={() => document.getElementById("decline_modal").showModal()}>Decline</button>}
+          {isSubmitted && <h1 className={`font-bold text-xl ${status === "Submitted" ? 'text-green-700' : 'text-red-700'}`}>{status}</h1>}
           </div>
         </div>
       </div>
@@ -131,9 +251,17 @@ function ViewRequestPayable() {
         <p className="mb-4 text-gray-600">Are you sure you want to process this request to budget management?</p>
         <div className="flex flex-col gap-4">
       <div className="flex justify-end gap-4">
-        <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" onClick={() => handleProcess()}>
+        {!isLoading && 
+          <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" onClick={() => handleProcess()}>
           Yes
         </button>
+        }
+        
+        {isLoading && 
+          <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200">
+            <span className="loading loading-spinner loading-md"></span>
+        </button>
+        }
         <button
           className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
           onClick={() => document.getElementById("approve_modal").close()}
@@ -161,12 +289,22 @@ function ViewRequestPayable() {
         className="textarea textarea-error border-gray-300 rounded-lg p-3"
         placeholder="Add a comment"
         rows="4"
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
         required
       ></textarea>
+      {required && <h1 className="text-red-600">Reason is Required</h1>}
       <div className="flex justify-end gap-4">
-        <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200">
+
+        {!isLoading &&  <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" onClick={() => handleDecline()}>
           Yes
         </button>
+        }
+
+        {isLoading &&  <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" onClick={() => handleDecline()}>
+          <span className="loading loading-spinner loading-md"></span>
+        </button>
+        }
         <button
           className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
           onClick={() => document.getElementById("decline_modal").close()}

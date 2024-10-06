@@ -23,9 +23,15 @@ import { TbCreditCardPay } from "react-icons/tb";
 import { MdOutlinePayments } from "react-icons/md";
 import { TbPigMoney } from "react-icons/tb";
 import { TbZoomMoney } from "react-icons/tb";
+import { useSocket } from '../context/SocketContext';
 
 
 const Sidebar = () => {
+
+  const [ payableLength, setPayableLength ] = useState(0)
+
+  const socket = useSocket()
+
   const [notifications, setNotifications] = useState({
     hasNotifications: true, 
     createInvoice: 0,
@@ -47,15 +53,6 @@ const initialAccountRequestData = [
   // Add more data as needed
 ];
 
-const initialReviewPayableData = [
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  // Add more data as needed
-];
-
 const initialReviewPaymentTransactions = [
   { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
   { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
@@ -69,7 +66,6 @@ const initialReviewPaymentTransactions = [
 const fetchNotificationData = () => {
   const createInvoiceCount = initialData.length; //DATA LENGTH
   const accountRequestCount = initialAccountRequestData.length; // ACCOUNT REQ DATA LENGTH
-  const reviewPayableCount = initialReviewPayableData.length; // ACCOUNT REQ DATA LENGTH
   const reviewPaymentTransactionsCount = initialReviewPaymentTransactions.length;
 
   // UPDATE
@@ -77,7 +73,6 @@ const fetchNotificationData = () => {
     ...prevState,
     createInvoice: createInvoiceCount,
     accountRequest: accountRequestCount,
-    reviewPayable: reviewPayableCount,
     reviewPaymentTransactions: reviewPaymentTransactionsCount,
     hasNotifications: createInvoiceCount > 0 || accountRequestCount > 0 || reviewPayableCount > 0 || reviewPaymentTransactionsCount > 0,
   }));
@@ -85,7 +80,19 @@ const fetchNotificationData = () => {
 
 useEffect(() => {
   fetchNotificationData();
+
+  socket.emit('get_payable_length', {msg: "get payable length"})
+
 }, []);
+
+useEffect(() => {
+  if(!socket) return;
+  
+  socket.on("receive_payable_length", (response) => {
+    setPayableLength(response)
+  })
+
+}, [socket])
 
 // REMOVE NOTIFICATION
 const handleCreateInvoiceClick = () => {
@@ -306,22 +313,22 @@ const toggleSidebar = () => {
             <li>
             <details open>
               <summary><TbCreditCardPay className="w-5 h-5" /> Accounts Payable
-              {notifications.reviewPayable > 0 && (
+              {payableLength > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}</summary>
                 <ul>
                  <li>
                     <details open>
                       <summary><MdOutlinePayments/>Manage Payables
-                      {notifications.reviewPayable > 0 && (
+                      {payableLength > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}</summary>
                           <ul>
                             <li className="hover:text-blue-500">
                               <NavLink to="reviewPayables" activeClassName="text-blue-500">
                                 ● Review Payables
-                                {notifications.reviewPayable > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{notifications.reviewPayable}</span>
+                                {payableLength > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{payableLength}</span>
                            )}
                               </NavLink>
                             </li>

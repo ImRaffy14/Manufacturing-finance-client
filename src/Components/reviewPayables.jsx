@@ -26,6 +26,7 @@ function reviewPayables() {
   const [category, setCategory] = useState('');
   const [data, setData] = useState([]);
   const [response, setResponse] = useState('')
+  const [onProcessData, setOnprocessData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const socket = useSocket()
@@ -53,26 +54,19 @@ function reviewPayables() {
   
   const onProcessColumns = [
     { name: 'Payble ID', selector: row => row._id },
-    { name: 'Request ID', selector: row => row.requestId || 'Burat' },
+    { name: 'Request ID', selector: row => row.requestId },
     { name: 'Category', selector: row => row.category },
     { name: 'Type of Request', selector: row => row.typeOfRequest },
     { name: 'Documents', selector: row => row.documents },
-    { name: 'Reason', selector: row => row.reason || 'Burat'},
+    { name: 'Reason', selector: row => row.reason },
     { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
     { name: 'Status', selector: row => ( 
-                                <span style={{ color: row.status === 'On Process' ? 'blue' : 'red',
+                                <span style={{ color: row.status === 'On process' ? 'blue' : 'red',
                                   fontWeight: 'bold' 
                                  }}>
                                 {row.status}
                                 </span>) },
                              
-  ];
-
-  const onProcessData = [
-    { _id: 1, requestId: 1, category: 'Burarrat', typeOfRequest: 'Edinburgh', documents: 'Suka, tubig, patis', reason: 'burat', totalRequest: 121212, status: 'On Process' },
-    { _id: 1, requestId: 1, category: 'Burarrat', typeOfRequest: 'Edinburgh', documents: 'Suka, tubig, patis', reason: 'burat', totalRequest: 121212, status: 'On Process' },
-    { _id: 1, requestId: 1, category: 'Burarrat', typeOfRequest: 'Edinburgh', documents: 'Suka, tubig, patis', reason: 'burat', totalRequest: 121212, status: 'On Process' },
-    // Add more data as needed
   ];
 
 
@@ -92,6 +86,7 @@ function reviewPayables() {
       if(response){
         const decryptedData = decryptData(response.data.result, import.meta.env.VITE_ENCRYPT_KEY)
         setData(decryptedData.pendingRequestBudget)
+        setOnprocessData(decryptedData.onProcessRequestBudget)
         setAccumulatedAmount(decryptedData.pendingBudgetRequestsCount.totalAmount)
         setPendingPayablesCount(decryptedData.pendingBudgetRequestsCount.totalCount)
         setIsLoading(false)
@@ -106,6 +101,7 @@ function reviewPayables() {
 
     socket.on("receive_budget_request_pending", (response) => {
       setData(response.pendingRequestBudget)
+      setOnprocessData(response.onProcessRequestBudget)
       setAccumulatedAmount(response.pendingBudgetRequestsCount.totalAmount)
       setPendingPayablesCount(response.pendingBudgetRequestsCount.totalCount)
     })

@@ -16,16 +16,21 @@ import { FiRepeat } from "react-icons/fi";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Link } from "react-router-dom";
+import { useSocket } from "../context/SocketContext";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function Dashboard() {
+  const [budgetRequest, setBudgetRequest] = useState(0)
+  const [invoicePending, setInvoicePending] = useState(0)
   const [salesAmount, setSalesAmount] = useState(0);
   const [revenueAmount, setRevenueAmount] = useState(0);
   const [spendingAmount, setSpendingAmount] = useState(0);
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
+
+  const socket = useSocket()
 
 
    const financialChartData = {
@@ -71,18 +76,30 @@ function Dashboard() {
     accountRequests: 50,
     invoiceRequests: 120,
     approvedInvoices: 100,
-    rejectedInvoices: 20,
     detectedAnomalies: 10,
   });
 
 
   useEffect(() => {
-    const fetchDashboardData = () => {
-      // Fetch and set data here
-    };
+    socket.emit('get_payable_length', {msg: "get payable length"})
+    socket.emit("get_pending_invoice", {msg: "get pending invoice"})
 
-    fetchDashboardData();
+    return
   }, []);
+
+
+  useEffect(() => {
+    if(!socket) return;
+    
+    socket.on("receive_payable_length", (response) => {
+      setBudgetRequest(response)
+
+    socket.on("receive_pending_invoice", (response) => {
+      setInvoicePending(response.pendingSalesCount.totalCount);
+    })
+    })
+  
+  }, [socket])
 
   return (
     <>
@@ -125,7 +142,7 @@ function Dashboard() {
             </div>
             <div className="flex gap-3 my-3">
             <FaMoneyCheckDollar className="text-blue-600 text-2xl my-2" />
-              <p className="text-4xl text-black font-bold">{dashboardData.approvedInvoices}</p>
+              <p className="text-4xl text-black font-bold">{budgetRequest}</p>
             </div>
           </div>
           </Link>
@@ -138,7 +155,7 @@ function Dashboard() {
             </div>
             <div className="flex gap-3 my-3">
             <FiRepeat className="text-green-600 text-2xl my-2" />
-              <p className="text-4xl text-black font-bold">{dashboardData.rejectedInvoices}</p>
+              <p className="text-4xl text-black font-bold">{invoicePending}</p>
             </div>
           </div>
           </Link>
@@ -151,7 +168,7 @@ function Dashboard() {
             </div>
             <div className="flex gap-3 my-3">
             <MdError className="text-red-600 text-2xl my-2" />
-              <p className="text-4xl text-black font-bold">{dashboardData.rejectedInvoices}</p>
+              <p className="text-4xl text-black font-bold">{dashboardData.detectedAnomalies}</p>
             </div>
           </div>
           </Link>

@@ -116,7 +116,7 @@ function AdminPage() {
                     <Route path="viewCollection" element={<ViewCollection />} />
                     <Route path="invoiceDownload" element={<InvoiceDownload />} />
                     <Route path="anomalyDetection" element={<AnomalyDetection />} />
-                    <Route path="viewRequestPayable" element={<ViewRequestPayable />} />
+                    <Route path="viewRequestPayable" element={<ViewRequestPayable  userData={user}/>} />
                 </Routes>
             </div>
         </div>
