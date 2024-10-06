@@ -223,7 +223,7 @@ const handleRowClick = (row) => {
                 </div>
             </div>
 
-            <div className="items-center justify-center bg-white rounded-lg shadow-xl mt-10 border border-gray-300">
+            <div className="items-center justify-center bg-white rounded-lg shadow-xl mt-7 mb-7 border border-gray-300">
                 <div className="mx-4">
                     <div className="overflow-x-auto w-full">
                         <DataTable
