@@ -139,7 +139,7 @@ function reviewPayables() {
 
 // Handle row click to show modal
 const handleRowClick = (row) => {
-  setSelectedRowData(row);
+  setSelectedRowOnProcessData(row);
   document.getElementById('onprocess_modal').showModal();
 };
 
@@ -252,30 +252,90 @@ const handleRowClick = (row) => {
         </div> 
 
          {/* Modal for displaying row data */}
-      {selectedRowData && (
-        <dialog id="row_modal" className="modal">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Details for Supplier ID: {selectedRowData.supplierNumber}</h3>
-            <div className="py-4">
-              <p><strong>Invoice Number:</strong> {selectedRowData.invoiceNumber}</p>
-              <p><strong>Invoice Date:</strong> {selectedRowData.invoiceDate}</p>
-              <p><strong>Due Date:</strong> {selectedRowData.dueDate}</p>
-              <p><strong>Total Amount:</strong> {selectedRowData.totalAmount}</p>
-              <p><strong>Status:</strong> {selectedRowData.status}</p>
-            </div>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={() => document.getElementById('row_modal').close()}
-            >
-              Close
-            </button>
+      {selectedRowOnProcessData && (
+        <dialog id="onprocess_modal" className="modal">
+        <div className="modal-box w-full h-full max-w-[1600px]">
+        <div className='bg-white p-10'>
+      
+      <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Request Payable Preview</h1>
+      
+        <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Request ID: {selectedRowOnProcessData._id}</h2>
+        
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Category:</strong></p>
+            <p className="text-gray-700">{selectedRowOnProcessData.category}</p>
           </div>
-          <form method="dialog" className="modal-backdrop">
-            <button type="button" onClick={() => document.getElementById('row_modal').close()}>
-              Close
-            </button>
-          </form>
-        </dialog>
+      
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Type of Request:</strong></p>
+            <p className="text-gray-700">{selectedRowOnProcessData.typeOfRequest}</p>
+          </div>
+      
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Documents:</strong></p>
+            <p className="text-blue-700"><a href={selectedRowOnProcessData.documents}>{selectedRowOnProcessData.documents}</a></p>
+          </div>
+      
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Reason:</strong></p>
+            <p className="text-gray-700">{selectedRowOnProcessData.reason || 'KUMAIN NG PUDAY'}</p>
+          </div>
+      
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Total Amount:</strong></p>
+            <p className="text-gray-700">₱{selectedRowOnProcessData.totalRequest}</p>
+          </div>
+      
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Status:</strong></p>
+            <p className={`text-blue-700 font-bold ${selectedRowOnProcessData?.status}`}>
+              {selectedRowOnProcessData?.status}
+            </p>
+          </div>
+      </div>
+      
+      {/* Invoice-style Preview below */}
+        <div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md" id="
+        payable-preview">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <img src={JJM} className="h-20 w-20"/>
+            </div>
+            <div className="text-right">
+              <h3 className="text-lg font-bold">Payable</h3>
+              <p><strong>Payable ID:</strong> {selectedRowOnProcessData._id}</p>
+              <p><strong>Status:</strong> {selectedRowOnProcessData.status || ''}</p>
+            </div>
+          </div>
+      
+          <div className="mb-4">
+            <p><strong>Category:</strong> {selectedRowOnProcessData.category}</p>
+            <p><strong>Type of Request:</strong> {selectedRowOnProcessData.typeOfRequest}</p>
+            <p><strong>Documents:</strong> {selectedRowOnProcessData.documents}</p>
+          </div>
+      
+          <div className="border-t border-b my-4 py-2">
+            <div className="flex justify-between font-semibold">
+              <span>Reason</span>
+              <span>Total Amount</span>
+            </div>
+            <div className="flex justify-between mt-2">
+              <span>{selectedRowOnProcessData.reason || 'KUMAIN NG PUDAY'}</span>
+              <span>₱{selectedRowOnProcessData.totalRequest}</span>
+            </div>
+          </div>
+      
+          <div className="text-right font-bold mt-4">
+            <p className="text-xl">TOTAL AMOUNT: ₱{selectedRowOnProcessData.totalRequest}</p>
+          </div>
+        </div>
+        </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
       )}
 
        {/* Modal */}
@@ -357,91 +417,10 @@ const handleRowClick = (row) => {
                     <button>Close</button>
                 </form>
             </dialog>
-
-            {/*On process Modal*/}
-<dialog id="onprocess_modal" className="modal">
-  <div className="modal-box w-full h-full max-w-[1600px]">
-  <div className='bg-white p-10'>
-
-<h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Request Payable Preview</h1>
-
-  <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Request ID: {onProcessData._id}</h2>
   
-  <div className="space-y-4">
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Category:</strong></p>
-      <p className="text-gray-700">{onProcessData.category}</p>
-    </div>
+            {/*On process Modal*/}
 
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Type of Request:</strong></p>
-      <p className="text-gray-700">{onProcessData.typeOfRequest}</p>
-    </div>
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Documents:</strong></p>
-      <p className="text-blue-700"><a href={onProcessData.documents}>{onProcessData.documents}</a></p>
-    </div>
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Reason:</strong></p>
-      <p className="text-gray-700">{onProcessData.reason || 'KUMAIN NG PUDAY'}</p>
-    </div>
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Total Amount:</strong></p>
-      <p className="text-gray-700">₱{onProcessData.totalRequest}</p>
-    </div>
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Status:</strong></p>
-      <p className={`text-gray-700 ${onProcessData.status === 'Pending' ? 'text-red-500 font-bold' : 'text-green-600 font-bold'}`}>
-        {onProcessData.status}
-      </p>
-    </div>
-</div>
-
-{/* Invoice-style Preview below */}
-  <div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md" id="
-  payable-preview">
-    <div className="flex justify-between items-center mb-4">
-      <div>
-        <img src={JJM} className="h-20 w-20"/>
-      </div>
-      <div className="text-right">
-        <h3 className="text-lg font-bold">Payable</h3>
-        <p><strong>Payable ID:</strong> {onProcessData._id}</p>
-        <p><strong>Status:</strong> {onProcessData.status || 'On Process'}</p>
-      </div>
-    </div>
-
-    <div className="mb-4">
-      <p><strong>Category:</strong> {onProcessData.category}</p>
-      <p><strong>Type of Request:</strong> {onProcessData.typeOfRequest}</p>
-      <p><strong>Documents:</strong> {onProcessData.documents}</p>
-    </div>
-
-    <div className="border-t border-b my-4 py-2">
-      <div className="flex justify-between font-semibold">
-        <span>Reason</span>
-        <span>Total Amount</span>
-      </div>
-      <div className="flex justify-between mt-2">
-        <span>{onProcessData.reason || 'KUMAIN NG PUDAY'}</span>
-        <span>₱{onProcessData.totalRequest}</span>
-      </div>
-    </div>
-
-    <div className="text-right font-bold mt-4">
-      <p className="text-xl">TOTAL AMOUNT: ₱{onProcessData.totalRequest}</p>
-    </div>
-  </div>
-  </div>
-  </div>
-  <form method="dialog" className="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+            
 
    </>
   );
