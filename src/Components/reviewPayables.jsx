@@ -36,11 +36,11 @@ function reviewPayables() {
   
   const columns = [
     { name: 'Payble ID', selector: row => row._id },
-    { name: 'Request ID', selector: row => row.requestId || 'Burat' },
+    { name: 'Request ID', selector: row => row.requestId},
     { name: 'Category', selector: row => row.category },
     { name: 'Type of Request', selector: row => row.typeOfRequest },
     { name: 'Documents', selector: row => row.documents },
-    { name: 'Reason', selector: row => row.reason || 'Burat'},
+    { name: 'Reason', selector: row => row.reason},
     { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.status === 'Pending' ? 'red' : 'blue',
@@ -104,6 +104,11 @@ function reviewPayables() {
   useEffect(() => {
     if(!socket) return;
 
+    socket.on("receive_budget_request_pending", (response) => {
+      setData(response.pendingRequestBudget)
+      setAccumulatedAmount(response.pendingBudgetRequestsCount.totalAmount)
+      setPendingPayablesCount(response.pendingBudgetRequestsCount.totalCount)
+    })
 
   }, [socket])
 

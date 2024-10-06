@@ -1,5 +1,6 @@
 import { useLocation, Link } from 'react-router-dom';   
 import JJM  from '../assets/JJM.jfif'
+import axios from 'axios'
 
 function ViewRequestPayable() {
   const location = useLocation();
@@ -7,6 +8,26 @@ function ViewRequestPayable() {
 
   if (!rowData) {
     return <p>No data available.</p>;
+  }
+
+  const API_URL = import.meta.env.VITE_SERVER_URL;
+
+  const handleProcess = async () => {
+    const submitData = {
+      _id: rowData._id,
+      requestId: rowData.requestId,
+      department: rowData.department,
+      typeOfRequest: rowData.typeOfRequest,
+      category: rowData.category,
+      reason: rowData.reason,
+      totalRequest: rowData.totalRequest,
+      documents: rowData.documents,
+      status: "On process",
+      comment: "Your request for budget is now on process",
+    }
+    
+    const response = await axios.post(`${API_URL}/API/BudgetRequests/UpdateRequest`, submitData);
+    console.log(response.data.msg)
   }
 
   return (
@@ -110,7 +131,7 @@ function ViewRequestPayable() {
         <p className="mb-4 text-gray-600">Are you sure you want to process this request to budget management?</p>
         <div className="flex flex-col gap-4">
       <div className="flex justify-end gap-4">
-        <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200">
+        <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" onClick={() => handleProcess()}>
           Yes
         </button>
         <button
