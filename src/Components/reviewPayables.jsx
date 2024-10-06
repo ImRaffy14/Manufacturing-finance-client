@@ -373,31 +373,27 @@ const handleRowClick = (row) => {
                         </div>
 
                         <div className="flex gap-4 w-full">
-
-                            <div className="w-full">
+                        <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="reason">
                                     Reason
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                <textarea
+                                placeholder="Reason"
+                                className="textarea textarea-bordered textarea-xs w-full max-w-xs"
                                 id="reason" 
                                 type="text"   
                                 value={reason}
-                                onChange={(e) => setReason(e.target.value)} required/> 
+                                onChange={(e) => setReason(e.target.value)} required></textarea>
+                                
                             </div>
+
+                            
 
                             <div className="w-full">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="documents">
-                                    Documents
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="reason">
+                                    Category
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="documents" 
-                                type="documents" 
-                                value={documents}
-                                onChange={(e) => setDocuments(e.target.value)} required/> 
-                            </div>
-                        </div>
-
-                        <div className="mt-2 w-full flex">
-                            <select className="select select-bordered w-[230px]"
+                            <select className="select select-bordered w-full"
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}>
                                 <option selected>Select Category</option>
@@ -405,7 +401,10 @@ const handleRowClick = (row) => {
                                 <option>Capital Expenditure</option>
                             </select>
                         </div>
+                        </div>
+
                         <div className="w-full">
+                          <h1 className="text-lg font-bold mb-2">Documents</h1>
                         <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setImage(e.target.files[0])} required />
                             </div>
                         {response && <h1 className="text-red-500 font-bold">{response}</h1>}
