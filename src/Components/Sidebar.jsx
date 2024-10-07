@@ -29,6 +29,7 @@ import { useSocket } from '../context/SocketContext';
 const Sidebar = ({ userData }) => {
 
   const [ payableLength, setPayableLength ] = useState(0)
+  const [ paidLength, setPaidLength] = useState(0)
 
   const socket = useSocket()
 
@@ -53,27 +54,17 @@ const initialAccountRequestData = [
   // Add more data as needed
 ];
 
-const initialReviewPaymentTransactions = [
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  // Add more data as needed
-];
 
 
 const fetchNotificationData = () => {
   const createInvoiceCount = initialData.length; //DATA LENGTH
   const accountRequestCount = initialAccountRequestData.length; // ACCOUNT REQ DATA LENGTH
-  const reviewPaymentTransactionsCount = initialReviewPaymentTransactions.length;
 
   // UPDATE
   setNotifications((prevState) => ({
     ...prevState,
     createInvoice: createInvoiceCount,
     accountRequest: accountRequestCount,
-    reviewPaymentTransactions: reviewPaymentTransactionsCount,
     hasNotifications: createInvoiceCount > 0 || accountRequestCount > 0 || reviewPayableCount > 0 || reviewPaymentTransactionsCount > 0,
   }));
 };
@@ -82,6 +73,7 @@ useEffect(() => {
   fetchNotificationData();
 
   socket.emit('get_payable_length', {msg: "get payable length"})
+  socket.emit("get_paid_records", {msg: "get paid records length"})
 
 }, []);
 
@@ -90,6 +82,12 @@ useEffect(() => {
   
   socket.on("receive_payable_length", (response) => {
     setPayableLength(response)
+  })
+
+  socket.on("receive_paid_records", (response) => {
+    setPaidLength(response.recordsCount)
+    
+
   })
 
 }, [socket])
@@ -362,23 +360,23 @@ const toggleSidebar = () => {
             <li>
             <details open>
               <summary><FaList className="w-5 h-5" />General Ledger
-              {notifications.reviewPaymentTransactions > 0 && (
+              {paidLength > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}</summary>
                 <ul>
                  <li>
                     <details open>
                       <summary><AiOutlineAudit/>Internal Audit and Controls
-                      {notifications.reviewPaymentTransactions > 0 && (
+                      {paidLength > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}</summary>
                           <ul>
                           <li className="hover:text-blue-500">
                               <NavLink to="reviewPaymentTransactions" activeClassName="text-blue-500">
                                 ● Review Payment Transactions
-                                {notifications.reviewPaymentTransactions > 0 && (
+                                {paidLength > 0 && (
                                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
-                                    {notifications.reviewPaymentTransactions}
+                                    {paidLength}
                                   </span>)}
                               </NavLink>
                             </li>

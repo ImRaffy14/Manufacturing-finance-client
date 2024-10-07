@@ -51,7 +51,7 @@ function reviewPayables() {
                                   fontWeight: 'bold' 
                                  }}>
                                 {row.status}
-                                </span>) },
+                                </span>) }, 
                              
   ];
   

@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { useNavigate } from 'react-router-dom';
+import { useSocket } from '../context/SocketContext';
+
 
 function reviewPaymentTransactions() {
   const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
   const [trailsData, setTrailsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
+  // const [selectedRowData, setSelectedRowData] = useState(null);
+  const [data, setData] = useState([])
 
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
+  const socket = useSocket()
 
   const columns = [
     { name: 'Invoice ID ', selector: row => row._id },
@@ -20,7 +24,7 @@ function reviewPaymentTransactions() {
     { name: 'Customer Name', selector: row => row.customerName },
     { name: 'Contact Details', selector: row => row.customerContact },
     { name: 'Invoice Date', selector: row => row.invoiceDate },
-    { name: 'Paid Date', selector: row => row.paidDate },
+    { name: 'Due Date', selector: row => row.dueDate},
     {
       name: 'Items',
       selector: row =>
@@ -30,28 +34,27 @@ function reviewPaymentTransactions() {
               `${item.itemName} (Qty: ${item.quantity}, Price: ₱${item.price})`
           )
           .join(', '),
-      wrap: true, // Optional: wrap text to avoid overflow
+      wrap: true,  width: '300px'
     },
     { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount) },
   ];
   
-  const data = [
-    {
-      _id: '1',
-      customerId: '1',
-      customerName: 'John Doe',
-      customerContact: '090909009',
-      invoiceDate: '12/12/2024',
-      paidDate: '12/14/2024',
-      items: [
-        { itemName: 'JJM Soap A', quantity: 2, price: 100 },
-        { itemName: 'JJM Soap B', quantity: 1, price: 150 },
-        { itemName: 'JJM Soap C', quantity: 3, price: 200 },
-      ],
-      totalAmount: '950', // Adjust the total amount to reflect the added items
-    },
-  ];
+
+  //HANDLES FETCHING DATA
+  useEffect(() => {
+    socket.emit("get_paid_records", {msg: "get paid records"})
+  }, [])
   
+  useEffect(() => {
+    if(!socket) return;
+
+    socket.on("receive_paid_records", (response) => {
+      setData(response.records)
+      setIsLoading(false)
+    })
+  
+  },[socket])
+
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
@@ -64,10 +67,22 @@ function reviewPaymentTransactions() {
   const handleRowClick = (row) => {
     navigate('/Dashboard/viewReviewPaymentTransactions', { state: { rowData: row } });
 };
+
+if (isLoading) {
+  return (
+    <div className="flex w-full flex-col gap-4">
+      <div className="skeleton h-[520px] w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+    </div>
+  );
+}
+
   return (
     <>
      <div className="max-w-screen-2xl mx-auto mt-4">
-        <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
+        <div className="items-center justify-center bg-white rounded-lg shadow-2xl border border-gray-300">
           <div className="mx-4">
             <div className="overflow-x-auto w-full">
               <DataTable

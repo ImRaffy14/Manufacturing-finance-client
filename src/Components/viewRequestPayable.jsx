@@ -161,7 +161,7 @@ function ViewRequestPayable({ userData }) {
         </ul>
     </div>
 
-      <div className='bg-white p-10'>
+      <div className='rounded-xl shadow-2xl bg-white p-10'>
 
       <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Request Payable Preview</h1>
 

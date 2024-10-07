@@ -8,10 +8,12 @@ function viewReviewPaymentTransactions({ userData }) {
   const { rowData } = location.state || {};
 
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
   
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setIsLoading(true)
     const data = {
         username : userData.userName,
         password : password,
@@ -38,7 +40,7 @@ function viewReviewPaymentTransactions({ userData }) {
           </ul>
         </div>
 
-        <div className="bg-white p-10">
+        <div className="rounded-xl shadow-2xl bg-white p-10">
           <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Payment Review</h1>
 
           <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Invoice ID: {rowData._id}</h2>
@@ -65,13 +67,13 @@ function viewReviewPaymentTransactions({ userData }) {
             </div>
 
             <div className="flex justify-between">
-              <p className="font-medium"><strong>Paid Date:</strong></p>
-              <p className="text-gray-700">{rowData.paidDate}</p>
+              <p className="font-medium"><strong>Due Date:</strong></p>
+              <p className="text-gray-700">{rowData.dueDate}</p>
             </div>
           </div>
 
           {/* Invoice-style Preview below */}
-          <div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md" id="payable-preview">
+          <div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md rounded-xl" id="payable-preview">
             <div className="flex justify-between items-center mb-4">
               <div>
                 <img src={JJM} className="h-20 w-20" />
@@ -86,7 +88,7 @@ function viewReviewPaymentTransactions({ userData }) {
               <p><strong>Customer ID:</strong> {rowData._id}</p>
               <p><strong>Customer Name:</strong> {rowData.customerName}</p>
               <p><strong>Invoice Date:</strong> {rowData.invoiceDate}</p>
-              <p><strong>Paid Date:</strong> {rowData.paidDate}</p>
+              <p><strong>Due Date:</strong> {rowData.dueDate}</p>
             </div>
 
             {/* Items Table */}
@@ -105,8 +107,8 @@ function viewReviewPaymentTransactions({ userData }) {
                   <tr key={index}>
                     <td className="border border-gray-300 px-4 py-2">{item.itemName}</td>
                     <td className="border border-gray-300 px-4 py-2 text-right">{item.quantity}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">{item.price}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">{calculateTotalAmount(item.price, item.quantity)}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₱{item.price}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₱{calculateTotalAmount(item.price, item.quantity)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -114,12 +116,12 @@ function viewReviewPaymentTransactions({ userData }) {
 
             {/* Total Amount */}
             <div className="text-right font-bold mt-4">
-              <p className="text-xl">TOTAL AMOUNT: ₱{rowData.totalRequest}</p>
+              <p className="text-xl">TOTAL AMOUNT: ₱{rowData.totalAmount}</p>
             </div>
           </div>
 
           <div className="flex items-center justify-center mt-4 gap-10">
-            <button className="btn btn-lg bg-green-400 hover:bg-green-700" onClick={() => document.getElementById('audit_modal').showModal()}>
+            <button className="btn btn-lg bg-green-400 hover:bg-green-700 w-[150px]" onClick={() => document.getElementById('audit_modal').showModal()}>
               Audit
             </button>
           </div>
@@ -141,17 +143,22 @@ function viewReviewPaymentTransactions({ userData }) {
         />
       </div>
 
-      <div className="flex justify-between mt-4">
- 
-          <button
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-blue-700"
+      {!isLoading && 
+        <button
+        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800"
         >
-          Confirm Audit  
+        Confirm Audit  
         </button>
-        
+      }
+      
+      </form>
+      
+      {isLoading &&       <button
+        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800 mt-4 w-[140px]"
+        >
+        <span className="loading loading-spinner loading-sm"></span>
+      </button>}
 
-      </div>
-    </form>
   </div>
   <form method="dialog" className="modal-backdrop">
     <button>close</button>
