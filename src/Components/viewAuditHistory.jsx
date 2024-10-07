@@ -15,7 +15,7 @@ function viewAuditHistory() {
     { name: 'User ID', selector: row => row._id },
     { name: 'Username', selector: row => row.userName },
     { name: 'Role', selector: row => row.role },
-    { name: 'Action', selector: row => row.action },
+    { name: 'Invoice ID', selector: row => row._id },
     { name: 'Description', selector: row => row.description },
   ];
 
@@ -105,7 +105,7 @@ function viewAuditHistory() {
               <p><strong>User ID:</strong> {selectedRowData._id}</p>
               <p><strong>Username:</strong> {selectedRowData.userName}</p>
               <p><strong>Role:</strong> {selectedRowData.role}</p>
-              <p><strong>Action:</strong> {selectedRowData.action}</p>
+              <p><strong>Invoice ID:</strong> {selectedRowData._id}</p>
               <p><strong>Description:</strong> {selectedRowData.description}</p>
             </div>
             <button

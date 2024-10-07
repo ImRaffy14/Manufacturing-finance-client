@@ -12,6 +12,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { CiTrash } from "react-icons/ci";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { MdOutlineChat } from "react-icons/md";
+import { TbCreditCardPay } from "react-icons/tb";
 import { FiRepeat } from "react-icons/fi";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
@@ -134,6 +135,19 @@ function Dashboard() {
           </div>
           </Link>
 
+          <Link to="/Dashboard/reviewPayables">
+           {/* Budget Requests*/}
+           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-black font-semibold text-md">Pending Payables</p>
+            </div>
+            <div className="flex gap-3 my-3">
+            <TbCreditCardPay className="text-blue-600 text-2xl my-2" />
+              <p className="text-4xl text-black font-bold">{budgetRequest}</p>
+            </div>
+          </div>
+          </Link>
+
           <Link to="/Dashboard/budgetRequest">
            {/* Budget Requests*/}
            <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
@@ -147,7 +161,7 @@ function Dashboard() {
           </div>
           </Link>
 
-          <Link to="/Dashboard/approveRejectInvoice">
+          <Link to="/Dashboard/pendingInvoice">
           {/* Rejected Invoices*/}
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
