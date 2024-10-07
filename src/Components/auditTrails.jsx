@@ -11,14 +11,23 @@ function AuditTrails() {
   const socket = useSocket();
 
   const columns = [
-    { name: 'Date & Time', selector: row => row.dateTime },
-    { name: 'User ID', selector: row => row._id },
-    { name: 'Username', selector: row => row.userName },
-    { name: 'Role', selector: row => row.role },
-    { name: 'Action', selector: row => row.action },
-    { name: 'Description', selector: row => row.description },
+    { name: 'Date & Time', selector: row => row.dateTime, width: '200px' },
+    { name: 'User ID', selector: row => row._id, width: '250px' },
+    { name: 'Username', selector: row => row.userName, width: '150px' },
+    { name: 'Role', selector: row => row.role, width: '150px' },
+    { name: 'Action', selector: row => row.action, width: '350px' },
+    { 
+      name: 'Description', 
+      selector: row => row.description, 
+      width: '300px',
+      cell: row => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {row.description}
+        </div>
+      ) 
+    },
   ];
-
+  
   const data = trailsData;
 
   useEffect(() => {

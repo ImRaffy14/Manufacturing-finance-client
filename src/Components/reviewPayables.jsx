@@ -11,6 +11,7 @@ import { useSocket } from "../context/SocketContext"
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
 import JJM from '../assets/JJM.jfif';
+import { toast } from 'react-toastify'
 
 function reviewPayables() {
   const navigate = useNavigate();
@@ -20,14 +21,15 @@ function reviewPayables() {
   const [selectedRowData, setSelectedRowData] = useState(null); 
   const [selectedRowOnProcessData, setSelectedRowOnProcessData] = useState(null); 
   const [typeOfRequest, setTypeOfRequest] = useState('');
-  const [totalRequest, setTotalRequest] = useState('');
-  const [documents, setDocuments] = useState('');
+  const [totalRequest, setTotalRequest] = useState(0);
+  const [documents, setDocuments] = useState(null);
   const [reason, setReason] = useState('');
   const [category, setCategory] = useState('');
   const [data, setData] = useState([]);
   const [response, setResponse] = useState('')
   const [onProcessData, setOnprocessData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false)
 
   const socket = useSocket()
 
@@ -108,6 +110,54 @@ function reviewPayables() {
 
   }, [socket])
 
+
+  //Handles submit
+  const submit = async (e) => {
+    e.preventDefault()
+
+    const formData = new FormData()
+    formData.append("typeOfRequest", "Budget")
+    formData.append("totalRequest", totalRequest)
+    formData.append("reason", reason)
+    formData.append("category", category)
+    formData.append("documents", documents)
+
+    setIsSubmitLoading(true)
+    
+    try{
+
+      const response = await axios.post(`${API_URL}/API/BudgetRequests/AddBudgetRequest`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+
+      if(response){
+        toast.success(response.data.msg, {
+          position: 'top-right'
+        })
+        setIsSubmitLoading(false)
+        setTotalRequest(0)
+        setReason("")
+        setCategory("")
+        setDocuments(null)
+        document.getElementById('payable_modal').close()
+      }
+    }
+    catch(error){
+      toast.error("Server Internal Error", {
+        position: 'top-right'
+      })
+      setIsSubmitLoading(false)
+      setIsSubmitLoading(false)
+      setTotalRequest(0)
+      setReason("")
+      setCategory("")
+      setDocuments(null)
+      document.getElementById('payable_modal').close()
+      console.error(error)
+    }
+  }
 
   //Handles Search from datatables
   const handleSearch = (event) => {
@@ -272,7 +322,12 @@ const handleRowClick = (row) => {
             <p className="font-medium"><strong>Documents:</strong></p>
             <p className="text-blue-700"><a href={selectedRowOnProcessData.documents}>{selectedRowOnProcessData.documents}</a></p>
           </div>
-      
+          <iframe 
+              src={selectedRowOnProcessData.documents}
+              width="100%" 
+              height="600px" 
+              title="PDF Viewer"
+            />
           <div className="flex justify-between">
             <p className="font-medium"><strong>Reason:</strong></p>
             <p className="text-gray-700">{selectedRowOnProcessData.reason || 'KUMAIN NG PUDAY'}</p>
@@ -339,7 +394,7 @@ const handleRowClick = (row) => {
                 <div className="modal-box shadow-xl">
 
                 
-                <form >
+                <form onSubmit={submit}>
                     <div className="flex flex-col justify-center items-center gap-4">
                         <h1 className="font-bold mb-4 text-lg">CREATE PAYABLE</h1>
 
@@ -362,7 +417,7 @@ const handleRowClick = (row) => {
                                     Total Amount
                                 </label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="totalRequest" 
-                                type="number" 
+                                type="Number" 
                                 value={totalRequest}
                                 onChange={(e) => setTotalRequest(e.target.value)} required/>
                             </div>
@@ -401,15 +456,16 @@ const handleRowClick = (row) => {
 
                         <div className="w-full">
                           <h1 className="text-lg font-bold mb-2">Documents</h1>
-                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setImage(e.target.files[0])} required />
+                          <h1 className="italic mb-2 text-red-500">Note: PDF documents maximum of 10MB only .</h1>
+                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setDocuments(e.target.files[0])} required />
                             </div>
                         {response && <h1 className="text-red-500 font-bold">{response}</h1>}
                         <div className="w-full">
-                            {!isLoading && <button className="btn btn-primary w-full font-bold">Submit</button>}
+                            {!isSubmitLoading && <button className="btn btn-primary w-full font-bold">Submit</button>}
                         </div>
                     </div>
                     </form>
-                        {isLoading && <button className="btn btn-primary w-full font-bold"><span className="loading loading-spinner loading-md"></span></button>}
+                        {isSubmitLoading && <button className="btn btn-primary w-full font-bold"><span className="loading loading-spinner loading-md"></span></button>}
                 </div>
                 <form method="dialog" className="modal-backdrop">
                     <button>Close</button>

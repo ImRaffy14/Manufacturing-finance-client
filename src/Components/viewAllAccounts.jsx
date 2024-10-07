@@ -22,9 +22,9 @@ function ViewAllAccounts({ userData }) {
   const socket = useSocket();
 
   const columns = [
-    { name: 'User Image', selector: row => <img src={row.image.secure_url} alt="Profile" style={{ width: '80px', height: '80px', borderRadius: '25%', padding: '5%' }} /> },
+    { name: 'User Image', selector: row => <img src={row.image.secure_url} alt="Profile" style={{ width: '80px', height: '80px', borderRadius: '25%', padding: '5%' }} />, width: '130px'  },
     { name: 'User ID', selector: row => row._id },
-    { name: 'Username', selector: row => row.userName },
+    { name: 'Username', selector: row => row.userName, width: '150px'  },
     { name: 'Full Name', selector: row => row.fullName },
     { name: 'Email', selector: row => row.email },
     { name: 'Role', selector: row => row.role },

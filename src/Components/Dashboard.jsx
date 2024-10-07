@@ -82,6 +82,7 @@ function Dashboard() {
 
   useEffect(() => {
     socket.emit('get_payable_length', {msg: "get payable length"})
+    
     socket.emit("get_pending_invoice", {msg: "get pending invoice"})
 
     return

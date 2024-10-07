@@ -110,7 +110,7 @@ function ViewRequestPayable({ userData }) {
 
       const response = await axios.post(`${API_URL}/API/BudgetRequests/UpdateRequest`, submitData);
       if(response){
-        toast.success(response.data.msg, {
+        toast.success(`Budget Request from ${submitData.department} is Declined`, {
           position: "top-right"
         });
 
@@ -182,7 +182,12 @@ function ViewRequestPayable({ userData }) {
             <p className="font-medium"><strong>Documents:</strong></p>
             <p className="text-blue-700"><a href={rowData.documents}>{rowData.documents}</a></p>
           </div>
-
+          <iframe 
+              src={rowData.documents}
+              width="100%" 
+              height="600px" 
+              title="PDF Viewer"
+            />
           <div className="flex justify-between">
             <p className="font-medium"><strong>Reason:</strong></p>
             <p className="text-gray-700">{rowData.reason}</p>
