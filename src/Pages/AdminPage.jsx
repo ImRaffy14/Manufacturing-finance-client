@@ -37,6 +37,7 @@ import ViewCollection from '../Components/viewCollection';
 import InvoiceDownload from '../Components/invoiceDownload';
 import AnomalyDetection from '../Components/anomalyDetection';
 import ViewRequestPayable from '../Components/viewRequestPayable';
+import ViewReviewPaymentTransactions from '../Components/viewReviewPaymentTransactions';
 import { getProfile } from '../authentication/auth';
 
 function AdminPage() {
@@ -77,45 +78,101 @@ function AdminPage() {
 
     return (
         <div className="h-screen flex">
-            <Sidebar />
+            <Sidebar  userData={user} />
             <div className="flex-col w-full overflow-auto bg-gray-200">
                 {user && <Search userData={user} />}    
                 <Routes>
                     <Route path="overview" element={<Dashboard />} />
                     <Route path="/" element={<Navigate to="/Dashboard/overview" />} />
                     <Route path="*" element={<PageNotFound />} />
-                    <Route path="accountCreation" element={<AccountCreation userData={user}/>} />
-                    <Route path="approvedBudgets" element={<ApprovedBudgets />} />
-                    <Route path="approveRejectPayables" element={<ApproveRejectPayables />} />
-                    <Route path="auditRecords" element={<AuditRecords />} />
-                    <Route path="auditTrails" element={<AuditTrails />} />
-                    <Route path="budgetApproval" element={<BudgetApproval />} />
+
+                        {/* Cash Collection */}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' || user.role === 'ADMIN') && (
+                        <Route path="collectionReports" element={<CollectionReports />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' || user.role === 'ADMIN') && (
+                        <Route path="viewCollection" element={<ViewCollection />} />
+                    )}
+
+                        {/* Budget Management */}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
+                        <Route path="approvedBudgets" element={<ApprovedBudgets />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
+                        <Route path="budgetRequest" element={<BudgetRequest />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
+                        <Route path="budgetApproval" element={<BudgetApproval />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
+                        <Route path="pendingApproval" element={<PendingApproval />} />
+                    )}
+
+                        {/* Accounts Receivable */}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'TREASURER' || user.role === 'TREASURER' ||  user.role === 'ADMIN') && (
+                        <Route path="createInvoice" element={<CreateInvoice userData={user} />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'TREASURER' || user.role === 'TREASURER' ||  user.role === 'ADMIN') && (
+                        <Route path="pendingInvoice" element={<PendingInvoice />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'TREASURER' || user.role === 'TREASURER' ||  user.role === 'ADMIN') && (
+                        <Route path="paidInvoice" element={<PaidInvoice />} />
+                    )}
+                    
+                        {/* Accounts Payable */}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'TREASURER' || user.role === 'TREASURER' ||  user.role === 'ADMIN') && (
+                        <Route path="approveRejectPayables" element={<ApproveRejectPayables />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'TREASURER' || user.role === 'TREASURER' ||  user.role === 'ADMIN') && (
+                        <Route path="reviewPayables" element={<ReviewPayables />} />
+                    )}
+
+                        {/* General Ledger */}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCIAL ANALYST' ||  user.role === 'FINANCE MANAGER' || user.role ==='ACCOUNTANT' || user.role === 'ADMIN') && (   
+                        <Route path="reviewPaymentTransactions" element={<ReviewPaymentTransactions />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCIAL ANALYST' ||  user.role === 'FINANCE MANAGER' || user.role ==='ACCOUNTANT' || user.role === 'ADMIN') && (   
+                        <Route path="viewAuditHistory" element={<ViewAuditHistory />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCIAL ANALYST' ||  user.role === 'FINANCE MANAGER' || user.role ==='ACCOUNTANT' || user.role === 'ADMIN') && (   
+                        <Route path="financialReports" element={<FinancialReports />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCIAL ANALYST' ||  user.role === 'FINANCE MANAGER' || user.role ==='ACCOUNTANT' || user.role === 'ADMIN') && (   
+                        <Route path="transactionRecords" element={<TransactionRecords />} />
+                    )}
+
+                        {/* Account's Management */}
+                    {(user.role === 'ADMIN' || user.role === 'FINANCE MANAGER')  && (
+                        <Route path="accountCreation" element={<AccountCreation userData={user}/>} />
+                    )}
+                    {(user.role === 'ADMIN' || user.role === 'FINANCE MANAGER')  && (
+                        <Route path="viewAllAccounts" element={<ViewAllAccounts userData={user}/>} />
+                    )}
+
+                        {/* Audit Trails */}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ADMIN') && (      
+                        <Route path="auditTrails" element={<AuditTrails />} />
+                    )}
+
+                        {/* Anomaly Detection */}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ADMIN') && (  
+                        <Route path="anomalyDetection" element={<AnomalyDetection />} />
+                    )}
+
+                    <Route path="auditRecords" element={<AuditRecords />} />    
                     <Route path="budgetReports" element={<BudgetReports />} />
-                    <Route path="budgetRequest" element={<BudgetRequest />} />
-                    <Route path="collectionReports" element={<CollectionReports />} />
-                    <Route path="financialReports" element={<FinancialReports />} />
                     <Route path="createBudget" element={<CreateBudget />} />
                     <Route path="createFinancialReport" element={<CreateFinancialReport />} />
-                    <Route path="createInvoice" element={<CreateInvoice userData={user} />} />
                     <Route path="customerPaymentStatus" element={<CustomerPaymentStatus />} />
                     <Route path="editAccounts" element={<EditAccounts />} />
                     <Route path="editBudget" element={<EditBudget />} />
                     <Route path="generateReports" element={<GenerateReports />} />
                     <Route path="manageAuditors" element={<ManageAuditors />} />
                     <Route path="manageRolesPermissions" element={<ManageRolesPermissions />} />
-                    <Route path="paidInvoice" element={<PaidInvoice />} />
                     <Route path="paymentStatus" element={<PaymentStatus />} />
-                    <Route path="pendingApproval" element={<PendingApproval />} />
-                    <Route path="pendingInvoice" element={<PendingInvoice />} />
-                    <Route path="reviewPaymentTransactions" element={<ReviewPaymentTransactions />} />
-                    <Route path="reviewPayables" element={<ReviewPayables />} />
                     <Route path="supplierPaymentHistory" element={<RupplierPaymentHistory />} />
-                    <Route path="transactionRecords" element={<TransactionRecords />} />
-                    <Route path="viewAllAccounts" element={<ViewAllAccounts userData={user}/>} />
-                    <Route path="viewAuditHistory" element={<ViewAuditHistory />} />
-                    <Route path="viewCollection" element={<ViewCollection />} />
                     <Route path="invoiceDownload" element={<InvoiceDownload />} />
-                    <Route path="anomalyDetection" element={<AnomalyDetection />} />
+                    <Route path="viewReviewPaymentTransactions" element={<ViewReviewPaymentTransactions userData={user}/>} />
                     <Route path="viewRequestPayable" element={<ViewRequestPayable  userData={user}/>} />
                 </Routes>
             </div>

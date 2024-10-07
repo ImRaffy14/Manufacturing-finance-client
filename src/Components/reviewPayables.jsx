@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 function reviewPayables() {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState('');
+  const [onPorcessSearchText, setOnProcessSearchText] = useState ('');
   const [accumulatedAmount, setAccumulatedAmount] = useState(0);
   const [pendingPayablesCount, setPendingPayablesCount] = useState(0);
   const [selectedRowData, setSelectedRowData] = useState(null); 
@@ -164,6 +165,10 @@ function reviewPayables() {
     setSearchText(event.target.value);
   };
 
+  const handleOnProcessSearch = (event) => {
+    setOnProcessSearchText(event.target.value);
+  };
+
   // Filter data based on search text
   const filteredData = data.filter(row =>
     Object.values(row).some(value =>
@@ -174,7 +179,7 @@ function reviewPayables() {
    // Filter data based on search text
    const filteredOnProcessData = onProcessData.filter(row =>
     Object.values(row).some(value =>
-      value.toString().toLowerCase().includes(searchText.toLowerCase())
+      value.toString().toLowerCase().includes(onPorcessSearchText.toLowerCase())
     )
   );
 
@@ -286,8 +291,8 @@ const handleRowClick = (row) => {
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                value={searchText}
-                                onChange={handleSearch}
+                                value={onPorcessSearchText}
+                                onChange={handleOnProcessSearch}
                                 className="mb-2 p-2 border border-gray-400 rounded-lg"
                             />
                             }

@@ -26,7 +26,7 @@ import { TbZoomMoney } from "react-icons/tb";
 import { useSocket } from '../context/SocketContext';
 
 
-const Sidebar = () => {
+const Sidebar = ({ userData }) => {
 
   const [ payableLength, setPayableLength ] = useState(0)
 
@@ -121,6 +121,7 @@ const toggleSidebar = () => {
 
 
   return (
+    <>
     <div
       className={`flex flex-col overflow-auto bg-white text-black border-r-2 sticky top-0 max-md:hidden transition-all duration-300 ${
         isCollapsed ? "w-20 px-4 py-4" : "w-72 lg:w-80 px-2 py-4"
@@ -181,8 +182,7 @@ const toggleSidebar = () => {
           Modules
         </p>
         
-        
-        {/* Cash management */}
+        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <TbBrandCashapp className="w-5 h-5" />}   
           {!isCollapsed && 
@@ -196,7 +196,7 @@ const toggleSidebar = () => {
                             <ul>
                               <li className="flex hover:text-blue-500">
                                 <NavLink to="viewCollection" activeClassName="text-blue-500">
-                                  ● ViewCollection
+                                  ● View Collection
                                 </NavLink>
                               </li>
                               <li className="hover:text-blue-500">
@@ -212,8 +212,11 @@ const toggleSidebar = () => {
           </li>
           }
         </ul>
+        )}
 
-           {/* Budget Management */}
+
+             {/* Budget Management */}
+{(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' ||  userData.role === 'ADMIN') && (
          <ul className="menu  rounded-box w-56">
           {isCollapsed && <TbPigMoney className="w-5 h-5" />}   
           {!isCollapsed && 
@@ -253,8 +256,10 @@ const toggleSidebar = () => {
           </li>
           }
         </ul>
+)}
         
             {/* Accounts Receivable */}
+            {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'TREASURER' || userData.role === 'TREASURER' ||  userData.role === 'ADMIN') && (           
             <ul className="menu rounded-box w-56">
       {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}
       {!isCollapsed && (
@@ -306,7 +311,9 @@ const toggleSidebar = () => {
         </li>
       )}
     </ul>
+            )}
         {/* Accounts Payable */}
+        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'TREASURER' ||  userData.role === 'ADMIN') && (           
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <TbCreditCardPay className="w-5 h-5" />}   
           {!isCollapsed && 
@@ -345,10 +352,10 @@ const toggleSidebar = () => {
           </li>
           }
         </ul>
-
-        
+        )}
 
         {/* General Ledger */}
+        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCIAL ANALYST' ||  userData.role === 'FINANCE MANAGER' || userData.role ==='ACCOUNTANT' || userData.role === 'ADMIN') && (           
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <FaList className="w-5 h-5" />}   
           {!isCollapsed && 
@@ -406,8 +413,9 @@ const toggleSidebar = () => {
           </li>
           }
         </ul>
-
+        )}
         {/* Accounts Management */}
+        {(userData.role === 'ADMIN' || userData.role === 'FINANCE MANAGER')  && (
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <MdAccountCircle className="w-5 h-5" />}   
           {!isCollapsed && 
@@ -450,8 +458,10 @@ const toggleSidebar = () => {
           </li>
           }
         </ul>
-          
+        )}
+
       {/* Audit putanginamo raffy */}
+      {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (      
 <ul className="menu rounded-box w-56">
   {isCollapsed && <SiAdobeaudition className="w-5 h-5" />}
   {!isCollapsed && (
@@ -469,8 +479,10 @@ const toggleSidebar = () => {
     </li>
   )}
 </ul>
+      )}
 
-        {/* Nagdedetect ng burat */}
+{/* Nagdedetect ng burat */}
+{(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (   
         <ul className="menu rounded-box w-56">
   {isCollapsed && <VscBracketError className="w-5 h-5" />}
   {!isCollapsed && (
@@ -488,8 +500,11 @@ const toggleSidebar = () => {
     </li>
   )}
 </ul>
+)}
+        
       </div>
     </div>
+    </>
   );
 };
 
