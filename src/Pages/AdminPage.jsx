@@ -38,6 +38,7 @@ import InvoiceDownload from '../Components/invoiceDownload';
 import AnomalyDetection from '../Components/anomalyDetection';
 import ViewRequestPayable from '../Components/viewRequestPayable';
 import ViewReviewPaymentTransactions from '../Components/viewReviewPaymentTransactions';
+import ViewBudgetRequest from '../Components/viewBudgetRequest';
 import { getProfile } from '../authentication/auth';
 
 function AdminPage() {
@@ -106,6 +107,9 @@ function AdminPage() {
                     )}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
                         <Route path="pendingApproval" element={<PendingApproval />} />
+                    )}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
+                        <Route path="viewBudgetRequest" element={<ViewBudgetRequest />} />
                     )}
 
                         {/* Accounts Receivable */}

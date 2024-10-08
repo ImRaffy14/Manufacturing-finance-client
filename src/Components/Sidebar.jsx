@@ -39,6 +39,7 @@ const Sidebar = ({ userData }) => {
     accountRequest: 0, 
     reviewPayable: 0,
     reviewPaymentHistory: 0,
+    budgetRequest: 4,
   });
 
 const initialData = [
@@ -65,7 +66,7 @@ const fetchNotificationData = () => {
     ...prevState,
     createInvoice: createInvoiceCount,
     accountRequest: accountRequestCount,
-    hasNotifications: createInvoiceCount > 0 || accountRequestCount > 0 || reviewPayableCount > 0 || reviewPaymentTransactionsCount > 0,
+    hasNotifications: createInvoiceCount > 0 || accountRequestCount > 0 || reviewPayableCount > 0 || reviewPaymentTransactionsCount > 0 || budgetRequestCount > 0,
   }));
 };
 
@@ -220,30 +221,30 @@ const toggleSidebar = () => {
           {!isCollapsed && 
             <li>
             <details open>
-              <summary><TbPigMoney className="w-5 h-5" />Budget Management</summary>
+              <summary><TbPigMoney className="w-5 h-5" />Budget Management
+              {notifications.budgetRequest > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              )}
+              </summary>
                 <ul>
                  <li>
                     <details open>
-                      <summary><TbZoomMoney/>Manage Budget</summary>
+                      <summary><TbZoomMoney/>Manage Budget
+                      {notifications.budgetRequest > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+              )}</summary>
                           <ul>
                             <li className="hover:text-blue-500">
                               <NavLink to="budgetRequest" activeClassName="text-blue-500">
                                 ● Budget Requests
+                                {notifications.budgetRequest > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{notifications.budgetRequest}</span>
+                           )}
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
-                              <NavLink to="budgetApproval" activeClassName="text-blue-500">
-                                ● Budget Approval
-                              </NavLink>
-                            </li>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="pendingApproval" activeClassName="text-blue-500">
-                                ● Pending Approvals
-                              </NavLink>
-                            </li>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="approvedBudgets" activeClassName="text-blue-500">
-                                ● Approved Budgets
+                              <NavLink to="budgetReports" activeClassName="text-blue-500">
+                                ● Budget Reports
                               </NavLink>
                             </li>
                           </ul>
