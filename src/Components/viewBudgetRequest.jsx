@@ -113,37 +113,58 @@ payable-preview">
 </div>
     </div>
 
-    {/* Approve Modal */}
     <dialog id="approve_modal" className="modal">
         <div className="modal-box">
-        <h3 className="font-bold text-xl mb-4">Approve Budget</h3>
-        <p className="mb-4 text-gray-600">Are you sure you want to approve this budget?</p>
-        <div className="flex flex-col gap-4">
-        <p className="font-bold">Reason:</p>
-      <textarea
-        className="textarea textarea-success border-gray-300 rounded-lg p-3"
-        placeholder="Add a comment"
-        rows="4"
-        required
-      ></textarea>
-      <div className="flex justify-end gap-4">
-        <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200">
-          Yes
-        </button>
-        <button
-          className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
-          onClick={() => document.getElementById("approve_modal").close()}
-        >
-          No
-        </button>
-      </div>
-    </div>
+        <form className="space-y-4" >
+            <div>
+            <h3 className="font-bold text-lg text-center">Enter Password to Approve Budget</h3>
+              <label className="block text-gray-600 font-medium mb-1">Password</label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+              <button
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
+              >
+              Confirm Budget  
+              </button>
+            </form>
         </div>
-        <form method="dialog" className="modal-backdrop">
-          <button>close</button>
-        </form>
-      </dialog>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
 
+    {/* Decline Password */}
+    <dialog id="confirm_decline_modal" className="modal">
+        <div className="modal-box">
+        <form className="space-y-4" >
+            <div>
+            <h3 className="font-bold text-lg text-center">Enter Password to Decline Budget</h3>
+              <label className="block text-gray-600 font-medium mb-1">Password</label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+              <button
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800"
+              >
+              Decline Budget  
+              </button>
+            </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
 
 
 {/* Decline Modal */}
@@ -160,7 +181,8 @@ payable-preview">
         required
       ></textarea>
       <div className="flex justify-end gap-4">
-        <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200">
+        <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" 
+        onClick={() => document.getElementById("confirm_decline_modal").showModal()}>
           Yes
         </button>
         <button

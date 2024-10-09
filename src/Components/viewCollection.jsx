@@ -1,9 +1,11 @@
 
 import React, { useState, useEffect } from "react";
-import { IoIosArrowUp } from "react-icons/io";
+import DataTable from 'react-data-table-component';
+import { useNavigate } from 'react-router-dom';
 import { RiPassPendingLine } from "react-icons/ri";
 import { FaIndustry } from "react-icons/fa";
 import { BsCashCoin } from "react-icons/bs";
+import { IoIosArrowUp } from "react-icons/io";  
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 
@@ -13,6 +15,16 @@ function viewCollection() {
   const [cashAmount, setCashAmount] = useState(0);
   const [revenueAmount, setRevenueAmount] = useState(0);
   const [spentAmount, setSpent] = useState(0);
+  const navigate = useNavigate();
+  const [budgetRequest, setBudgetRequest] = useState(0);
+  const [totalCash, setTotalCash] = useState(0);
+  const [reason, setReason] = useState('');
+  const [searchText, setSearchText] = useState('');
+  const [requestId, setRequestId] = useState('');
+  const [category, setCategory] = useState('');
+  const [typeOfRequest, setTypeOfRequest] = useState ('');
+  const [documents, setDocuments] = useState ('');
+  const [totalRequest, setTotalRequest] = useState(0);
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
@@ -33,7 +45,70 @@ function viewCollection() {
   ];
   
 
-  
+  const columns = [
+    { name: 'Payable ID', selector: row => row._id },
+    { name: 'Request ID', selector: row => row.requestId },
+    { name: 'Category', selector: row => row.category },
+    { name: 'Type of Request', selector: row => row.typeOfRequest },
+    { name: 'Documents', selector: row => row.documents },
+    { name: 'Reason', selector: row => row.reason },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
+    { name: 'Status', selector: row => ( 
+                                <span style={{ color: row.status === 'On process' ? 'blue' : 'red',
+                                  fontWeight: 'bold' 
+                                 }}>
+                                {row.status}
+                                </span>) },
+  ];
+
+  const data = [
+    {
+      _id: 'P001',
+      requestId: 'REQ1001',
+      category: 'Office Supplies',
+      typeOfRequest: 'Purchase',
+      documents: 'Invoice123.pdf',
+      reason: 'For restocking office supplies',
+      totalRequest: 5000.75,
+      status: 'On process',
+    },
+    {
+      _id: 'P002',
+      requestId: 'REQ1002',
+      category: 'Travel Expenses',
+      typeOfRequest: 'Reimbursement',
+      documents: 'Receipt789.jpg',
+      reason: 'Business trip to client site',
+      totalRequest: 15000.25,
+      status: 'On process',
+    },
+    {
+      _id: 'P003',
+      requestId: 'REQ1003',
+      category: 'IT Equipment',
+      typeOfRequest: 'Purchase',
+      documents: 'Quote567.pdf',
+      reason: 'Purchase of new laptops for development team',
+      totalRequest: 80000.00,
+      status: 'On process',
+    },
+  ];
+
+  const handleSearch = (event) => {
+    setSearchText(event.target.value);
+  };
+
+// Filter data based on search text
+const filteredData = data.filter(row =>
+  Object.values(row).some(value =>
+    value.toString().toLowerCase().includes(searchText.toLowerCase())
+  )
+);
+
+const handleRowClick = (row) => {
+  navigate('/Dashboard/viewBudgetRequest', { state: { rowData: row } });
+};
+
   return (
     <>
     
@@ -50,13 +125,9 @@ function viewCollection() {
             </div>
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(cashAmount)}</p>
-              <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                <IoIosArrowUp className="text-green-700" /> 18.2%
-              </p>
             </div>
             <div className="my-3">
-              <p className="text-green-700 font-semibold">
-                +{formatCurrency(231)} <span className="text-gray-500">than past month</span>
+              <p className="text-green-700 font-semibold"><span className="text-gray-500">as of the month</span>
               </p>
             </div>
           </div>
@@ -68,42 +139,42 @@ function viewCollection() {
       <div className="bg-white/75 shadow-xl rounded-lg p-6">
         <div className="flex gap-4">
             {/* Revenue Card */}
-            <div className="bg-white/75 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Total Revenue</p>
-                <FaIndustry className="text-green-600 text-xl" />
-              </div>
-              <div className="flex gap-3 my-3">
-                <p className="text-3xl font-bold">{formatCurrency(revenueAmount)}</p>
-                <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                  <IoIosArrowUp className="text-green-700" /> 10.8%
-                </p>
-              </div>
-              <div className="my-3">
-                <p className="text-green-700 font-semibold">
-                +{formatCurrency(12313)}<span className="text-gray-500"> than past month</span>
-                </p>
-              </div>
+           <div className="bg-white/75 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-sm">Total Revenue</p>
+              <FaIndustry className="text-green-600 text-xl" />
             </div>
+            <div className="flex gap-3 my-3">
+              <p className="text-3xl font-bold">{formatCurrency(revenueAmount)}</p>
+              <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
+                <IoIosArrowUp className="text-green-700" /> 10.8%
+              </p>
+            </div>
+            <div className="my-3">
+              <p className="text-green-700 font-semibold">
+              +{formatCurrency(12313)}<span className="text-gray-500"> than past month</span>
+              </p>
+            </div>
+          </div>
 
-            {/* Spending Card */}
-            <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Total Spent</p>
-                <RiPassPendingLine className="text-red-600 text-xl" />
-              </div>
-              <div className="flex gap-3 my-3">
-                <p className="text-3xl font-bold">{formatCurrency(spentAmount)}</p>
-                <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
-                  <IoIosArrowUp className="text-red-700" /> 9.1%
-                </p>
-              </div>
-              <div className="my-3">
-                <p className="text-red-700 font-semibold">
-                  +{formatCurrency(3213)} <span className="text-gray-500">than past month</span>
-                </p>
-              </div>
+          {/* Spending Card */}
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-sm">Total Spent</p>
+              <RiPassPendingLine className="text-red-600 text-xl" />
             </div>
+            <div className="flex gap-3 my-3">
+              <p className="text-3xl font-bold">{formatCurrency(spentAmount)}</p>
+              <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
+                <IoIosArrowUp className="text-red-700" /> 9.1%
+              </p>
+            </div>
+            <div className="my-3">
+              <p className="text-red-700 font-semibold">
+                +{formatCurrency(3213)} <span className="text-gray-500">than past month</span>
+              </p>
+            </div>
+          </div>
             </div>
 
         {/* Bar Charts Section */}
@@ -143,6 +214,35 @@ function viewCollection() {
         </div>
       </div>
     </div>
+
+        </div>
+        <div className="max-w-screen-2xl mx-auto flex flex-col p-4">
+          <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
+                  <div className="mx-4">
+                      <div className="overflow-x-auto w-full">
+                          <DataTable
+                              title="Collection Reports"
+                              columns={columns}
+                              data={filteredData}
+                              pagination
+                              defaultSortField="name"
+                              highlightOnHover
+                              pointerOnHover
+                              onRowClicked={handleRowClick}
+                              subHeader
+                              subHeaderComponent={
+                              <input
+                                  type="text"
+                                  placeholder="Search..."
+                                  value={searchText}
+                                  onChange={handleSearch}
+                                  className="mb-2 p-2 border border-gray-400 rounded-lg"
+                              />
+                              }
+                          />
+                      </div>
+                  </div>
+              </div>
 
         </div>
 

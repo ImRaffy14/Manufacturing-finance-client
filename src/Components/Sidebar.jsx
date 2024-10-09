@@ -181,7 +181,7 @@ const toggleSidebar = () => {
           Modules
         </p>
         
-        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
+        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <TbBrandCashapp className="w-5 h-5" />}   
           {!isCollapsed && 
@@ -196,11 +196,6 @@ const toggleSidebar = () => {
                               <li className="flex hover:text-blue-500">
                                 <NavLink to="viewCollection" activeClassName="text-blue-500">
                                   ● View Collection
-                                </NavLink>
-                              </li>
-                              <li className="hover:text-blue-500">
-                                <NavLink to="collectionReports" activeClassName="text-blue-500">
-                                  ● Collection Reports
                                 </NavLink>
                               </li>
                            </ul>
@@ -258,7 +253,7 @@ const toggleSidebar = () => {
 )}
         
             {/* Accounts Receivable */}
-            {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'TREASURER' || userData.role === 'TREASURER' ||  userData.role === 'ADMIN') && (           
+            {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ACCOUNTANT' ||  userData.role === 'ADMIN') && (           
             <ul className="menu rounded-box w-56">
       {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}
       {!isCollapsed && (
@@ -312,7 +307,7 @@ const toggleSidebar = () => {
     </ul>
             )}
         {/* Accounts Payable */}
-        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'TREASURER' ||  userData.role === 'ADMIN') && (           
+        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' ||  userData.role === 'ADMIN') && (           
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <TbCreditCardPay className="w-5 h-5" />}   
           {!isCollapsed && 
@@ -354,7 +349,7 @@ const toggleSidebar = () => {
         )}
 
         {/* General Ledger */}
-        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCIAL ANALYST' ||  userData.role === 'FINANCE MANAGER' || userData.role ==='ACCOUNTANT' || userData.role === 'ADMIN') && (           
+        {(userData.role === 'CHIEF FINANCIAL OFFICER' ||  userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (           
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <FaList className="w-5 h-5" />}   
           {!isCollapsed && 
@@ -414,7 +409,7 @@ const toggleSidebar = () => {
         </ul>
         )}
         {/* Accounts Management */}
-        {(userData.role === 'ADMIN' || userData.role === 'FINANCE MANAGER')  && (
+        {(userData.role === 'ADMIN' || userData.role === 'CHIEF FINANCIAL OFFICER')  && (
         <ul className="menu  rounded-box w-56">
           {isCollapsed && <MdAccountCircle className="w-5 h-5" />}   
           {!isCollapsed && 

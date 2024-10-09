@@ -201,8 +201,6 @@ function accountCreation({ userData }) {
                                 <option>CHIEF FINANCIAL OFFICER</option>
                                 <option>FINANCE MANAGER</option>
                                 <option>ACCOUNTANT</option>
-                                <option>FINANCIAL ANALYST</option>
-                                <option>TREASURER</option>
                             </select>
                         </div>
 
