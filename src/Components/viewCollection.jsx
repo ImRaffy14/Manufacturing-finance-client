@@ -114,11 +114,11 @@ const handleRowClick = (row) => {
     
 
         <div className="max-w-screen-2xl mx-auto flex flex-col ">
-    <div className="p-4">
+    <div className="">
       
       <div className="flex gap-4">
           {/* Sales Card */}
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Cash of the Company</p>
               <BsCashCoin className="text-green-600 text-xl" />
@@ -134,12 +134,12 @@ const handleRowClick = (row) => {
         </div>
           </div>
 
-          <div className="p-4">
+          <div className="">
       {/* Financial chart */}
-      <div className="bg-white/75 shadow-xl rounded-lg p-6">
+      <div className="bg-white/75 shadow-xl rounded-lg p-6 mt-7">
         <div className="flex gap-4">
             {/* Revenue Card */}
-           <div className="bg-white/75 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Revenue</p>
               <FaIndustry className="text-green-600 text-xl" />
@@ -158,7 +158,7 @@ const handleRowClick = (row) => {
           </div>
 
           {/* Spending Card */}
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Spent</p>
               <RiPassPendingLine className="text-red-600 text-xl" />
@@ -178,11 +178,11 @@ const handleRowClick = (row) => {
             </div>
 
         {/* Bar Charts Section */}
-        <div className="mt-6">
+        <div className="my-6">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">Cash Flow</h3>
           <div className="grid grid-cols-2 gap-4">
             {/* Inflows Chart */}
-            <div className="bg-white p-5 rounded-lg shadow-lg">
+            <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-3">Inflows</h4>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={inflowsData}>
@@ -197,7 +197,7 @@ const handleRowClick = (row) => {
             </div>
 
             {/* Outflows Chart */}
-            <div className="bg-white p-5 rounded-lg shadow-lg">
+            <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-3">Outflows</h4>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={outflowsData}>
@@ -216,8 +216,8 @@ const handleRowClick = (row) => {
     </div>
 
         </div>
-        <div className="max-w-screen-2xl mx-auto flex flex-col p-4">
-          <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
+        <div className="max-w-screen-2xl mx-auto flex flex-col">
+          <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 p-4 my-7">
                   <div className="mx-4">
                       <div className="overflow-x-auto w-full">
                           <DataTable

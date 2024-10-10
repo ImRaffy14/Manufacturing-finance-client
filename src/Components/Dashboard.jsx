@@ -58,7 +58,7 @@ const revenue = [
   { name: 'Sep', product1: 8100 },
   { name: 'Oct', product1: 1100 },
   { name: 'Nov', product1: 2100 },
-  { name: 'Dec', product1: 6100 },
+  { name: 'Dec', product1: 100 },
  
 ];
 
@@ -116,13 +116,13 @@ const spending = [
   return (
     <>
     <div className="p-4">
- <div className="bg-white/75 shadow-xl rounded-lg p-6">
-  <h1 className="text-xl font-bold">Overview</h1>
-    <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
+  <div className="bg-white/75 shadow-xl rounded-lg p-6">
+    <h1 className="text-xl font-bold">Overview</h1>
+      <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
       
           {/* Account Requests*/}
           <Link to="/Dashboard/accountCreation">
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Account Requests</p>
             </div>
@@ -135,7 +135,7 @@ const spending = [
 
           <Link to="/Dashboard/createInvoice">
            {/* Invoice Requests*/}
-           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Invoice Requests</p>
             </div>
@@ -148,7 +148,7 @@ const spending = [
 
           <Link to="/Dashboard/reviewPayables">
            {/* Budget Requests*/}
-           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Pending Payables</p>
             </div>
@@ -161,7 +161,7 @@ const spending = [
 
           <Link to="/Dashboard/budgetRequest">
            {/* Budget Requests*/}
-           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Budget Requests</p>
             </div>
@@ -174,7 +174,7 @@ const spending = [
 
           <Link to="/Dashboard/pendingInvoice">
           {/* Rejected Invoices*/}
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">On Process Invoice</p>
             </div>
@@ -187,7 +187,7 @@ const spending = [
 
           <Link to="/Dashboard/anomalyDetection">
            {/* Detected Anomalies*/}
-           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-black font-semibold text-md">Detected Anomalies</p>
             </div>
@@ -207,7 +207,7 @@ const spending = [
           <h3 className="text-xl font-semibold text-gray-700 mb-4">Analytics</h3>
           <div className="flex gap-4">
             {/* Sales Card */}
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Sales</p>
               <GrMoney className="text-gray-600 text-xl" />
@@ -220,13 +220,13 @@ const spending = [
             </div>
             <div className="my-3">
               <p className="text-green-700 font-semibold">
-              +{formatCurrency(231)} <span className="text-gray-500">than past month</span>
+                {formatCurrency(231)} <span className="text-gray-500">than past month</span>
               </p>
             </div>
           </div>
 
            {/* Revenue Card */}
-           <div className="bg-white/75 shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Revenue</p>
               <HiOutlineCurrencyDollar className="text-gray-600 text-xl" />
@@ -239,13 +239,13 @@ const spending = [
             </div>
             <div className="my-3">
               <p className="text-green-700 font-semibold">
-              +{formatCurrency(12313)}<span className="text-gray-500"> than past month</span>
+                {formatCurrency(12313)}<span className="text-gray-500"> than past month</span>
               </p>
             </div>
           </div>
 
           {/* Spending Card */}
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Spending</p>
               <RiPassPendingLine className="text-gray-600 text-xl" />
@@ -266,8 +266,9 @@ const spending = [
          
          <div className="flex gap-4 mt-6">
   {/* First chart (BarChart) */}
-  <div className="bg-white shadow-lg w-1/2 p-8 rounded-lg hover:shadow-xl">
-    <h4 className="text-lg font-semibold text-gray-700 mb-3">Total Sales</h4>
+  <div className="bg-white shadow-xl w-[1100px] p-8 rounded-lg hover:shadow-xl">
+    <h4 className="text-lg font-semibold text-gray-700 mb-3">Product Sales Volume</h4>
+    <h4 className="text-md text-gray-500 mb-10">Shows the total number of products sold during the selected period, providing a clear view of overall product movement.</h4>
     <ResponsiveContainer width="100%" height={400}>
       <BarChart data={sales}>
         <CartesianGrid strokeDasharray="3 3" />
@@ -281,23 +282,26 @@ const spending = [
   </div>
 
   {/* Second chart (SalesPieChart) */}
-  <div className="bg-white shadow-lg w-1/2 p-8 rounded-lg hover:shadow-xl">
-    <h4 className="text-lg font-semibold text-gray-700 mb-3">Product Sales</h4>
+  <div className="bg-white shadow-xl w-1/2 p-8 rounded-lg hover:shadow-xl">
+    <h4 className="text-lg font-semibold text-gray-700 mb-2">Product Sales Status</h4>
+    <h4 className="text-md text-gray-500 mb-10">Displays the performance of each product, highlighting the top-selling product and providing insights into sales trends.</h4>
+
     <SalesPieChart />
   </div>
 </div>
 
       <div className="flex gap-4 mt-6">
-        <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg hover:shadow-xl">
-          <h1 className="text-gray-600 font-semibold text-xl p-4">Revenue</h1>
+        <div className="bg-white w-full shadow-xl p-10 rounded-lg hover:shadow-xl mb-10">
+          <h1 className="text-gray-700 font-semibold text-xl mb-4">Net Income</h1>
+          <h4 className="text-md text-gray-500 mb-10">Shows the company’s profit after expenses are deducted from total sales, offering a snapshot of overall financial health.</h4>
           <AreaChart
             data={revenue}
             dataKey1="product1"
             color1="rgb(74 222 128)"
           />
         </div>
-
-        <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg hover:shadow-xl">
+{/* 
+        <div className="bg-white w-1/2 shadow-xl p-5 rounded-lg hover:shadow-xl">
           <h1 className="text-gray-600 font-semibold text-xl p-4">Spending</h1>
           <AreaChart
             data={spending}
@@ -305,7 +309,7 @@ const spending = [
             color1="rgb(248 113 113)"
             
           />
-        </div>
+        </div> */}
       </div>
     </div>
         </div>

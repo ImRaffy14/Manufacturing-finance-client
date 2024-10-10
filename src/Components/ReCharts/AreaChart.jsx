@@ -8,16 +8,15 @@ const AreaChartComponent = ({ data, dataKey1, dataKey2, color1, color2 }) => (
   <ResponsiveContainer width="100%" height={500}>
     <AreaChart data={data}>
       {/* Adding grid lines */}
-      <CartesianGrid stroke="#ccc" /> {/* Customize grid line color and style */}
       <XAxis dataKey="name" />
       <YAxis />
       <Tooltip />
       <Area
-        type="linear"
+        type="basis"
         dataKey={dataKey1}
         stroke={color1} // Main stroke color
         fill={color1}
-        strokeWidth={5} // Adjust stroke width
+        strokeWidth={3} // Adjust stroke width
         fillOpacity={0.6} // Adjust fill opacity for better contrast
       />
       <Area
