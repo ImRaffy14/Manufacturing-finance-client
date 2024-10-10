@@ -280,8 +280,6 @@ function ViewAllAccounts({ userData }) {
               <option value="CHIEF FINANCIAL OFFICER">CHIEF FINANCIAL OFFICER</option>
               <option value="FINANCE MANAGER">FINANCE MANAGER</option>
               <option value="ACCOUNTANT">ACCOUNTANT</option>
-              <option value="FINANCIAL ANALYST">FINANCIAL ANALYST</option>
-              <option value="TREASURER">TREASURER</option>
             </select>
           </div>
 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import AreaChart from '../Components/ReCharts/AreaChart';
+import SalesPieChart from '../Components/ReCharts/SalesPieChart';
 import { FaFileInvoiceDollar} from "react-icons/fa";
 import { FaUsers } from 'react-icons/fa';
 import { MdError } from "react-icons/md";
@@ -9,12 +11,10 @@ import { GrMoney } from "react-icons/gr";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { TbCreditCardPay } from "react-icons/tb";
 import { FiRepeat } from "react-icons/fi";
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Link } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function Dashboard() {
   const [budgetRequest, setBudgetRequest] = useState(0)
@@ -28,46 +28,56 @@ function Dashboard() {
   };
 
   const socket = useSocket()
-
-
-   const financialChartData = {
-    labels: ["January", "February", "March", "April", "May", "June"],
-    datasets: [
-      {
-        label: "Revenue",
-        data: [500, 700, 800, 600, 900, 1100],
-        borderColor: "#10B981", // Emerald green line color
-        backgroundColor: "rgba(16, 185, 129, 0.1)", // Light green background
-        fill: true,
-        tension: 0,
-      },
-    ],
-  };
-
-  const spendingChartData = {
-    labels: ["January", "February", "March", "April", "May", "June"],
-    datasets: [
-      {
-        label: "Revenue",
-        data: [500, 700, 800, 600, 900, 1100],
-        borderColor: "#D22B2B", // Emerald green line color
-        backgroundColor: "rgba(16, 185, 129, 0.1)", // Light green background
-        fill: true,
-        tension: 0,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  };
-
   
+ 
+
+  const sales = [
+    { name: 'January', amount: 4000 },
+    { name: 'February', amount: 3000 },
+    { name: 'March', amount: 5000 },
+    { name: 'April', amount: 6000 },
+    { name: 'May', amount: 7000 },
+    { name: 'June', amount: 8000 },
+    { name: 'July', amount: 9000 },
+    { name: 'August', amount: 8500 },
+    { name: 'September', amount: 7500 },
+    { name: 'October', amount: 6000 },
+    { name: 'November', amount: 9500 },
+    { name: 'December', amount: 10000 },
+  ];
+// Revenue Data
+const revenue = [
+  { name: 'Jan', product1: 4500 },
+  { name: 'Feb', product1: 3200 },
+  { name: 'Mar', product1: 2500 },
+  { name: 'Apr', product1: 3000 },
+  { name: 'May', product1: 2100 },
+  { name: 'Jun', product1: 6100 },
+  { name: 'Jul', product1: 4100 },
+  { name: 'Aug', product1: 1100 },
+  { name: 'Sep', product1: 8100 },
+  { name: 'Oct', product1: 1100 },
+  { name: 'Nov', product1: 2100 },
+  { name: 'Dec', product1: 6100 },
+ 
+];
+
+// Spending Data
+const spending = [
+  { name: 'Jan', expense1: 4500 },
+  { name: 'Feb', expense1: 3200 },
+  { name: 'Mar', expense1: 2500 },
+  { name: 'Apr', expense1: 3000 },
+  { name: 'May', expense1: 2100 },
+  { name: 'Jun', expense1: 4000 },
+  { name: 'Jul', expense1: 5000 },
+  { name: 'Aug', expense1: 4600 },
+  { name: 'Sepr', expense1: 3700 },
+  { name: 'Oct', expense1: 3400 },
+  { name: 'Nov', expense1: 5200 },
+  { name: 'Dec', expense1: 6000 },
+];
+
   // sample data
   const [dashboardData, setDashboardData] = useState({
     accountRequests: 50,
@@ -253,18 +263,53 @@ function Dashboard() {
             </div>
           </div>
           </div>
-          <div className="flex gap-4">
-          <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg mt-3  hover:shadow-xl">
+         
+         <div className="flex gap-4 mt-6">
+  {/* First chart (BarChart) */}
+  <div className="bg-white shadow-lg w-1/2 p-8 rounded-lg hover:shadow-xl">
+    <h4 className="text-lg font-semibold text-gray-700 mb-3">Total Sales</h4>
+    <ResponsiveContainer width="100%" height={400}>
+      <BarChart data={sales}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="amount" fill="#82ca9d" />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+
+  {/* Second chart (SalesPieChart) */}
+  <div className="bg-white shadow-lg w-1/2 p-8 rounded-lg hover:shadow-xl">
+    <h4 className="text-lg font-semibold text-gray-700 mb-3">Product Sales</h4>
+    <SalesPieChart />
+  </div>
+</div>
+
+      <div className="flex gap-4 mt-6">
+        <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg hover:shadow-xl">
           <h1 className="text-gray-600 font-semibold text-xl p-4">Revenue</h1>
-          <Line data={financialChartData} options={chartOptions} />
-          </div>
-          <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg mt-3  hover:shadow-xl">
+          <AreaChart
+            data={revenue}
+            dataKey1="product1"
+            color1="rgb(74 222 128)"
+          />
+        </div>
+
+        <div className="bg-white w-1/2 shadow-lg p-5 rounded-lg hover:shadow-xl">
           <h1 className="text-gray-600 font-semibold text-xl p-4">Spending</h1>
-          <Line data={spendingChartData} options={chartOptions} />
-          </div>
-          </div>
+          <AreaChart
+            data={spending}
+            dataKey1="expense1"
+            color1="rgb(248 113 113)"
+            
+          />
         </div>
       </div>
+    </div>
+        </div>
+      
     </>
   );
 }
