@@ -18,6 +18,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 function Dashboard() {
   const [budgetRequest, setBudgetRequest] = useState(0)
+  const [pendingPayables, setPendingPayables] = useState(0)
   const [invoicePending, setInvoicePending] = useState(0)
   const [salesAmount, setSalesAmount] = useState(0);
   const [revenueAmount, setRevenueAmount] = useState(0);
@@ -78,23 +79,27 @@ function Dashboard() {
 
   useEffect(() => {
     socket.emit('get_payable_length', {msg: "get payable length"})
-    
     socket.emit("get_pending_invoice", {msg: "get pending invoice"})
+    socket.emit("get_budget_request_length", {msg: "get budget request records length"})
 
-    return
   }, []);
 
 
   useEffect(() => {
     if(!socket) return;
     
-    socket.on("receive_payable_length", (response) => {
-      setBudgetRequest(response)
+  socket.on("receive_payable_length", (response) => {
+    setPendingPayables(response)
+  })
 
-    socket.on("receive_pending_invoice", (response) => {
-      setInvoicePending(response.pendingSalesCount.totalCount);
-    })
-    })
+  socket.on("receive_budget_request_length", (response) => {
+    setBudgetRequest(response)
+  })
+
+  socket.on("receive_pending_invoice", (response) => {
+    setInvoicePending(response.pendingSalesCount.totalCount);
+  })
+
   
   }, [socket])
 
@@ -139,7 +144,7 @@ function Dashboard() {
             </div>
             <div className="flex gap-3 my-3">
             <TbCreditCardPay className="text-blue-600 text-2xl my-2" />
-              <p className="text-4xl text-black font-bold">{budgetRequest}</p>
+              <p className="text-4xl text-black font-bold">{pendingPayables}</p>
             </div>
           </div>
           </Link>

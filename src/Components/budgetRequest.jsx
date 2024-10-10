@@ -7,32 +7,38 @@ import { FaRegPlusSquare } from "react-icons/fa";
 import { MdContactEmergency } from "react-icons/md";
 import DataTable from 'react-data-table-component';
 import { useNavigate } from 'react-router-dom';
+import { useSocket } from "../context/SocketContext";
+import  axios from "axios";
+import CryptoJS from 'crypto-js';
 
 
 
 function budgetRequest() {
   const navigate = useNavigate();
   const [budgetRequest, setBudgetRequest] = useState(0);
-  const [totalCash, setTotalCash] = useState(0);
   const [reason, setReason] = useState('');
   const [searchText, setSearchText] = useState('');
   const [requestId, setRequestId] = useState('');
   const [category, setCategory] = useState('');
   const [typeOfRequest, setTypeOfRequest] = useState ('');
-  const [documents, setDocuments] = useState ('');
-const [totalRequest, setTotalRequest] = useState(0);
+  const [isLoading, setIsLoading] = useState(true)
+  const [data, setData] = useState([])
+  const [totalRequest, setTotalRequest] = useState(0);
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
+  const socket = useSocket()
+
   const columns = [
-    { name: 'Payable ID', selector: row => row._id },
-    { name: 'Request ID', selector: row => row.requestId },
-    { name: 'Category', selector: row => row.category },
-    { name: 'Type of Request', selector: row => row.typeOfRequest },
-    { name: 'Documents', selector: row => row.documents },
-    { name: 'Reason', selector: row => row.reason },
-    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
+    { name: 'Payble ID', selector: row => row._id, width: '250px' },
+    { name: 'Request ID', selector: row => row.requestId, width: '250px' },
+    { name: 'Department', selector: row => row.department, width: '150px' },
+    { name: 'Category', selector: row => row.category, width: '200px' },
+    { name: 'Type of Request', selector: row => row.typeOfRequest, width: '150px'  },
+    { name: 'Documents', selector: row => row.documents, width: '300px' },
+    { name: 'Reason', selector: row => row.reason , width: '200px'},
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest), width: '150px'},  
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.status === 'On process' ? 'blue' : 'red',
                                   fontWeight: 'bold' 
@@ -41,53 +47,56 @@ const [totalRequest, setTotalRequest] = useState(0);
                                 </span>) },
   ];
 
-  const data = [
-    {
-      _id: 'P001',
-      requestId: 'REQ1001',
-      category: 'Office Supplies',
-      typeOfRequest: 'Purchase',
-      documents: 'Invoice123.pdf',
-      reason: 'For restocking office supplies',
-      totalRequest: 5000.75,
-      status: 'On process',
-    },
-    {
-      _id: 'P002',
-      requestId: 'REQ1002',
-      category: 'Travel Expenses',
-      typeOfRequest: 'Reimbursement',
-      documents: 'Receipt789.jpg',
-      reason: 'Business trip to client site',
-      totalRequest: 15000.25,
-      status: 'On process',
-    },
-    {
-      _id: 'P003',
-      requestId: 'REQ1003',
-      category: 'IT Equipment',
-      typeOfRequest: 'Purchase',
-      documents: 'Quote567.pdf',
-      reason: 'Purchase of new laptops for development team',
-      totalRequest: 80000.00,
-      status: 'On process',
-    },
-  ];
 
+
+  const API_URL = import.meta.env.VITE_SERVER_URL;
+
+  //DECRYPTION
+  const decryptData = (encryptedData, secretKey) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey); // Decrypt the data
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8); // Convert decrypted bytes to string
+    return JSON.parse(decrypted); // Parse the decrypted string into JSON
+  };
+
+    //FETCHING DATA
+    useEffect(() => {
+      const fetchData = async () => {
+        const response = await axios.get(`${API_URL}/API/BudgetRequests`)
+        if(response){
+          const decryptedData = decryptData(response.data.result, import.meta.env.VITE_ENCRYPT_KEY)
+          setData(decryptedData.onProcessRequestBudget)
+          setBudgetRequest(decryptedData.onProcessRequestBudgetCount)
+          setIsLoading(false)
+        }
+      }
+  
+      fetchData()
+    }, [])
+
+  useEffect(() => {
+
+    socket.on("receive_budget_request_pending", (response) => {
+      setData(response.onProcessRequestBudget)
+      setBudgetRequest(response.onProcessRequestBudgetCount)
+    })
+
+  }, [socket])
+
+  //Handles Search from datatables
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
 
 // Filter data based on search text
-const filteredData = data.filter(row =>
-  Object.values(row).some(value =>
-    value.toString().toLowerCase().includes(searchText.toLowerCase())
-  )
-);
+  const filteredData = data.filter(row =>
+    Object.values(row).some(value =>
+      value.toString().toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
 
-const handleRowClick = (row) => {
-  navigate('/Dashboard/viewBudgetRequest', { state: { rowData: row } });
-};
+  const handleRowClick = (row) => {
+    navigate('/Dashboard/viewBudgetRequest', { state: { rowData: row } });
+  };
   
   return (
     <>
@@ -104,16 +113,6 @@ const handleRowClick = (row) => {
             <div className="flex gap-3 my-3">
             <VscGitPullRequestGoToChanges className="text-blue-600 text-2xl my-2" />
               <p className="text-4xl font-bold">{budgetRequest}</p>
-            </div>
-          </div>
-
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
-            <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-md">Total Cash</p>
-            </div>
-            <div className="flex gap-3 my-3">
-            <BsCashCoin className="text-green-600 text-2xl my-2" />
-              <p className="text-4xl font-bold">{formatCurrency(totalCash)}</p>
             </div>
           </div>
 

@@ -39,13 +39,14 @@ function reviewPayables() {
     };
   
   const columns = [
-    { name: 'Payble ID', selector: row => row._id },
-    { name: 'Request ID', selector: row => row.requestId},
-    { name: 'Category', selector: row => row.category },
-    { name: 'Type of Request', selector: row => row.typeOfRequest },
-    { name: 'Documents', selector: row => row.documents },
-    { name: 'Reason', selector: row => row.reason},
-    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
+    { name: 'Payble ID', selector: row => row._id , width: '250px'},
+    { name: 'Request ID', selector: row => row.requestId, width: '250px'},
+    { name: 'Department', selector: row => row.department, width: '150px'},
+    { name: 'Category', selector: row => row.category, width: '200px' },
+    { name: 'Type of Request', selector: row => row.typeOfRequest, width: '150px' },
+    { name: 'Documents', selector: row => row.documents, width: '300px' },
+    { name: 'Reason', selector: row => row.reason , width: '200px'},
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest), width: '180px'},  
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.status === 'Pending' ? 'red' : 'blue',
                                   fontWeight: 'bold' 
@@ -56,13 +57,14 @@ function reviewPayables() {
   ];
   
   const onProcessColumns = [
-    { name: 'Payble ID', selector: row => row._id },
-    { name: 'Request ID', selector: row => row.requestId },
-    { name: 'Category', selector: row => row.category },
-    { name: 'Type of Request', selector: row => row.typeOfRequest },
-    { name: 'Documents', selector: row => row.documents },
-    { name: 'Reason', selector: row => row.reason },
-    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
+    { name: 'Payble ID', selector: row => row._id, width: '250px' },
+    { name: 'Request ID', selector: row => row.requestId, width: '250px' },
+    { name: 'Department', selector: row => row.department, width: '150px' },
+    { name: 'Category', selector: row => row.category, width: '200px' },
+    { name: 'Type of Request', selector: row => row.typeOfRequest, width: '150px'  },
+    { name: 'Documents', selector: row => row.documents, width: '300px' },
+    { name: 'Reason', selector: row => row.reason , width: '200px'},
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest), width: '150px'},  
     { name: 'Status', selector: row => ( 
                                 <span style={{ color: row.status === 'On process' ? 'blue' : 'red',
                                   fontWeight: 'bold' 
@@ -322,6 +324,11 @@ const handleRowClick = (row) => {
             <p className="font-medium"><strong>Type of Request:</strong></p>
             <p className="text-gray-700">{selectedRowOnProcessData.typeOfRequest}</p>
           </div>
+
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Deparment:</strong></p>
+            <p className="text-gray-700">{selectedRowOnProcessData.department}</p>
+          </div>
       
           <div className="flex justify-between">
             <p className="font-medium"><strong>Documents:</strong></p>
@@ -368,6 +375,7 @@ const handleRowClick = (row) => {
           <div className="mb-4">
             <p><strong>Category:</strong> {selectedRowOnProcessData.category}</p>
             <p><strong>Type of Request:</strong> {selectedRowOnProcessData.typeOfRequest}</p>
+            <p><strong>Department:</strong> {selectedRowOnProcessData.department}</p>
             <p><strong>Documents:</strong> {selectedRowOnProcessData.documents}</p>
           </div>
       

@@ -179,6 +179,11 @@ function ViewRequestPayable({ userData }) {
           </div>
 
           <div className="flex justify-between">
+            <p className="font-medium"><strong>Department:</strong></p>
+            <p className="text-gray-700">{rowData.department}</p>
+          </div>
+
+          <div className="flex justify-between">
             <p className="font-medium"><strong>Documents:</strong></p>
             <p className="text-blue-700"><a href={rowData.documents}>{rowData.documents}</a></p>
           </div>
@@ -223,6 +228,7 @@ function ViewRequestPayable({ userData }) {
           <div className="mb-4">
             <p><strong>Category:</strong> {rowData.category}</p>
             <p><strong>Type of Request:</strong> {rowData.typeOfRequest}</p>
+            <p><strong>Department:</strong> {rowData.department}</p>
             <p><strong>Documents:</strong> {rowData.documents}</p>
           </div>
 

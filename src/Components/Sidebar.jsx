@@ -30,6 +30,7 @@ const Sidebar = ({ userData }) => {
 
   const [ payableLength, setPayableLength ] = useState(0)
   const [ paidLength, setPaidLength] = useState(0)
+  const [ budgetLength, setBudgetLength] = useState(0)
 
   const socket = useSocket()
 
@@ -39,7 +40,7 @@ const Sidebar = ({ userData }) => {
     accountRequest: 0, 
     reviewPayable: 0,
     reviewPaymentHistory: 0,
-    budgetRequest: 4,
+    budgetRequest: 0,
   });
 
 const initialData = [
@@ -75,6 +76,7 @@ useEffect(() => {
 
   socket.emit('get_payable_length', {msg: "get payable length"})
   socket.emit("get_paid_records", {msg: "get paid records length"})
+  socket.emit("get_budget_request_length", {msg: "get budget request records length"})
 
 }, []);
 
@@ -87,8 +89,10 @@ useEffect(() => {
 
   socket.on("receive_paid_records", (response) => {
     setPaidLength(response.recordsCount)
-    
+  })
 
+  socket.on("receive_budget_request_length", (response) => {
+    setBudgetLength(response)
   })
 
 }, [socket])
@@ -217,7 +221,7 @@ const toggleSidebar = () => {
             <li>
             <details open>
               <summary><TbPigMoney className="w-5 h-5" />Budget Management
-              {notifications.budgetRequest > 0 && (
+              {budgetLength > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}
               </summary>
@@ -225,15 +229,15 @@ const toggleSidebar = () => {
                  <li>
                     <details open>
                       <summary><TbZoomMoney/>Manage Budget
-                      {notifications.budgetRequest > 0 && (
+                      {budgetLength > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}</summary>
                           <ul>
                             <li className="hover:text-blue-500">
                               <NavLink to="budgetRequest" activeClassName="text-blue-500">
                                 ● Budget Requests
-                                {notifications.budgetRequest > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{notifications.budgetRequest}</span>
+                                {budgetLength > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{budgetLength >= 100 ? "99+" :  budgetLength }</span>
                            )}
                               </NavLink>
                             </li>
@@ -329,7 +333,7 @@ const toggleSidebar = () => {
                               <NavLink to="reviewPayables" activeClassName="text-blue-500">
                                 ● Review Payables
                                 {payableLength > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{payableLength}</span>
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{payableLength >= 100 ? "99+" : payableLength}</span>
                            )}
                               </NavLink>
                             </li>
@@ -372,7 +376,7 @@ const toggleSidebar = () => {
                                 ● Review Payment Transactions
                                 {paidLength > 0 && (
                                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
-                                    {paidLength}
+                                    {paidLength >= 100 ? "99+" : paidLength}
                                   </span>)}
                               </NavLink>
                             </li>
