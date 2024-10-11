@@ -11,6 +11,7 @@ function budgetReports() {
   const [category, setCategory] = useState('');
   const [typeOfRequest, setTypeOfRequest] = useState ('');
   const [documents, setDocuments] = useState ('');
+  const [isLoading, setIsLoading] = useState(true)
   const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
   // Handle row click to show modal
 const [totalRequest, setTotalRequest] = useState(0);
@@ -79,9 +80,21 @@ const filteredData = data.filter(row =>
 );
 
 const handleRowClick = (row) => {
-  setSelectedRowData(row);
+  setSelectedRowData(row);  
   document.getElementById('budgetReports_modal').showModal();
  };
+
+ if (!isLoading) {
+  return (
+    <div className="flex w-full flex-col gap-4">
+      <div className="skeleton h-[520px] w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+    </div>
+  );
+}
+
   return (
     <>
 

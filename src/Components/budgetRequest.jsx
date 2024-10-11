@@ -97,6 +97,17 @@ function budgetRequest() {
   const handleRowClick = (row) => {
     navigate('/Dashboard/viewBudgetRequest', { state: { rowData: row } });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-[520px] w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+      </div>
+    );
+  }
   
   return (
     <>

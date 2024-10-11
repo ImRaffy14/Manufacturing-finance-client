@@ -266,7 +266,7 @@ const spending = [
          
          <div className="flex gap-4 mt-6">
   {/* First chart (BarChart) */}
-  <div className="bg-white shadow-xl w-[1100px] p-8 rounded-lg hover:shadow-xl">
+  <div className="bg-white shadow-xl w-full p-8 rounded-lg hover:shadow-xl">
     <h4 className="text-lg font-semibold text-gray-700 mb-3">Product Sales Volume</h4>
     <h4 className="text-md text-gray-500 mb-10">Shows the total number of products sold during the selected period, providing a clear view of overall product movement.</h4>
     <ResponsiveContainer width="100%" height={400}>
@@ -282,12 +282,12 @@ const spending = [
   </div>
 
   {/* Second chart (SalesPieChart) */}
-  <div className="bg-white shadow-xl w-1/2 p-8 rounded-lg hover:shadow-xl">
+  {/* <div className="bg-white shadow-xl w-1/2 p-8 rounded-lg hover:shadow-xl">
     <h4 className="text-lg font-semibold text-gray-700 mb-2">Product Sales Status</h4>
     <h4 className="text-md text-gray-500 mb-10">Displays the performance of each product, highlighting the top-selling product and providing insights into sales trends.</h4>
 
     <SalesPieChart />
-  </div>
+  </div> */}
 </div>
 
       <div className="flex gap-4 mt-6">

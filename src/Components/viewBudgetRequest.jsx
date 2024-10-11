@@ -21,18 +21,18 @@ function viewBudgetRequest() {
     
   return (
     <>
-     <div className="breadcrumbs text-xl ml-4 mt-4">
+     <div className="breadcrumbs text-xl mt-8">
         <ul>
             <li><a> <Link to="/Dashboard/budgetRequest">Return</Link></a></li>
-            <li><a>Documents</a></li>
+            <li><a className='text-blue-500 underline'>Documents</a></li>
         </ul>
     </div>
     
-    <div className="max-w-screen-2xl mx-auto mt-8 mb-10 p-10 bg-white">
+    <div className="max-w-screen-2xl mx-auto  mb-10 p-10 bg-white">
         
       <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Budget Request Preview</h1>
 
-  <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Request ID: {rowData._id}</h2>
+  <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Request ID: {rowData.requestId}</h2>
   
   <div className="space-y-4">
     <div className="flex justify-between">
@@ -43,6 +43,11 @@ function viewBudgetRequest() {
     <div className="flex justify-between">
       <p className="font-medium"><strong>Type of Request:</strong></p>
       <p className="text-gray-700">{rowData.typeOfRequest}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Department:</strong></p>
+      <p className="text-gray-700">{rowData.department}</p>
     </div>
 
     <div className="flex justify-between">
@@ -89,6 +94,7 @@ payable-preview">
   <div className="mb-4">
     <p><strong>Category:</strong> {rowData.category}</p>
     <p><strong>Type of Request:</strong> {rowData.typeOfRequest}</p>
+    <p><strong>Department:</strong> {rowData.department}</p>
     <p><strong>Documents:</strong> {rowData.documents}</p>
   </div>
 
