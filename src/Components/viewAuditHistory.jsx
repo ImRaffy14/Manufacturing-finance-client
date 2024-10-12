@@ -10,29 +10,33 @@ function viewAuditHistory() {
 
   const socket = useSocket();
 
+  const formatCurrency = (value) => {
+    return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  };
+
   const columns = [
     { name: 'Date & Time', selector: row => row.dateTime },
-    { name: 'User ID', selector: row => row._id },
-    { name: 'Username', selector: row => row.userName },
-    { name: 'Role', selector: row => row.role },
-    { name: 'Invoice ID', selector: row => row._id },
-    { name: 'Description', selector: row => row.description },
-  ];
+    { name: 'Auditor ID', selector: row => row.auditorId },
+    { name: 'Auditor', selector: row => row.auditor },
+    { name: 'Invoice ID', selector: row => row.invoiceId },
+    { name: 'Customer Name', selector: row => row.customerName },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
+    ];
 
   const data = trailsData;
 
   useEffect(() => {
     if (!socket) return;
 
-    socket.emit('getAuditTrails', { msg: 'get audit trails' });
+    socket.emit('get_audit_history', { msg: 'get audit history' });
 
-    socket.on('receive_audit_trails', (response) => {
+    socket.on('receive_audit_history', (response) => {
       setTrailsData(response);
       setIsLoading(false);
     });
 
     return () => {
-      socket.off('receive_audit_trails'); // Cleanup listener on component unmount
+      socket.off('receive_audit_history'); // Cleanup listener on component unmount
     };
   }, [socket]);
 
@@ -102,11 +106,11 @@ function viewAuditHistory() {
             <h3 className="font-bold text-lg">Details for User: {selectedRowData.userName}</h3>
             <div className="py-4">
               <p><strong>Date & Time:</strong> {selectedRowData.dateTime}</p>
-              <p><strong>User ID:</strong> {selectedRowData._id}</p>
-              <p><strong>Username:</strong> {selectedRowData.userName}</p>
-              <p><strong>Role:</strong> {selectedRowData.role}</p>
-              <p><strong>Invoice ID:</strong> {selectedRowData._id}</p>
-              <p><strong>Description:</strong> {selectedRowData.description}</p>
+              <p><strong>Auditor ID:</strong> {selectedRowData.auditorId}</p>
+              <p><strong>Auditor:</strong> {selectedRowData.auditor}</p>
+              <p><strong>Invoice ID:</strong> {selectedRowData.invoiceId}</p>
+              <p><strong>Customer Name:</strong> {selectedRowData.customerName}</p>
+              <p><strong>Total Ammount:</strong> {formatCurrency(selectedRowData.totalAmount)}</p>
             </div>
             <button
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

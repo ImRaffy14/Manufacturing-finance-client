@@ -1,7 +1,9 @@
 import React from 'react';
 import { useLocation, Link, } from 'react-router-dom';   
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
 import JJM from '../assets/JJM.jfif';
+import { useSocket } from '../context/SocketContext'
+import { toast } from 'react-toastify'
 
 function viewReviewPaymentTransactions({ userData }) {
   const location = useLocation();
@@ -9,16 +11,70 @@ function viewReviewPaymentTransactions({ userData }) {
 
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [invalid, setInvalid] = useState("")
+
+  const socket = useSocket()
+
+  //HANDLES LISTENING AN EVENT FROM SOCKET
+  useEffect(() => {
+
+    const handleAuditAuthUser = (response) => {
+      toast.success(response.msg , {
+        position: 'top-right'
+      })
+  
+      setIsLoading(false)
+      setIsSubmitted(true)
+      setPassword('')
+      document.getElementById('audit_modal').close()
+    }
+  
+    const handleAuditAuthUserInvalid = (response) => {
+      setInvalid(response.msg)
+      setIsLoading(false)
+      setPassword('')
+    }
+
+    const handlesAuditMatched = (response) => {
+      toast.error(response.msg , {
+        position: 'top-right'
+      })
+  
+      setIsLoading(false)
+      setPassword('')
+      document.getElementById('audit_modal').close()
+    }
+  
+    // Register socket event listeners
+    socket.on('receive_audit_authUser', handleAuditAuthUser)
+    socket.on('receive_audit_authUser_invalid', handleAuditAuthUserInvalid)
+    socket.on('receive_audit_matched', handlesAuditMatched)
+  
+    // Cleanup function to remove the event listeners on component unmount
+    return () => {
+      socket.off('receive_audit_authUser', handleAuditAuthUser)
+      socket.off('receive_audit_authUser_invalid', handleAuditAuthUserInvalid)
+      socket.off('receive_audit_matched', handlesAuditMatched)
+    }
+
+  }, [socket])
   
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setIsLoading(true)
+
     const data = {
-        username : userData.userName,
+        userName : userData.userName,
+        userId: userData._id,
         password : password,
+        invoiceId: rowData._id,
+        customerName: rowData.customerName,
+        totalAmount: rowData.totalAmount
     }
-    console.log (data);
+
+    socket.emit('auth_user', data)
   }
 
   if (!rowData) {
@@ -121,9 +177,11 @@ function viewReviewPaymentTransactions({ userData }) {
           </div>
 
           <div className="flex items-center justify-center mt-4 gap-10">
-            <button className="btn btn-lg bg-green-400 hover:bg-green-700 w-[150px]" onClick={() => document.getElementById('audit_modal').showModal()}>
+            {!isSubmitted && 
+              <button className="btn btn-lg bg-green-400 hover:bg-green-700 w-[150px]" onClick={() => document.getElementById('audit_modal').showModal()}>
               Audit
             </button>
+            }
           </div>
         </div>
       </div>
@@ -138,11 +196,16 @@ function viewReviewPaymentTransactions({ userData }) {
           type="password"
           placeholder="Enter your password"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          value={password}
           required
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-
+      
+      {invalid && 
+      <h1 className="text-red-500">{invalid}</h1>
+      }
+      
       {!isLoading && 
         <button
         className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800"
@@ -153,7 +216,7 @@ function viewReviewPaymentTransactions({ userData }) {
       
       </form>
       
-      {isLoading &&       <button
+      {isLoading && <button
         className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800 mt-4 w-[140px]"
         >
         <span className="loading loading-spinner loading-sm"></span>

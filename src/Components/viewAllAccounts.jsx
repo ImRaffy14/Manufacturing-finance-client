@@ -35,18 +35,25 @@ function ViewAllAccounts({ userData }) {
   //HANDLES SOCKET REALTIME RENDERING DATA
   useEffect(() => {
     if (!socket) return;
-
-    socket.emit('getAccounts', { msg: 'get accounts' });
-
-    socket.on('receive_accounts', (response) => {
+  
+    // Define the event handler
+    const handleReceiveAccounts = (response) => {
       setTableData(response);
       setIsLoading(false);
-    });
-
+    };
+  
+    // Emit the event to get accounts
+    socket.emit('getAccounts', { msg: 'get accounts' });
+  
+    // Register the event listener
+    socket.on('receive_accounts', handleReceiveAccounts);
+  
+    // Cleanup function to remove the listener when the component unmounts or socket changes
     return () => {
-      socket.off('receive_accounts'); 
+      socket.off('receive_accounts', handleReceiveAccounts); // Pass the same callback to remove the listener
     };
   }, [socket]);
+  
 
 
   // HANDLES FOR DATA TABLES

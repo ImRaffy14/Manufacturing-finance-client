@@ -40,20 +40,29 @@ function reviewPaymentTransactions() {
   ];
   
 
-  //HANDLES FETCHING DATA
-  useEffect(() => {
-    socket.emit("get_paid_records", {msg: "get paid records"})
-  }, [])
-  
-  useEffect(() => {
-    if(!socket) return;
+ // HANDLES FETCHING DATA
+useEffect(() => {
+  socket.emit("get_paid_records", { msg: "get paid records" });
+}, [socket]); // Ensure 'socket' is in the dependency array
 
-    socket.on("receive_paid_records", (response) => {
-      setData(response.records)
-      setIsLoading(false)
-    })
-  
-  },[socket])
+useEffect(() => {
+  if (!socket) return;
+
+  // Define the event handler
+  const handleReceivePaidRecords = (response) => {
+    setData(response.records);
+    setIsLoading(false);
+  };
+
+  // Register the event listener
+  socket.on("receive_paid_records", handleReceivePaidRecords);
+
+  // Cleanup function to remove the listener when the component unmounts or 'socket' changes
+  return () => {
+    socket.off("receive_paid_records", handleReceivePaidRecords);
+  };
+}, [socket]);
+
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);

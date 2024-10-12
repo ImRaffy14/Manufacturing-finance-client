@@ -29,7 +29,7 @@ function paidInvoice() {
     },
     { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
     { name: 'Status', selector: row => ( 
-                                <span style={{ color: row.Status === 'Paid' ? 'green' : 'red',
+                                <span style={{ color: row.Status === 'Paid' ? 'green' : row.Status === 'To review' ?  'blue' : 'red' ,
                                   fontWeight: 'bold' 
                                  }}>
                                 {row.Status}

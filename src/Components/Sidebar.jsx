@@ -72,30 +72,45 @@ const fetchNotificationData = () => {
 };
 
 useEffect(() => {
+  // Fetch notification data and emit socket events
   fetchNotificationData();
 
-  socket.emit('get_payable_length', {msg: "get payable length"})
-  socket.emit("get_paid_records", {msg: "get paid records length"})
-  socket.emit("get_budget_request_length", {msg: "get budget request records length"})
+  socket.emit('get_payable_length', { msg: "get payable length" });
+  socket.emit('get_paid_records', { msg: "get paid records length" });
+  socket.emit('get_budget_request_length', { msg: "get budget request records length" });
 
-}, []);
+}, [socket]);  // Ensure socket is in the dependency array to prevent potential issues if socket changes
 
 useEffect(() => {
-  if(!socket) return;
-  
-  socket.on("receive_payable_length", (response) => {
-    setPayableLength(response)
-  })
+  if (!socket) return;
 
-  socket.on("receive_paid_records", (response) => {
-    setPaidLength(response.recordsCount)
-  })
+  // Define event handlers
+  const handlePayableLength = (response) => {
+    setPayableLength(response);
+  };
 
-  socket.on("receive_budget_request_length", (response) => {
-    setBudgetLength(response)
-  })
+  const handlePaidRecords = (response) => {
+    setPaidLength(response.recordsCount);
+  };
 
-}, [socket])
+  const handleBudgetRequestLength = (response) => {
+    setBudgetLength(response);
+  };
+
+  // Register event listeners
+  socket.on("receive_payable_length", handlePayableLength);
+  socket.on("receive_paid_records", handlePaidRecords);
+  socket.on("receive_budget_request_length", handleBudgetRequestLength);
+
+  // Cleanup function to remove listeners when component unmounts or socket changes
+  return () => {
+    socket.off("receive_payable_length", handlePayableLength);
+    socket.off("receive_paid_records", handlePaidRecords);
+    socket.off("receive_budget_request_length", handleBudgetRequestLength);
+  };
+
+}, [socket]);
+
 
 // REMOVE NOTIFICATION
 const handleCreateInvoiceClick = () => {

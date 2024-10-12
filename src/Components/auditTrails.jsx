@@ -15,7 +15,7 @@ function AuditTrails() {
     { name: 'User ID', selector: row => row._id, width: '250px' },
     { name: 'Username', selector: row => row.userName, width: '150px' },
     { name: 'Role', selector: row => row.role, width: '150px' },
-    { name: 'Action', selector: row => row.action, width: '350px' },
+    { name: 'Action', selector: row => row.action, width: '300px' },
     { 
       name: 'Description', 
       selector: row => row.description, 

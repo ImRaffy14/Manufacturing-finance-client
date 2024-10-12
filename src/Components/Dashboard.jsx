@@ -88,30 +88,41 @@ const spending = [
 
 
   useEffect(() => {
-    socket.emit('get_payable_length', {msg: "get payable length"})
-    socket.emit("get_pending_invoice", {msg: "get pending invoice"})
-    socket.emit("get_budget_request_length", {msg: "get budget request records length"})
-
-  }, []);
-
-
-  useEffect(() => {
-    if(!socket) return;
-    
-  socket.on("receive_payable_length", (response) => {
-    setPendingPayables(response)
-  })
-
-  socket.on("receive_budget_request_length", (response) => {
-    setBudgetRequest(response)
-  })
-
-  socket.on("receive_pending_invoice", (response) => {
-    setInvoicePending(response.pendingSalesCount.totalCount);
-  })
-
+    // Emit socket events to request data
+    socket.emit('get_payable_length', { msg: "get payable length" })
+    socket.emit("get_pending_invoice", { msg: "get pending invoice" })
+    socket.emit("get_budget_request_length", { msg: "get budget request records length" })
+  }, [socket]);
   
-  }, [socket])
+  useEffect(() => {
+    if (!socket) return;
+  
+    // Define handlers for socket events
+    const handlePayableLength = (response) => {
+      setPendingPayables(response);
+    };
+  
+    const handleBudgetRequestLength = (response) => {
+      setBudgetRequest(response);
+    };
+  
+    const handlePendingInvoice = (response) => {
+      setInvoicePending(response.pendingSalesCount.totalCount);
+    };
+  
+    // Register socket event listeners
+    socket.on("receive_payable_length", handlePayableLength);
+    socket.on("receive_budget_request_length", handleBudgetRequestLength);
+    socket.on("receive_pending_invoice", handlePendingInvoice);
+  
+    // Cleanup function to remove listeners when component unmounts or socket changes
+    return () => {
+      socket.off("receive_payable_length", handlePayableLength);
+      socket.off("receive_budget_request_length", handleBudgetRequestLength);
+      socket.off("receive_pending_invoice", handlePendingInvoice);
+    };
+  }, [socket]);
+  
 
   return (
     <>
