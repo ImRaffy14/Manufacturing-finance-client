@@ -137,7 +137,7 @@ const handleRowClick = (row) => {
               <p><strong>Type of Request:</strong> {selectedRowData.typeOfRequest}</p>
               <p><strong>Documents:</strong> {selectedRowData.documents}</p>
               <p><strong>Reason:</strong> {selectedRowData.reason}</p>
-              <p><strong>Total Amount:</strong> {selectedRowData.totalRequest}</p>
+              <p><strong>Total Amount:</strong> {formatCurrency(selectedRowData.totalRequest)}</p>
               <p><strong>Status:</strong> {selectedRowData.status}</p>
             </div>
             <button

@@ -149,6 +149,11 @@ function ViewRequestPayable({ userData }) {
     }
   }
 
+  const formatCurrency = (value) => {
+    return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  };
+
+
   return (
   <>
     
@@ -200,7 +205,7 @@ function ViewRequestPayable({ userData }) {
 
           <div className="flex justify-between">
             <p className="font-medium"><strong>Total Amount:</strong></p>
-            <p className="text-gray-700">₱{rowData.totalRequest}</p>
+            <p className="text-gray-700">{formatCurrency(rowData.totalRequest)}</p>
           </div>
 
           <div className="flex justify-between">
@@ -239,12 +244,12 @@ function ViewRequestPayable({ userData }) {
             </div>
             <div className="flex justify-between mt-2">
               <span>{rowData.reason || 'KUMAIN NG PUDAY'}</span>
-              <span>₱{rowData.totalRequest}</span>
+              <span>{formatCurrency(rowData.totalRequest)}</span>
             </div>
           </div>
 
           <div className="text-right font-bold mt-4">
-            <p className="text-xl">TOTAL AMOUNT: ₱{rowData.totalRequest}</p>
+            <p className="text-xl">TOTAL AMOUNT:{formatCurrency(rowData.totalRequest)}</p>
           </div>
         </div>
           <div className="flex items-center justify-center mt-4 gap-10">
