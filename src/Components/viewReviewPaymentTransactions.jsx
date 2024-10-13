@@ -28,6 +28,16 @@ function viewReviewPaymentTransactions({ userData }) {
       setIsSubmitted(true)
       setPassword('')
       document.getElementById('audit_modal').close()
+
+      const invoiceTrails = {
+        userId: userData._id,
+        userName: userData.userName,
+        role: userData.role,
+        action: "AUDITS SALES RECORD",
+        description: `${userData.userName} audits sales records for ${rowData.customerName} Invoice ID: ${rowData._id}`,
+      };
+  
+      socket.emit("addAuditTrails", invoiceTrails);
     }
   
     const handleAuditAuthUserInvalid = (response) => {
@@ -205,7 +215,7 @@ function viewReviewPaymentTransactions({ userData }) {
       {invalid && 
       <h1 className="text-red-500">{invalid}</h1>
       }
-      
+
       {!isLoading && 
         <button
         className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800"

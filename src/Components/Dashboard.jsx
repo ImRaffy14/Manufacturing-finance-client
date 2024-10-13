@@ -220,18 +220,18 @@ const spending = [
             {/* Sales Card */}
           <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-sm">Sales</p>
+              <p className="text-gray-600 font-semibold text-sm">Sales Volume</p>
               <GrMoney className="text-gray-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">{formatCurrency(salesAmount)}</p>
+              <p className="text-3xl font-bold">{salesAmount}</p>
               <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
                 <IoIosArrowUp className="text-green-700" /> 18.2%
               </p>
             </div>
             <div className="my-3">
               <p className="text-green-700 font-semibold">
-                {formatCurrency(231)} <span className="text-gray-500">than past month</span>
+                {231} <span className="text-gray-500">than past month</span>
               </p>
             </div>
           </div>
@@ -239,7 +239,7 @@ const spending = [
            {/* Revenue Card */}
            <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-sm">Revenue</p>
+              <p className="text-gray-600 font-semibold text-sm">Sales</p>
               <HiOutlineCurrencyDollar className="text-gray-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">

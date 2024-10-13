@@ -126,10 +126,6 @@ const handleRowClick = (row) => {
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(cashAmount)}</p>
             </div>
-            <div className="my-3">
-              <p className="text-green-700 font-semibold"><span className="text-gray-500">as of the month</span>
-              </p>
-            </div>
           </div>
         </div>
           </div>
@@ -141,7 +137,7 @@ const handleRowClick = (row) => {
             {/* Revenue Card */}
            <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-sm">Total Revenue</p>
+              <p className="text-gray-600 font-semibold text-sm">Total Sales</p>
               <FaIndustry className="text-green-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">

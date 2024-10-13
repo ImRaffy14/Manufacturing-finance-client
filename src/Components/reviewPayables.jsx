@@ -148,7 +148,7 @@ function reviewPayables() {
       }
     }
     catch(error){
-      toast.error("Server Internal Error", {
+      toast.error("Something went wrong", {
         position: 'top-right'
       })
       setIsSubmitLoading(false)
