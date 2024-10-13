@@ -7,14 +7,17 @@ import { FaIndustry } from "react-icons/fa";
 import { BsCashCoin } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";  
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
-
+import { PiHandWithdraw } from "react-icons/pi";
+import { FaRegPlusSquare } from "react-icons/fa";
+import AreaChart from '../Components/ReCharts/AreaChart';
 
 
 function viewCollection() {
   const [cashAmount, setCashAmount] = useState(0);
   const [revenueAmount, setRevenueAmount] = useState(0);
   const [spentAmount, setSpent] = useState(0);
+  const [password, setPassword] = useState('');
+  const [withdraw, setWithdraw] = useState(0);
   const navigate = useNavigate();
   const [budgetRequest, setBudgetRequest] = useState(0);
   const [totalCash, setTotalCash] = useState(0);
@@ -31,65 +34,47 @@ function viewCollection() {
 
 
   const inflowsData = [
-    { name: 'January', amount: 4000 },
-    { name: 'February', amount: 3000 },
-    { name: 'March', amount: 5000 },
-    { name: 'April', amount: 6000 },
+    { name: 'First', In: 0 },
+    { name: 'Second', In: 6000 },
+    { name: 'Third', In: 1000 },
+    { name: 'Fourth', In: 6000 },
   ];
   
   const outflowsData = [
-    { name: 'January', amount: 2000 },
-    { name: 'February', amount: 2500 },
-    { name: 'March', amount: 1800 },
-    { name: 'April', amount: 3200 },
+    { name: 'First', Out: 2000 },
+    { name: 'Second',Out: 2500 },
+    { name: 'Fourth', Out: 1800 },
+    { name: 'Fourth', Out: 3200 },
   ];
   
 
   const columns = [
-    { name: 'Payable ID', selector: row => row._id },
-    { name: 'Request ID', selector: row => row.requestId },
-    { name: 'Category', selector: row => row.category },
-    { name: 'Type of Request', selector: row => row.typeOfRequest },
-    { name: 'Documents', selector: row => row.documents },
-    { name: 'Reason', selector: row => row.reason },
-    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
-    { name: 'Status', selector: row => ( 
-                                <span style={{ color: row.status === 'On process' ? 'blue' : 'red',
-                                  fontWeight: 'bold' 
-                                 }}>
-                                {row.status}
-                                </span>) },
+    { name: 'ID', selector: row => row._id },
+    { name: 'Month', selector: row => row.month },
+    { name: 'Year', selector: row => row.year },
+    { name: 'Net Income', selector: row => formatCurrency(row.netIncome)},
   ];
 
   const data = [
     {
       _id: 'P001',
-      requestId: 'REQ1001',
-      category: 'Office Supplies',
-      typeOfRequest: 'Purchase',
-      documents: 'Invoice123.pdf',
-      reason: 'For restocking office supplies',
-      totalRequest: 5000.75,
+      month: 'October',
+      year: '2024',
+      netIncome: 12121,
       status: 'On process',
     },
     {
-      _id: 'P002',
-      requestId: 'REQ1002',
-      category: 'Travel Expenses',
-      typeOfRequest: 'Reimbursement',
-      documents: 'Receipt789.jpg',
-      reason: 'Business trip to client site',
-      totalRequest: 15000.25,
+      _id: 'P001',
+      month: 'October',
+      year: '2024',
+      netIncome: 12121,
       status: 'On process',
     },
     {
-      _id: 'P003',
-      requestId: 'REQ1003',
-      category: 'IT Equipment',
-      typeOfRequest: 'Purchase',
-      documents: 'Quote567.pdf',
-      reason: 'Purchase of new laptops for development team',
-      totalRequest: 80000.00,
+      _id: 'P001',
+      month: 'October',
+      year: '2024',
+      netIncome: 12121,
       status: 'On process',
     },
   ];
@@ -106,8 +91,24 @@ const filteredData = data.filter(row =>
 );
 
 const handleRowClick = (row) => {
-  navigate('/Dashboard/viewBudgetRequest', { state: { rowData: row } });
+  navigate('/', { state: { rowData: row } });
 };
+
+const getMonthNames = () => {
+  const currentDate = new Date();
+  const currentMonthIndex = currentDate.getMonth(); // getMonth() returns month index (0 - January, 11 - December)
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June', 
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const currentMonth = months[currentMonthIndex];
+  const nextMonth = months[(currentMonthIndex + 1) % 12]; // Get the next month, using modulo for December -> January
+
+  return { currentMonth, nextMonth };
+};
+
+const { currentMonth, nextMonth } = getMonthNames();
 
   return (
     <>
@@ -127,12 +128,24 @@ const handleRowClick = (row) => {
               <p className="text-3xl font-bold">{formatCurrency(cashAmount)}</p>
             </div>
           </div>
+
+          <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600 font-semibold text-sm">Cash Withdrawal</p>
+              <PiHandWithdraw className="text-red-600 text-xl" />
+            </div>
+            <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('withdraw_modal').showModal()}>
+            <FaRegPlusSquare className="text-red-600 text-2xl my-2" />
+              <p className="text-3xl font-bold">Withdraw</p>
+            </div>
+        </div>
         </div>
           </div>
 
           <div className="">
       {/* Financial chart */}
       <div className="bg-white/75 shadow-xl rounded-lg p-6 mt-7">
+      <h1 className="text-xl font-bold">Month of {currentMonth}</h1>
         <div className="flex gap-4">
             {/* Revenue Card */}
            <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
@@ -180,31 +193,23 @@ const handleRowClick = (row) => {
             {/* Inflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-3">Inflows</h4>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={inflowsData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="amount" fill="#82ca9d" />
-                </BarChart>
-              </ResponsiveContainer>
+              <AreaChart
+            data={inflowsData}
+            dataKey1="In"
+            color1="rgb(74 222 128)"
+            
+          />
             </div>
 
             {/* Outflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-3">Outflows</h4>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={outflowsData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="amount" fill="#f55c47" />
-                </BarChart>
-              </ResponsiveContainer>
+          <AreaChart
+            data={outflowsData}
+            dataKey1="Out"
+            color1="rgb(248 113 113)"
+            
+          />
             </div>
           </div>
         </div>
@@ -242,7 +247,69 @@ const handleRowClick = (row) => {
 
         </div>
 
-    
+        <dialog id="withdraw_modal" className="modal">
+  <div className="modal-box">
+    <h3 className="flex items-center justify-center font-bold text-lg">Enter Amount to Withdraw</h3>
+    <div className="w-full mt-2">
+      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="withdrawal">Amount</label>
+      <input 
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        type="number" 
+        placeholder="PHP" 
+        required
+        id="withdrawal"
+      />
+    </div>
+
+    <div className="flex items-center justify-end mt-3">
+      <button
+        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800"
+        onClick={() => {
+          const amountInput = document.getElementById('withdrawal');
+          if (amountInput.checkValidity()) {
+            // Open the confirm modal if the input is valid
+            document.getElementById('confirm_withdraw_modal').showModal();
+          } else {
+            // Show validation error if input is invalid
+            amountInput.reportValidity();
+          }
+        }}
+      >
+        Withdraw
+      </button>
+    </div>
+  </div>
+  <form method="dialog" className="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<dialog id="confirm_withdraw_modal" className="modal">
+  <div className="modal-box">
+    <form className="space-y-4">
+      <div>
+        <h3 className="font-bold text-lg text-center">Enter Password to Confirm Withdrawal</h3>
+        <label className="block text-gray-600 font-medium mb-1">Password</label>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          required
+        />
+      </div>
+
+      <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800">
+        Confirm
+      </button>
+    </form>
+  </div>
+  <form method="dialog" className="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+
+
     </>
   )
 }
