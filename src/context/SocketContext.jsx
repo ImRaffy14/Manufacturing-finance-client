@@ -18,7 +18,14 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         if(isAuthenticated()){
-            const newSocket = io.connect(import.meta.env.VITE_SERVER_URL);
+            const token = localStorage.getItem('token');
+
+            const newSocket = io.connect(import.meta.env.VITE_SERVER_URL, {
+                auth: {
+                    token: token
+                },
+                transports: ['websocket'],
+            });
             setSocket(newSocket);
             return () => {
                 newSocket.disconnect();

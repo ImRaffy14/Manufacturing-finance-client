@@ -185,7 +185,7 @@ function budgetRequest() {
           
           </div>
           
-          <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
+          <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 mb-10">
                 <div className="mx-4">
                     <div className="overflow-x-auto w-full">
                         <DataTable
