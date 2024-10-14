@@ -5,7 +5,7 @@ import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 const AreaChartComponent = ({ data, dataKey1, dataKey2, color1, color2 }) => (
-  <ResponsiveContainer width="100%" height={500}>
+  <ResponsiveContainer width="100%" height={300}>
     <AreaChart data={data}>
       {/* Adding grid lines */}
       <XAxis dataKey="name" />

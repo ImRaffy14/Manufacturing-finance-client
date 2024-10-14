@@ -28,9 +28,10 @@ function approveRejectPayables() {
     { name: 'Type of Request', selector: row => row.typeOfRequest, width: '150px'  },
     { name: 'Documents', selector: row => row.documents, width: '300px' },
     { name: 'Reason', selector: row => row.reason , width: '200px'},
+    { name: 'Comment', selector: row => row.comment , width: '200px'},
     { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest), width: '180px'},  
     { name: 'Status', selector: row => ( 
-                                <span style={{ color: row.status === 'On process' ? 'blue' : 'red',
+                                <span style={{ color: row.status === 'Approved' ? 'green' : 'red',
                                   fontWeight: 'bold' 
                                  }}>
                                 {row.status}
@@ -146,7 +147,7 @@ function approveRejectPayables() {
               <p><strong>Category:</strong> {selectedRowData.category}</p>
               <p><strong>Request Type:</strong> {selectedRowData.typeOfRequest}</p>
               <p><strong>Documents:</strong> {selectedRowData.documents}</p>
-              <p><strong>Coments:</strong> {selectedRowData.comments}</p>
+              <p><strong>Coments:</strong> {selectedRowData.comment}</p>
               <p><strong>Status:</strong> {selectedRowData.status}</p>
             </div>
             <button

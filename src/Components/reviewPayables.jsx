@@ -104,12 +104,18 @@ function reviewPayables() {
   useEffect(() => {
     if(!socket) return;
 
-    socket.on("receive_budget_request_pending", (response) => {
+    const handlesBudgetReqPending = (response) => {
       setData(response.pendingRequestBudget)
       setOnprocessData(response.onProcessRequestBudget)
       setAccumulatedAmount(response.pendingBudgetRequestsCount.totalAmount)
       setPendingPayablesCount(response.pendingBudgetRequestsCount.totalCount)
-    })
+    }
+
+    socket.on("receive_budget_request_pending", handlesBudgetReqPending)
+
+    return () => {
+      socket.off('receive_budget_request_pending')
+    };
 
   }, [socket])
 

@@ -1,19 +1,20 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';   
 import JJM  from '../assets/JJM.jfif'
-import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useSocket } from '../context/SocketContext'
 
-function viewBudgetRequest() {
+function viewBudgetRequest({userData}) {
     const [isLoading, setIsLoading] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
-    const [status, setStatus] = useState("")
+    const [authFailed, setAuthFailed] = useState("")
+    const [password, setPassword] = useState("")
     const [comment, setComment] = useState("")
-    const [required, setRequired] = useState(false)
     const location = useLocation(); // Get the location object
     const { rowData } = location.state || {}; // Extract rowData from location.state
+
+    const socket = useSocket()
 
     if (!rowData) {
       return <p>No data available.</p>;
@@ -22,6 +23,98 @@ function viewBudgetRequest() {
     const formatCurrency = (value) => {
       return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
     };
+
+    //HANDLES DATA PROCCESS / DATA EMIT
+    useEffect(() => {   
+      
+      if(!socket) return;
+
+      const handlesResponse = (response) => {
+        toast.success(response.msg, {
+          position: "top-right"
+        })
+        setPassword("")
+        setComment("")
+        setIsSubmitted(true)
+        setIsLoading(false)
+        document.getElementById("approve_modal").close()
+        document.getElementById("decline_modal").close()
+        document.getElementById("confirm_decline_modal").close()
+      }
+
+      const handleAuthFailed = (response) => {
+        setAuthFailed(response.msg)
+        setIsLoading(false)
+        setPassword("")
+      }
+
+      const handleError = (response) => {
+        toast.error(response.msg, {
+          position: "top-right"
+        })
+        
+        setPassword("")
+        setComment("")
+        setIsSubmitted(true)
+        setIsLoading(false)
+        document.getElementById("approve_modal").close()
+        document.getElementById("decline_modal").close()
+        document.getElementById("confirm_decline_modal").close()
+      }
+
+      socket.on("receive_budget_request", handlesResponse)
+      socket.on("receive_budget_authUser_invalid", handleAuthFailed)
+      socket.on("budget_notfound", handleError)
+
+      return () => {
+        socket.off("receive_budget_request")
+        socket.off("receive_budget_authUser_invalid")
+        socket.off("budget_notfound")
+      } 
+    }, [socket])
+
+    //HANDLES APPROVED
+    const handleSubmit = (e) =>{
+      e.preventDefault()
+
+      const approvedBudgetData = {
+        _id: rowData._id,
+        requestId: rowData.requestId,
+        department: rowData.department,
+        typeOfRequest: rowData.typeOfRequest, 
+        category: rowData.category,
+        reason: rowData.reason,
+        totalRequest: rowData.totalRequest,
+        documents: rowData.documents,
+        status: "Approved",
+        comment: "Finance manager approves the budget request."
+    }
+
+      setIsLoading(true)
+      socket.emit("budget_request_data", { rowData: approvedBudgetData, authenticate: {userId: userData._id, userName: userData.userName, password}})
+    }
+
+    //HANDLES DECLINED
+    const handlesDecline = (e) => {
+      e.preventDefault()
+
+      const declinedBudgetData = {
+        _id: rowData._id,
+        requestId: rowData.requestId,
+        department: rowData.department,
+        typeOfRequest: rowData.typeOfRequest, 
+        category: rowData.category,
+        reason: rowData.reason,
+        totalRequest: rowData.totalRequest,
+        documents: rowData.documents,
+        status: "Declined",
+        comment: comment
+    }
+
+    setIsLoading(true)
+    socket.emit("budget_request_data", { rowData: declinedBudgetData, authenticate: {userId: userData._id, userName: userData.userName, password}})
+
+    }
     
   return (
     <>
@@ -117,15 +210,19 @@ payable-preview">
     <p className="text-xl">TOTAL AMOUNT:{formatCurrency(rowData.totalRequest)}</p>
   </div>
 </div>
-<div className="flex items-center justify-center mt-4 gap-10">
-<button className="btn btn-lg bg-green-400 hover:bg-green-700" onClick={() => document.getElementById("approve_modal").showModal()}>Approve</button>
-<button className="btn btn-lg bg-red-400 hover:bg-red-700" onClick={() => document.getElementById("decline_modal").showModal()}>Decline</button>
-</div>
+  <div className="flex items-center justify-center mt-4 gap-10">
+  {!isSubmitted && 
+  <>
+  <button className="btn btn-lg bg-green-400 hover:bg-green-700" onClick={() => document.getElementById("approve_modal").showModal()}>Approve</button>
+  <button className="btn btn-lg bg-red-400 hover:bg-red-700" onClick={() => document.getElementById("decline_modal").showModal()}>Decline</button>
+  </>
+  }
+  </div>
     </div>
 
     <dialog id="approve_modal" className="modal">
         <div className="modal-box">
-        <form className="space-y-4" >
+        <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
             <h3 className="font-bold text-lg text-center">Enter Password to Approve Budget</h3>
               <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -133,16 +230,33 @@ payable-preview">
                 type="password"
                 placeholder="Enter your password"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                value={password}
                 required
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
+            {authFailed &&
+            <h1 className="text-red-500">{authFailed}</h1> 
+            }
+
+            {!isLoading && 
               <button
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
               >
               Confirm Budget  
               </button>
+            }
             </form>
+
+            {isLoading && 
+              <button
+              className="px-4 py-1 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[145px]"
+              >
+              <span className="loading loading-spinner loading-md"></span> 
+              </button>
+            }
+
         </div>
           <form method="dialog" className="modal-backdrop">
             <button>close</button>
@@ -152,7 +266,7 @@ payable-preview">
     {/* Decline Password */}
     <dialog id="confirm_decline_modal" className="modal">
         <div className="modal-box">
-        <form className="space-y-4" >
+        <form className="space-y-4" onSubmit={handlesDecline}>
             <div>
             <h3 className="font-bold text-lg text-center">Enter Password to Decline Budget</h3>
               <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -160,6 +274,7 @@ payable-preview">
                 type="password"
                 placeholder="Enter your password"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                value={password}
                 required
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -188,6 +303,8 @@ payable-preview">
         className="textarea textarea-error border-gray-300 rounded-lg p-3"
         placeholder="Add a comment"
         rows="4"
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
         required
       ></textarea>
       <div className="flex justify-end gap-4">
@@ -197,7 +314,7 @@ payable-preview">
         </button>
         <button
           className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
-          onClick={() => document.getElementById("approve_modal").close()}
+          onClick={() => document.getElementById("decline_modal").close()}
         >
           No
         </button>

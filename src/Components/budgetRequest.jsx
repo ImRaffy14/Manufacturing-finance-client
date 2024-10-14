@@ -118,7 +118,7 @@ function budgetRequest() {
 
     <div className="max-w-screen-2xl mx-auto mt-[20px]">
   
-    <div className="flex space-x-4 mb-[20px]">
+    <div className="flex space-x-4">
             {/* Pending Invoice */}
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
@@ -127,45 +127,6 @@ function budgetRequest() {
             <div className="flex gap-3 my-3">
             <VscGitPullRequestGoToChanges className="text-blue-600 text-2xl my-2" />
               <p className="text-4xl font-bold">{budgetRequest}</p>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            {/* Operating Expenses */}
-            <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Operating Expenses</p>
-                <BsCashCoin className="text-green-600 text-xl" />
-              </div>
-              <div className="flex gap-3 my-3">
-                <p className="text-3xl font-bold">{formatCurrency(operatingExpenses)}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            {/* Capital Expenditure */}
-            <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Capital Expenditure</p>
-                <BsCashCoin className="text-green-600 text-xl" />
-              </div>
-              <div className="flex gap-3 my-3">
-                <p className="text-3xl font-bold">{formatCurrency(capitalExpenditure)}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            {/* Emergency Reserve */}
-            <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Emergency Reserve</p>
-                <BsCashCoin className="text-green-600 text-xl" />
-              </div>
-              <div className="flex gap-3 my-3">
-                <p className="text-3xl font-bold">{formatCurrency(emergencyReserve)}</p>
-              </div>
             </div>
           </div>
 
@@ -180,6 +141,49 @@ function budgetRequest() {
             </div>
         </div>
             </div>
+
+          <div className="flex space-x-4 mb-[30px]">
+            
+          <div className="flex gap-4">
+            {/* Operating Expenses */}
+            <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
+              <div className="flex items-center justify-between">
+                <p className="text-gray-600 font-semibold text-sm">Operating Expenses</p>
+                <BsCashCoin className="text-green-600 text-xl" />
+              </div>
+              <div className="flex gap-3 my-3">
+                <p className="text-3xl font-bold">{formatCurrency(operatingExpenses)}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            {/* Capital Expenditure */}
+            <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
+              <div className="flex items-center justify-between">
+                <p className="text-gray-600 font-semibold text-sm">Capital Expenditure</p>
+                <BsCashCoin className="text-green-600 text-xl" />
+              </div>
+              <div className="flex gap-3 my-3">
+                <p className="text-3xl font-bold">{formatCurrency(capitalExpenditure)}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            {/* Emergency Reserve */}
+            <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
+              <div className="flex items-center justify-between">
+                <p className="text-gray-600 font-semibold text-sm">Emergency Reserve</p>
+                <BsCashCoin className="text-green-600 text-xl" />
+              </div>
+              <div className="flex gap-3 my-3">
+                <p className="text-3xl font-bold">{formatCurrency(emergencyReserve)}</p>
+              </div>
+            </div>
+          </div>
+          
+          </div>
           
           <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
                 <div className="mx-4">

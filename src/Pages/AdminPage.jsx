@@ -109,7 +109,7 @@ function AdminPage() {
                         <Route path="pendingApproval" element={<PendingApproval />} />
                     )}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
-                        <Route path="viewBudgetRequest" element={<ViewBudgetRequest />} />
+                        <Route path="viewBudgetRequest" element={<ViewBudgetRequest userData={user} />} />
                     )}
 
                         {/* Accounts Receivable */}
