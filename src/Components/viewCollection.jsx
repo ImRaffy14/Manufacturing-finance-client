@@ -151,7 +151,7 @@ const { currentMonth, nextMonth } = getMonthNames();
            <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Sales</p>
-              <PiCoinsFill className="text-green-600 text-xl" />
+              <PiCoinsFill className="text-yellow-500 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(salesAmount)}</p>
