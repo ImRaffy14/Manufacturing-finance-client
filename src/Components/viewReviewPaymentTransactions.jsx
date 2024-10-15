@@ -8,7 +8,6 @@ import { toast } from 'react-toastify'
 function viewReviewPaymentTransactions({ userData }) {
   const location = useLocation();
   const { rowData } = location.state || {};
-
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)

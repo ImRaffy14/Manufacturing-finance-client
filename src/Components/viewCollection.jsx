@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
 import { useNavigate } from 'react-router-dom';
 import { RiPassPendingLine } from "react-icons/ri";
-import { FaIndustry } from "react-icons/fa";
+import { PiCoinsFill } from "react-icons/pi";
 import { BsCashCoin } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";  
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -14,7 +14,7 @@ import AreaChart from '../Components/ReCharts/AreaChart';
 
 function viewCollection() {
   const [cashAmount, setCashAmount] = useState(0);
-  const [revenueAmount, setRevenueAmount] = useState(0);
+  const [salesAmount, setSalesAmount] = useState(0);
   const [spentAmount, setSpent] = useState(0);
   const [password, setPassword] = useState('');
   const [withdraw, setWithdraw] = useState(0);
@@ -91,7 +91,7 @@ const filteredData = data.filter(row =>
 );
 
 const handleRowClick = (row) => {
-  navigate('/', { state: { rowData: row } });
+  navigate('/Dashboard/reviewViewCollection', { state: { rowData: row } });
 };
 
 const getMonthNames = () => {
@@ -151,10 +151,10 @@ const { currentMonth, nextMonth } = getMonthNames();
            <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Sales</p>
-              <FaIndustry className="text-green-600 text-xl" />
+              <PiCoinsFill className="text-green-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">{formatCurrency(revenueAmount)}</p>
+              <p className="text-3xl font-bold">{formatCurrency(salesAmount)}</p>
               <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
                 <IoIosArrowUp className="text-green-700" /> 10.8%
               </p>
