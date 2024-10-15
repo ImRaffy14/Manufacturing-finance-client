@@ -187,8 +187,9 @@ const { currentMonth, nextMonth } = getMonthNames();
             </div>
 
         {/* Bar Charts Section */}
-        <div className="my-6">
+        <div className="mt-10 mb-10">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">Cash Flow</h3>
+          <h4 className="text-md text-gray-500 mb-10">Shows the movement of cash in and out of the business during the selected period, offering insight into liquidity and operational efficiency.</h4>
           <div className="grid grid-cols-2 gap-4">
             {/* Inflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
