@@ -37,7 +37,7 @@ function budgetRequest() {
   const socket = useSocket()
 
   const columns = [
-    { name: 'Payble ID', selector: row => row._id, width: '250px' },
+    { name: 'Payable ID', selector: row => row._id, width: '250px' },
     { name: 'Request ID', selector: row => row.requestId, width: '250px' },
     { name: 'Department', selector: row => row.department, width: '150px' },
     { name: 'Category', selector: row => row.category, width: '200px' },
@@ -133,115 +133,103 @@ function budgetRequest() {
   
   return (
     <>
-    
-
-    <div className="max-w-screen-2xl mx-auto mt-[20px]">
-  
-    <div className="flex space-x-4">
-            {/* Pending Invoice */}
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
-            <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-md">Budget Requests</p>
+      <div className="max-w-screen-2xl mx-auto mt-[20px]">
+        <div className="flex space-x-4">
+              {/* Pending Invoice */}
+            <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
+              <div className="flex items-center justify-between">
+                <p className="text-gray-600 font-semibold text-md">Budget Requests</p>
+              </div>
+              <div className="flex gap-3 my-3">
+              <VscGitPullRequestGoToChanges className="text-blue-600 text-2xl my-2" />
+                <p className="text-4xl font-bold">{budgetRequest}</p>
+              </div>
             </div>
-            <div className="flex gap-3 my-3">
-            <VscGitPullRequestGoToChanges className="text-blue-600 text-2xl my-2" />
-              <p className="text-4xl font-bold">{budgetRequest}</p>
-            </div>
-          </div>
-
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
-            <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-sm">Add Emergency Reserve</p>
-              <MdContactEmergency className="text-gray-600 text-xl" />
-            </div>
-            <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('budget_modal').showModal()}>
-            <FaRegPlusSquare className="text-blue-600 text-2xl my-2" />
-              <p className="text-3xl font-bold">Create</p>
+            <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
+              <div className="flex items-center justify-between">
+                <p className="text-gray-600 font-semibold text-sm">Add Emergency Reserve</p>
+                <MdContactEmergency className="text-gray-600 text-xl" />
+              </div>
+              <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('budget_modal').showModal()}>
+              <FaRegPlusSquare className="text-blue-600 text-2xl my-2" />
+                <p className="text-3xl font-bold">Create</p>
+              </div>
             </div>
         </div>
-            </div>
 
-          <div className="flex space-x-4 mb-[30px]">
-            
-          <div className="flex gap-4">
-            {/* Operating Expenses */}
-            <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Operating Expenses</p>
-                <GiTakeMyMoney className="text-green-600 text-xl" />
-              </div>
-              <div className="flex gap-3 my-3">
-                <p className="text-3xl font-bold">{formatCurrency(operatingExpenses)}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            {/* Capital Expenditure */}
-            <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Capital Expenditure</p>
-                <GiExpense className="text-green-600 text-xl" />
-              </div>
-              <div className="flex gap-3 my-3">
-                <p className="text-3xl font-bold">{formatCurrency(capitalExpenditure)}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            {/* Emergency Reserve */}
-            <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Emergency Budget</p>
-                <BsCashCoin className="text-green-600 text-xl" />
-              </div>
-              <div className="flex gap-3 my-3">
-                <p className="text-3xl font-bold">{formatCurrency(emergencyReserve)}</p>
-              </div>
-            </div>
-          </div>
-          
-          </div>
-          
-          <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 mb-10">
-                <div className="mx-4">
-                    <div className="overflow-x-auto w-full">
-                        <DataTable
-                            title="Budget Requests"
-                            columns={columns}
-                            data={filteredData}
-                            pagination
-                            defaultSortField="name"
-                            highlightOnHover
-                            pointerOnHover
-                            onRowClicked={handleRowClick}
-                            subHeader
-                            subHeaderComponent={
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                value={searchText}
-                                onChange={handleSearch}
-                                className="mb-2 p-2 border border-gray-400 rounded-lg"
-                            />
-                            }
-                        />
-                    </div>
+        <div className="flex space-x-4 mb-[30px]">
+            <div className="flex gap-4">
+              {/* Operating Expenses */}
+              <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
+                <div className="flex items-center justify-between">
+                  <p className="text-gray-600 font-semibold text-sm">Operating Expenses</p>
+                  <GiTakeMyMoney className="text-green-600 text-xl" />
                 </div>
+                <div className="flex gap-3 my-3">
+                  <p className="text-3xl font-bold">{formatCurrency(operatingExpenses)}</p>
+                </div>
+              </div>
             </div>
-
+            <div className="flex gap-4">
+              {/* Capital Expenditure */}
+              <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
+                <div className="flex items-center justify-between">
+                  <p className="text-gray-600 font-semibold text-sm">Capital Expenditure</p>
+                  <GiExpense className="text-green-600 text-xl" />
+                </div>
+                <div className="flex gap-3 my-3">
+                  <p className="text-3xl font-bold">{formatCurrency(capitalExpenditure)}</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              {/* Emergency Reserve */}
+              <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
+                <div className="flex items-center justify-between">
+                  <p className="text-gray-600 font-semibold text-sm">Emergency Budget</p>
+                  <BsCashCoin className="text-green-600 text-xl" />
+                </div>
+                <div className="flex gap-3 my-3">
+                  <p className="text-3xl font-bold">{formatCurrency(emergencyReserve)}</p>
+                </div>
+              </div>
+            </div>
         </div>
+            
+            <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 mb-10">
+                  <div className="mx-4">
+                      <div className="overflow-x-auto w-full">
+                          <DataTable
+                              title="Budget Requests"
+                              columns={columns}
+                              data={filteredData}
+                              pagination
+                              defaultSortField="name"
+                              highlightOnHover
+                              pointerOnHover
+                              onRowClicked={handleRowClick}
+                              subHeader
+                              subHeaderComponent={
+                              <input
+                                  type="text"
+                                  placeholder="Search..."
+                                  value={searchText}
+                                  onChange={handleSearch}
+                                  className="mb-2 p-2 border border-gray-400 rounded-lg"
+                              />
+                              }
+                          />
+                      </div>
+                  </div>
+            </div>
+      </div>
 
 
         <dialog id="budget_modal" className="modal">
-                <div className="modal-box shadow-xl">
-
-                
-                <form>
+            <div className="modal-box shadow-xl">
+                  <form>
                     <div className="flex flex-col justify-center items-center gap-4">
                         <h1 className="font-bold mb-4 text-lg">CREATE BUDGET</h1>
-
                         <div className="flex gap-4 w-full">
                             <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="typeOfRequest">
@@ -255,7 +243,6 @@ function budgetRequest() {
                                 onChange={(e) => setTypeOfRequest(e.target.value)}
                                    />
                             </div>
-
                             <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalRequest">
                                     Total Amount
@@ -266,42 +253,35 @@ function budgetRequest() {
                                 onChange={(e) => setTotalRequest(e.target.value)} required/>
                             </div>
                         </div>
-
                         <div className="flex gap-4 w-full">
-                        <div className="w-full">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="reason">
-                                    Reason
-                                </label>
-                                <textarea
-                                placeholder="Reason"
-                                className="textarea textarea-bordered textarea-xs w-full max-w-xs"
-                                id="reason" 
-                                type="text"   
-                                value={reason}
-                                onChange={(e) => setReason(e.target.value)} required></textarea>
-                                
-                            </div>
-                            
-
-                            <div className="w-full">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalRequest">
-                                    Category
-                                </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="totalRequest" 
-                                type="text" 
-                                value='Emergency Reserve'
-                                onChange={(e) => setTotalRequest(e.target.value)} required/>
-                            </div>
-
+                          <div className="w-full">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="reason">
+                                   Reason
+                              </label>
+                              <textarea
+                              placeholder="Reason"
+                              className="textarea textarea-bordered textarea-xs w-full max-w-xs"
+                              id="reason" 
+                              type="text"   
+                              value={reason}
+                              onChange={(e) => setReason(e.target.value)} required></textarea>
+                          </div>
+                          <div className="w-full">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalRequest">
+                                  Category
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="totalRequest" 
+                              type="text" 
+                              value='Emergency Reserve'
+                              onChange={(e) => setTotalRequest(e.target.value)} required/>
+                          </div>
                         </div>
-
                         <div className="w-full">
                           <button className="btn btn-primary w-full font-bold">Submit</button>
                         </div>
                     </div>
-                    </form>
-                        
-                </div>
+                  </form>    
+            </div>
                 <form method="dialog" className="modal-backdrop">
                     <button>Close</button>
                 </form>

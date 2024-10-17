@@ -129,24 +129,63 @@ const handleRowClick = (row) => {
   {/* Modal for displaying row data */}
 {selectedRowData && (
         <dialog id="budgetReports_modal" className="modal">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Details for Payable ID: {selectedRowData._id}</h3>
-            <div className="py-4">
-              <p><strong>Request ID:</strong> {selectedRowData.requestId}</p>
-              <p><strong>Category:</strong> {selectedRowData.category}</p>
-              <p><strong>Type of Request:</strong> {selectedRowData.typeOfRequest}</p>
-              <p><strong>Documents:</strong> {selectedRowData.documents}</p>
-              <p><strong>Reason:</strong> {selectedRowData.reason}</p>
-              <p><strong>Total Amount:</strong> {formatCurrency(selectedRowData.totalRequest)}</p>
-              <p><strong>Status:</strong> {selectedRowData.status}</p>
-            </div>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={() => document.getElementById('budgetReports_modal').close()}
-            >
-              Close
-            </button>
-          </div>
+             <div className="modal-box w-full max-w-[1400px] bg-white shadow-lg rounded-lg">
+    <div className='rounded-xl shadow-2xl bg-white p-10'>
+
+<h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Budget Preview</h1>
+
+  <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Payable ID : <strong>{selectedRowData._id}</strong></h2>
+  
+  <div className="space-y-4">
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Category:</strong></p>
+      <p className="text-gray-700">{selectedRowData.category}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Type of Request:</strong></p>
+      <p className="text-gray-700">{selectedRowData.typeOfRequest}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Reason:</strong></p>
+      <p className="text-gray-700">{selectedRowData.reason}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Total Amount:</strong></p>
+      <p className="text-gray-700">{formatCurrency(selectedRowData.totalRequest)}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Status:</strong></p>
+      <p className={`font-bold ${selectedRowData.status === 'On process' ? 'text-blue-700' : 'text-red-600'}`}>
+        {selectedRowData.status}
+      </p>
+
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Documents:</strong></p>
+      <p className="text-blue-700"><a href={selectedRowData.documents}>{selectedRowData.documents}</a></p>
+    </div>
+    <iframe 
+        src={selectedRowData.documents}
+        width="100%" 
+        height="600px" 
+        title="PDF Viewer"
+      />
+</div>
+  </div>
+      <div className="mt-6 flex justify-end">
+        <button
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          onClick={() => document.getElementById('row_modal').close()}
+        >
+          Close
+        </button>
+      </div>
+    </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('budgetReports_modal').close()}>
               Close

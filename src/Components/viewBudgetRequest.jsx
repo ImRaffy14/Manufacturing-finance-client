@@ -13,13 +13,10 @@ function viewBudgetRequest({userData}) {
     const [comment, setComment] = useState("")
     const location = useLocation(); // Get the location object
     const { rowData } = location.state || {}; // Extract rowData from location.state
-
+          if (!rowData) {
+            return <p>No data available.</p>;
+          }
     const socket = useSocket()
-
-    if (!rowData) {
-      return <p>No data available.</p>;
-    }
-
     const formatCurrency = (value) => {
       return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
     };
@@ -118,137 +115,120 @@ function viewBudgetRequest({userData}) {
     
   return (
     <>
-     <div className="breadcrumbs text-xl mt-8">
+      <div className="breadcrumbs text-xl mt-8">
         <ul>
-            <li><a> <Link to="/Dashboard/budgetRequest">Return</Link></a></li>
-            <li><a className='text-blue-500 underline'>Documents</a></li>
+          <li><a> <Link to="/Dashboard/budgetRequest">Return</Link></a></li>
+          <li><a className='text-blue-500 underline'>Documents</a></li>
         </ul>
-    </div>
-    
-    <div className="max-w-screen-2xl mx-auto  mb-10 p-10 bg-white">
-        
-      <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Budget Request Preview</h1>
-
-  <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Request ID: {rowData.requestId}</h2>
-  
-  <div className="space-y-4">
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Category:</strong></p>
-      <p className="text-gray-700">{rowData.category}</p>
-    </div>
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Type of Request:</strong></p>
-      <p className="text-gray-700">{rowData.typeOfRequest}</p>
-    </div>
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Department:</strong></p>
-      <p className="text-gray-700">{rowData.department}</p>
-    </div>
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Documents:</strong></p>
-      <p className="text-blue-700"><a href={rowData.documents}>{rowData.documents}</a></p>
-    </div>
-    <iframe 
-              src={rowData.documents}
-              width="100%" 
-              height="600px" 
-              title="PDF Viewer"
-            />
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Reason:</strong></p>
-      <p className="text-gray-700">{rowData.reason || 'KUMAIN NG PUDAY'}</p>
-    </div>
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Total Amount:</strong></p>
-      <p className="text-gray-700">{formatCurrency(rowData.totalRequest)}</p>
-    </div>
-
-    <div className="flex justify-between">
-      <p className="font-medium"><strong>Status:</strong></p>
-      <p className="text-blue-700"><strong>{rowData.status}</strong></p>
-    </div>
-</div>
+      </div>
+    <div className="max-w-screen-2xl mx-auto mb-10 p-10 bg-white">
+      <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Budget Request Preview</h1>
+      <h2 className="text-2xl font-semibold mb-4 mt-10 border-b pb-2 border-gray-300">Details for Request ID : <strong>{rowData.requestId}</strong></h2>
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Category:</strong></p>
+            <p className="text-gray-700">{rowData.category}</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Type of Request:</strong></p>
+            <p className="text-gray-700">{rowData.typeOfRequest}</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Department:</strong></p>
+            <p className="text-gray-700">{rowData.department}</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Documents:</strong></p>
+            <p className="text-blue-700"><a href={rowData.documents}>{rowData.documents}</a></p>
+          </div>
+          <iframe 
+                    src={rowData.documents}
+                    width="100%" 
+                    height="600px" 
+                    title="PDF Viewer"
+                  />
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Reason:</strong></p>
+            <p className="text-gray-700">{rowData.reason || 'KUMAIN NG PUDAY'}</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Total Amount:</strong></p>
+            <p className="text-gray-700">{formatCurrency(rowData.totalRequest)}</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Status:</strong></p>
+            <p className="text-blue-700"><strong>{rowData.status}</strong></p>
+          </div>
+        </div>
 
       {/* Invoice-style Preview below */}
-<div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md" id="
-payable-preview">
-  <div className="flex justify-between items-center mb-4">
-    <div>
-      <img src={JJM} className="h-20 w-20"/>
-    </div>
-    <div className="text-right">
-      <h3 className="text-lg font-bold">Payable</h3>
-      <p><strong>Payable ID:</strong> {rowData._id}</p>
-      <p><strong>Status:</strong> {rowData.status || 'Pending'}</p>
-    </div>
-  </div>
-
-  <div className="mb-4">
-    <p><strong>Category:</strong> {rowData.category}</p>
-    <p><strong>Type of Request:</strong> {rowData.typeOfRequest}</p>
-    <p><strong>Department:</strong> {rowData.department}</p>
-    <p><strong>Documents:</strong> {rowData.documents}</p>
-  </div>
-
-  <div className="border-t border-b my-4 py-2">
-    <div className="flex justify-between font-semibold">
-      <span>Reason</span>
-      <span>Total Amount</span>
-    </div>
-    <div className="flex justify-between mt-2">
-      <span>{rowData.reason || 'KUMAIN NG PUDAY'}</span>
-      <span>{formatCurrency(rowData.totalRequest)}</span>
-    </div>
-  </div>
-
-  <div className="text-right font-bold mt-4">
-    <p className="text-xl">TOTAL AMOUNT:{formatCurrency(rowData.totalRequest)}</p>
-  </div>
-</div>
-  <div className="flex items-center justify-center mt-4 gap-10">
-  {!isSubmitted && 
-  <>
-  <button className="btn btn-lg bg-green-400 hover:bg-green-700" onClick={() => document.getElementById("approve_modal").showModal()}>Approve</button>
-  <button className="btn btn-lg bg-red-400 hover:bg-red-700" onClick={() => document.getElementById("decline_modal").showModal()}>Decline</button>
-  </>
-  }
-  </div>
+      <div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md" id="payable-preview">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <img src={JJM} className="h-20 w-20"/>
+          </div>
+          <div className="text-right">
+            <h3 className="text-lg font-bold">Payable</h3>
+            <p><strong>Payable ID:</strong> {rowData._id}</p>
+            <p><strong>Status:</strong> {rowData.status || 'Pending'}</p>
+          </div>
+        </div>
+        <div className="mb-4">
+          <p><strong>Category:</strong> {rowData.category}</p>
+          <p><strong>Type of Request:</strong> {rowData.typeOfRequest}</p>
+          <p><strong>Department:</strong> {rowData.department}</p>
+          <p><strong>Documents:</strong> {rowData.documents}</p>
+        </div>
+        <div className="border-t border-b my-4 py-2">
+          <div className="flex justify-between font-semibold">
+            <span>Reason</span>
+            <span>Total Amount</span>
+          </div>
+          <div className="flex justify-between mt-2">
+            <span>{rowData.reason || 'KUMAIN NG PUDAY'}</span>
+            <span>{formatCurrency(rowData.totalRequest)}</span>
+          </div>
+        </div>
+        <div className="text-right font-bold mt-4">
+          <p className="text-xl">TOTAL AMOUNT:{formatCurrency(rowData.totalRequest)}</p>
+        </div>
+      </div>
+      <div className="flex items-center justify-center mt-4 gap-10">
+        {!isSubmitted && 
+          <>
+            <button className="btn btn-lg bg-green-400 hover:bg-green-700" onClick={() => document.getElementById("approve_modal").showModal()}>Approve</button>
+            <button className="btn btn-lg bg-red-400 hover:bg-red-700" onClick={() => document.getElementById("decline_modal").showModal()}>Decline</button>
+          </>
+        }
+      </div>
     </div>
 
     <dialog id="approve_modal" className="modal">
         <div className="modal-box">
-        <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-            <h3 className="font-bold text-lg text-center">Enter Password to Approve Budget</h3>
-              <label className="block text-gray-600 font-medium mb-1">Password</label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                value={password}
-                required
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-
-            {authFailed &&
-            <h1 className="text-red-500">{authFailed}</h1> 
-            }
-
-            {!isLoading && 
-              <button
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
-              >
-              Confirm Budget  
-              </button>
-            }
-            </form>
-
+          <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Approve Budget</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              {authFailed &&
+              <h1 className="text-red-500">{authFailed}</h1> 
+              }
+              {!isLoading && 
+                <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
+                >
+                Confirm Budget  
+                </button>
+              }
+          </form>
             {isLoading && 
               <button
               className="px-4 py-1 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[145px]"
@@ -256,7 +236,6 @@ payable-preview">
               <span className="loading loading-spinner loading-md"></span> 
               </button>
             }
-
         </div>
           <form method="dialog" className="modal-backdrop">
             <button>close</button>
@@ -291,40 +270,38 @@ payable-preview">
           </form>
     </dialog> 
 
-
-{/* Decline Modal */}
-<dialog id="decline_modal" className="modal">
+    {/* Decline Modal */}
+    <dialog id="decline_modal" className="modal">
         <div className="modal-box">
-        <h3 className="font-bold text-xl mb-4">Decline Budget</h3>
-        <p className="mb-4 text-gray-600">Are you sure you want to decline this budget?</p>
-        <div className="flex flex-col gap-4">
-        <p className="font-bold">Reason:</p>
-      <textarea
-        className="textarea textarea-error border-gray-300 rounded-lg p-3"
-        placeholder="Add a comment"
-        rows="4"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        required
-      ></textarea>
-      <div className="flex justify-end gap-4">
-        <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" 
-        onClick={() => document.getElementById("confirm_decline_modal").showModal()}>
-          Yes
-        </button>
-        <button
-          className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
-          onClick={() => document.getElementById("decline_modal").close()}
-        >
-          No
-        </button>
-      </div>
-    </div>
+          <h3 className="font-bold text-xl mb-4">Decline Budget</h3>
+          <p className="mb-4 text-gray-600">Are you sure you want to decline this budget?</p>
+            <div className="flex flex-col gap-4">
+              <p className="font-bold">Reason:</p>
+                <textarea
+                  className="textarea textarea-error border-gray-300 rounded-lg p-3"
+                  placeholder="Add a comment"
+                  rows="4"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  required />
+              <div className="flex justify-end gap-4">
+                <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" 
+                onClick={() => document.getElementById("confirm_decline_modal").showModal()}>
+                  Yes
+                </button>
+                <button
+                  className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
+                  onClick={() => document.getElementById("decline_modal").close()}
+                >
+                  No
+                </button>
+              </div>
+            </div>
         </div>
-        <form method="dialog" className="modal-backdrop">
-          <button>close</button>
-        </form>
-      </dialog>
+            <form method="dialog" className="modal-backdrop">
+              <button>close</button>
+            </form>
+    </dialog>
     </>
   )
 }

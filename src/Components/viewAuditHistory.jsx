@@ -100,24 +100,36 @@ function viewAuditHistory() {
       </div>
 
       {/* Modal for displaying row data */}
-      {selectedRowData && (
+  {selectedRowData && (
         <dialog id="row_modal" className="modal">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Details for User: {selectedRowData.userName}</h3>
-            <div className="py-4">
-              <p><strong>Date & Time:</strong> {selectedRowData.dateTime}</p>
-              <p><strong>Auditor ID:</strong> {selectedRowData.auditorId}</p>
-              <p><strong>Auditor:</strong> {selectedRowData.auditor}</p>
-              <p><strong>Invoice ID:</strong> {selectedRowData.invoiceId}</p>
-              <p><strong>Customer Name:</strong> {selectedRowData.customerName}</p>
-              <p><strong>Total Ammount:</strong> {formatCurrency(selectedRowData.totalAmount)}</p>
-            </div>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={() => document.getElementById('row_modal').close()}
-            >
-              Close
-            </button>
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Audit Preview</h1>
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Invoice ID:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.invoiceId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Date & Time:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.dateTime}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Auditor ID:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.auditorId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Auditor:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.auditor}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Customer Name:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.customerName}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Total Amount:</strong></p>
+                      <p className="text-gray-700">{formatCurrency(selectedRowData.totalAmount)}</p>
+                    </div>
+                  </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('row_modal').close()}>

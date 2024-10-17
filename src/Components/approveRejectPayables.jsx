@@ -21,7 +21,7 @@ function approveRejectPayables() {
   const socket = useSocket()
 
   const columns = [
-    { name: 'Payble ID', selector: row => row._id, width: '250px' },
+    { name: 'Payable ID', selector: row => row._id, width: '250px' },
     { name: 'Request ID', selector: row => row.requestId, width: '250px' },
     { name: 'Department', selector: row => row.department, width: '150px' },
     { name: 'Category', selector: row => row.category, width: '200px' },
@@ -138,32 +138,49 @@ function approveRejectPayables() {
             </div>
         </div> 
 
-         {/* Modal for displaying row data */}
-      {selectedRowData && (
-        <dialog id="row_modal" className="modal">
-          <div className="modal-box w-full  max-w-[900px]">
-            <h3 className="font-bold text-lg">Details for Request ID: {selectedRowData._id}</h3>
-            <div className="py-4">
-              <p><strong>Category:</strong> {selectedRowData.category}</p>
-              <p><strong>Request Type:</strong> {selectedRowData.typeOfRequest}</p>
-              <p><strong>Documents:</strong> {selectedRowData.documents}</p>
-              <p><strong>Coments:</strong> {selectedRowData.comment}</p>
-              <p><strong>Status:</strong> {selectedRowData.status}</p>
-            </div>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={() => document.getElementById('row_modal').close()}
-            >
-              Close
-            </button>
+       {/* Modal for displaying row data */}
+{selectedRowData && (
+  <dialog id="row_modal" className="modal">
+    <div className="modal-box w-full max-w-[1400px] rounded-xl shadow-2xl bg-white p-10">
+      <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Payables Preview</h1>
+      <h2 className="text-2xl font-semibold mb-4 mt-10 border-b pb-2 border-gray-300">Details for Payable ID: <strong>{selectedRowData._id}</strong></h2>
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Category:</strong></p>
+            <p className="text-gray-700">{selectedRowData.category}</p>
           </div>
-          <form method="dialog" className="modal-backdrop">
-            <button type="button" onClick={() => document.getElementById('row_modal').close()}>
-              Close
-            </button>
-          </form>
-        </dialog>
-      )}
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Type of Request:</strong></p>
+            <p className="text-gray-700">{selectedRowData.typeOfRequest}</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Department:</strong></p>
+            <p className="text-gray-700">{selectedRowData.department}</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Status:</strong></p>
+            <p className={`text-gray-700 ${selectedRowData.status === 'Approved' ? 'text-green-500 font-bold' : 'text-red-600 font-bold'}`}>
+              {selectedRowData.status}
+            </p>
+          </div>
+          <div className="flex justify-between">
+            <p className="font-medium"><strong>Documents:</strong></p>
+            <p className="text-blue-700"><a href={selectedRowData.documents}>{selectedRowData.documents}</a></p>
+          </div>
+          <iframe 
+              src={selectedRowData.documents}
+              width="100%" 
+              height="600px" 
+              title="PDF Viewer"
+            />
+        </div>
+    </div>
+    <form method="dialog" className="modal-backdrop">
+      <button type="button" onClick={() => document.getElementById('row_modal').close()}></button>
+    </form>
+  </dialog>
+)}
+
    </>
   );
 

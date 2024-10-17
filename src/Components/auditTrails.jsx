@@ -107,22 +107,33 @@ function AuditTrails() {
       {/* Modal for displaying row data */}
       {selectedRowData && (
         <dialog id="row_modal" className="modal">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Details for User: {selectedRowData.userName}</h3>
-            <div className="py-4">
-              <p><strong>Date & Time:</strong> {selectedRowData.dateTime}</p>
-              <p><strong>User ID:</strong> {selectedRowData._id}</p>
-              <p><strong>Username:</strong> {selectedRowData.userName}</p>
-              <p><strong>Role:</strong> {selectedRowData.role}</p>
-              <p><strong>Action:</strong> {selectedRowData.action}</p>
-              <p><strong>Description:</strong> {selectedRowData.description}</p>
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+                <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Audit Trails Preview</h1>
+                  <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for User: <strong>{selectedRowData.userName}</strong></h2>
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Date & Time:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.dateTime}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>User ID:</strong></p>
+                      <p className="text-gray-700">{selectedRowData._id}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Role:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.role}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Action:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.action}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Description:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.description}</p>
+                    </div>
+                </div>
+            <div>
             </div>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={() => document.getElementById('row_modal').close()}
-            >
-              Close
-            </button>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('row_modal').close()}>
