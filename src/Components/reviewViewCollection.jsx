@@ -70,11 +70,11 @@ function reviewViewCollection() {
           </ul>
         </div>
     {/* Financial chart */}
-    <div className="bg-white/75 shadow-xl rounded-lg p-6 mt-7">
-    <div className="flex mb-10">
-    <h1 className="text-3xl font-bold">Details for ID: <strong>{rowData._id}</strong></h1>
+    <div className="bg-white/75 shadow-xl rounded-lg p-6 ">
+    <div className="flex mb-[80px]">
+    <h1 className="text-2xl font-semibold">Details for ID: <strong>{rowData._id}</strong></h1>
     </div>
-      <h2 className="text-xl font-bold">Month of {currentMonth}</h2>
+      <h2 className="text-xl font-bold mb-4">Month of {currentMonth}</h2>
         <div className="flex gap-4">
             {/* Net Income Card */}
            <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
@@ -134,12 +134,12 @@ function reviewViewCollection() {
             </div>
 
         {/* Bar Charts Section */}
-        <div className="mt-10 mb-5">
-          <h3 className="text-xl font-semibold text-gray-700 mb-4">Cash Flow</h3>
+        <div className="mt-[60px] mb-10">
+          <h3 className="text-xl font-bold mb-6">Cash Flow</h3>
           <div className="grid grid-cols-2 gap-4">
             {/* Inflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
-              <h4 className="text-lg font-semibold text-gray-700 mb-3">Inflows</h4>
+              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Inflows</h4>
               <AreaChart
             data={inflowsData}
             dataKey1="In"
@@ -150,7 +150,7 @@ function reviewViewCollection() {
 
             {/* Outflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
-              <h4 className="text-lg font-semibold text-gray-700 mb-3">Outflows</h4>
+              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Outflows</h4>
           <AreaChart
             data={outflowsData}
             dataKey1="Out"

@@ -193,7 +193,7 @@ const { currentMonth, nextMonth } = getMonthNames();
           <div className="grid grid-cols-2 gap-4">
             {/* Inflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
-              <h4 className="text-lg font-semibold text-gray-700 mb-3">Inflows</h4>
+              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Inflows</h4>
               <AreaChart
             data={inflowsData}
             dataKey1="In"
@@ -204,7 +204,7 @@ const { currentMonth, nextMonth } = getMonthNames();
 
             {/* Outflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
-              <h4 className="text-lg font-semibold text-gray-700 mb-3">Outflows</h4>
+              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Outflows</h4>
           <AreaChart
             data={outflowsData}
             dataKey1="Out"

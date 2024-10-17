@@ -278,8 +278,8 @@ const spending = [
          <div className="flex gap-4 mt-6">
   {/* First chart (BarChart) */}
   <div className="bg-white shadow-xl w-full p-8 rounded-lg hover:shadow-xl">
-    <h4 className="text-lg font-semibold text-gray-700 mb-3">Product Sales Volume</h4>
-    <h4 className="text-md text-gray-500 mb-10">Shows the total number of products sold during the selected period, providing a clear view of overall product movement.</h4>
+    <h4 className="text-lg font-semibold text-gray-700 mb-3 text-center">Product Sales Volume</h4>
+    <h4 className="text-md text-gray-500 mb-[80px] text-center">Shows the total number of products sold during the selected period, providing a clear view of overall product movement.</h4>
     <ResponsiveContainer width="100%" height={400}>
       <BarChart data={sales}>
         <CartesianGrid strokeDasharray="3 3" />
@@ -303,8 +303,8 @@ const spending = [
 
       <div className="flex gap-4 mt-6">
         <div className="bg-white w-full shadow-xl p-10 rounded-lg hover:shadow-xl mb-10">
-          <h1 className="text-gray-700 font-semibold text-xl mb-4">Net Income</h1>
-          <h4 className="text-md text-gray-500 mb-10">Shows the company’s profit after expenses are deducted from total sales, offering a snapshot of overall financial health.</h4>
+          <h1 className="text-gray-700 font-semibold text-xl mb-4 text-center">Net Income</h1>
+          <h4 className="text-md text-gray-500 mb-[80px] text-center">Shows the company’s profit after expenses are deducted from total sales, offering a snapshot of overall financial health.</h4>
           <AreaChart
             data={revenue}
             dataKey1="product1"
