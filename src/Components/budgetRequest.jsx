@@ -72,17 +72,33 @@ function budgetRequest() {
           setIsLoading(false)
         }
       }
-  
+      
       fetchData()
     }, [])
 
   useEffect(() => {
+    if(!socket) return;
 
-    socket.on("receive_budget_request_pending", (response) => {
+    socket.emit('get_budget_allocation', {msg: "get budget allocation"})
+
+    const handlesRequestPending = (response) => {
       setData(response.onProcessRequestBudget)
       setBudgetRequest(response.onProcessRequestBudgetCount)
-    })
+    } 
+    
+    const handlesBudgetAllocation = (response) => {
+      setOperatingExpenses(response.operatingExpenses)
+      setCapitalExpenditure(response.capitalExpenditures)
+      setEmergencyReserve(response.emergencyReserve)
+    }
+    
+    socket.on("receive_budget_request_pending", handlesRequestPending)
+    socket.on("receive_budget_allocation", handlesBudgetAllocation)
 
+    return () => {
+      socket.off("receive_budget_request_pending")
+      socket.off("receive_budget_allocation")
+    }
   }, [socket])
 
   //Handles Search from datatables
@@ -174,7 +190,7 @@ function budgetRequest() {
             {/* Emergency Reserve */}
             <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
               <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Emergency Reserve</p>
+                <p className="text-gray-600 font-semibold text-sm">Emergency Budget</p>
                 <BsCashCoin className="text-green-600 text-xl" />
               </div>
               <div className="flex gap-3 my-3">

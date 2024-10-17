@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import axios from 'axios'
 
 const SocketContext = createContext();
 
@@ -21,9 +22,7 @@ export const SocketProvider = ({ children }) => {
             const token = localStorage.getItem('token');
 
             const newSocket = io.connect(import.meta.env.VITE_SERVER_URL, {
-                auth: {
-                    token: token
-                },
+                withCredentials: true,
                 transports: ['websocket'],
             });
             setSocket(newSocket);
