@@ -36,6 +36,7 @@ import ViewAuditHistory from '../Components/viewAuditHistory';
 import ViewCollection from '../Components/viewCollection';
 import InvoiceDownload from '../Components/invoiceDownload';
 import AnomalyDetection from '../Components/anomalyDetection';
+import ReviewViewCollection from '../Components/reviewViewCollection';
 import ViewRequestPayable from '../Components/viewRequestPayable';
 import ViewReviewPaymentTransactions from '../Components/viewReviewPaymentTransactions';
 import ViewBudgetRequest from '../Components/viewBudgetRequest';
@@ -178,6 +179,7 @@ function AdminPage() {
                     <Route path="invoiceDownload" element={<InvoiceDownload />} />
                     <Route path="viewReviewPaymentTransactions" element={<ViewReviewPaymentTransactions userData={user}/>} />
                     <Route path="viewRequestPayable" element={<ViewRequestPayable  userData={user}/>} />
+                    <Route path="reviewViewCollection" element={<ReviewViewCollection/>}/>
                 </Routes>
             </div>
         </div>

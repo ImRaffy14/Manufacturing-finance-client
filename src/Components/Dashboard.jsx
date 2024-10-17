@@ -14,7 +14,7 @@ import { FiRepeat } from "react-icons/fi";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Link } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
-
+import { BsFillBarChartLineFill } from "react-icons/bs";
 
 function Dashboard() {
   const [budgetRequest, setBudgetRequest] = useState(0)
@@ -221,7 +221,7 @@ const spending = [
           <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Sales Volume</p>
-              <GrMoney className="text-gray-600 text-xl" />
+              <BsFillBarChartLineFill className="text-green-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{salesAmount}</p>
@@ -240,7 +240,7 @@ const spending = [
            <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Sales</p>
-              <HiOutlineCurrencyDollar className="text-gray-600 text-xl" />
+              <HiOutlineCurrencyDollar className="text-green-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(revenueAmount)}</p>
@@ -259,7 +259,7 @@ const spending = [
           <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Spending</p>
-              <RiPassPendingLine className="text-gray-600 text-xl" />
+              <RiPassPendingLine className="text-red-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(spendingAmount)}</p>

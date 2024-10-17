@@ -10,6 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import { useSocket } from "../context/SocketContext";
 import  axios from "axios";
 import CryptoJS from 'crypto-js';
+import { GiExpense } from "react-icons/gi";
+import { GiTakeMyMoney } from "react-icons/gi";
+import { GiPiggyBank } from "react-icons/gi";
 
 
 
@@ -146,7 +149,7 @@ function budgetRequest() {
             </div>
           </div>
 
-          <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
+          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Add Emergency Reserve</p>
               <MdContactEmergency className="text-gray-600 text-xl" />
@@ -165,7 +168,7 @@ function budgetRequest() {
             <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
               <div className="flex items-center justify-between">
                 <p className="text-gray-600 font-semibold text-sm">Operating Expenses</p>
-                <BsCashCoin className="text-green-600 text-xl" />
+                <GiTakeMyMoney className="text-green-600 text-xl" />
               </div>
               <div className="flex gap-3 my-3">
                 <p className="text-3xl font-bold">{formatCurrency(operatingExpenses)}</p>
@@ -178,7 +181,7 @@ function budgetRequest() {
             <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-5 transition-transform transform hover:scale-105 hover:shadow-xl">
               <div className="flex items-center justify-between">
                 <p className="text-gray-600 font-semibold text-sm">Capital Expenditure</p>
-                <BsCashCoin className="text-green-600 text-xl" />
+                <GiExpense className="text-green-600 text-xl" />
               </div>
               <div className="flex gap-3 my-3">
                 <p className="text-3xl font-bold">{formatCurrency(capitalExpenditure)}</p>
