@@ -12,42 +12,66 @@ import { PiHandDeposit } from "react-icons/pi";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { FaRegMinusSquare } from "react-icons/fa";
 import AreaChart from '../Components/ReCharts/AreaChart';
+import { useSocket } from '../context/SocketContext'
 
 
 function viewCollection({ userData }) {
   const [cashAmount, setCashAmount] = useState(0);
   const [salesAmount, setSalesAmount] = useState(0);
-  const [spentAmount, setSpent] = useState(0);
-  const [password, setPassword] = useState('');
+  const [spentAmount, setSpentAmount] = useState(0);
+  const [inflowsChart, setInflowsChart] = useState([])
+  const [outflowsChart, setOutflowsChart] = useState([])
+  const [inflowDiff, setInflowDiff] = useState(0)
+  const [inflowPercentage, setInflowPercentage] = useState(0)
+  const [outflowDiff, setOutflowDiff] = useState(0)
+  const [outflowPercentage, setOutflowPercetage] = useState(0)
   const [withdraw, setWithdraw] = useState(0);
   const navigate = useNavigate();
-  const [budgetRequest, setBudgetRequest] = useState(0);
   const [totalCash, setTotalCash] = useState(0);
-  const [reason, setReason] = useState('');
   const [searchText, setSearchText] = useState('');
-  const [requestId, setRequestId] = useState('');
-  const [category, setCategory] = useState('');
-  const [typeOfRequest, setTypeOfRequest] = useState ('');
-  const [documents, setDocuments] = useState ('');
-  const [totalRequest, setTotalRequest] = useState(0);
+  const [isLoading, setIsLoading] = useState(true)
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
+  const socket = useSocket()
 
-  const inflowsData = [
-    { name: 'First', In: 0 },
-    { name: 'Second', In: 6000 },
-    { name: 'Third', In: 1000 },
-    { name: 'Fourth', In: 6000 },
-  ];
-  
-  const outflowsData = [
-    { name: 'First', Out: 2000 },
-    { name: 'Second',Out: 2500 },
-    { name: 'Fourth', Out: 1800 },
-    { name: 'Fourth', Out: 3200 },
-  ];
+  //INFLOWS ANALYTICS
+  const inflowsData = inflowsChart && inflowsChart.length > 0 
+    ? inflowsChart.map((inflows) => ({
+        _id: `week ${inflows._id}`,
+        Amount: inflows.totalInflowAmount
+      }))
+    : [];
+
+  while (inflowsData.length < 4) {
+    const lastWeekNumber = inflowsData.length > 0
+      ? parseInt(inflowsData[inflowsData.length - 1]._id.replace('week ', ''), 10)
+      : 0;
+
+    inflowsData.push({
+      _id: `week ${lastWeekNumber + 1}`,
+      Amount: 0
+    });
+  }
+
+  //OUTFLOWS ANALYTICS
+  let outflowsData = outflowsChart.map((outflows) => ({
+    _id: `week ${outflows._id}`,
+    Amount: outflows.totalOutflowAmount
+  }));
+
+  while (outflowsData.length < 4) {
+    const lastWeekNumber = outflowsData.length > 0
+      ? parseInt(outflowsData[outflowsData.length - 1]._id.replace('week ', ''), 10)
+      : 0;
+
+    outflowsData.push({
+      _id: `week ${lastWeekNumber + 1}`,
+      Amount: 0
+    });
+  }
+
   
 
   const columns = [
@@ -81,6 +105,48 @@ function viewCollection({ userData }) {
     },
   ];
 
+  //FETCHING DATA
+  useEffect(() => {
+
+    if(!socket) return;
+
+    socket.emit("get_total_cash", {msg: "get total cash"})
+    socket.emit("get_collection_analytics", {msg: "get collection analytics"})
+    socket.emit("get_monthly_collection_records", {msg: "get monthly collection records"})
+
+    const handlesCollectionAnalytics = (response) => {
+      setSalesAmount(response.totalInflows)
+      setSpentAmount(response.totalOutflows)
+      setInflowsChart(response.inflows)
+      setOutflowsChart(response.outflows)
+      setInflowDiff(response.inflowDifference)
+      setInflowPercentage(response.inflowPercentageChange)
+      setOutflowDiff(response.outflowDifference)
+      setOutflowPercetage(response.outflowPercentageChange)
+      console.log(response)
+    }
+
+    const handlesTotalCash = (response) => {
+      setTotalCash(response)
+      setIsLoading(false)
+    }
+
+    const handlesMonthlyRecords = (response) => {
+      // console.log(response)
+    }
+
+    socket.on("receive_total_cash", handlesTotalCash)
+    socket.on("receive_collection_analytics", handlesCollectionAnalytics)
+    socket.on("receive_monthly_collection_records", handlesMonthlyRecords)
+
+    return () => {
+      socket.off("receive_total_cash")
+      socket.off("receive_collection_analytics")
+      socket.off("receive_monthly_collection_records")
+    }
+
+  }, [socket])
+
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
@@ -112,6 +178,18 @@ const getMonthNames = () => {
 
 const { currentMonth, nextMonth } = getMonthNames();
 
+//LOADER
+if (isLoading) {
+  return (
+    <div className="flex w-full flex-col gap-4">
+      <div className="skeleton h-[520px] w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+      <div className="skeleton h-20 w-full"></div>
+    </div>
+  );
+}
+
   return (
     <>
     
@@ -127,7 +205,7 @@ const { currentMonth, nextMonth } = getMonthNames();
               <BsCashCoin className="text-green-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">{formatCurrency(cashAmount)}</p>
+              <p className="text-3xl font-bold">{formatCurrency(totalCash)}</p>
             </div>
           </div>
           {(userData.role === 'ADMIN' || userData.role === 'CHIEF FINANCIAL OFFICER')  && (
@@ -172,12 +250,12 @@ const { currentMonth, nextMonth } = getMonthNames();
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(salesAmount)}</p>
               <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                <IoIosArrowUp className="text-green-700" /> 10.8%
+                <IoIosArrowUp className="text-green-700" /> {inflowPercentage}
               </p>
             </div>
             <div className="my-3">
               <p className="text-green-700 font-semibold">
-              +{formatCurrency(12313)}<span className="text-gray-500"> than past month</span>
+              +{formatCurrency(inflowDiff)}<span className="text-gray-500"> than past month</span>
               </p>
             </div>
           </div>
@@ -191,12 +269,12 @@ const { currentMonth, nextMonth } = getMonthNames();
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(spentAmount)}</p>
               <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
-                <IoIosArrowUp className="text-red-700" /> 9.1%
+                <IoIosArrowUp className="text-red-700" /> {outflowPercentage}
               </p>
             </div>
             <div className="my-3">
               <p className="text-red-700 font-semibold">
-                +{formatCurrency(3213)} <span className="text-gray-500">than past month</span>
+                +{formatCurrency(outflowDiff)} <span className="text-gray-500">than past month</span>
               </p>
             </div>
           </div>
@@ -209,10 +287,10 @@ const { currentMonth, nextMonth } = getMonthNames();
           <div className="grid grid-cols-2 gap-4">
             {/* Inflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
-              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Inflows</h4>
+              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Inflow</h4>
               <AreaChart
             data={inflowsData}
-            dataKey1="In"
+            dataKey1="Amount"
             color1="rgb(74 222 128)"
             
           />
@@ -220,10 +298,10 @@ const { currentMonth, nextMonth } = getMonthNames();
 
             {/* Outflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
-              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Outflows</h4>
+              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Outflow</h4>
           <AreaChart
             data={outflowsData}
-            dataKey1="Out"
+            dataKey1="Amount"
             color1="rgb(248 113 113)"
             
           />

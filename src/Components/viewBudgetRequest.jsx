@@ -52,7 +52,6 @@ function viewBudgetRequest({userData}) {
         
         setPassword("")
         setComment("")
-        setIsSubmitted(true)
         setIsLoading(false)
         document.getElementById("approve_modal").close()
         document.getElementById("decline_modal").close()

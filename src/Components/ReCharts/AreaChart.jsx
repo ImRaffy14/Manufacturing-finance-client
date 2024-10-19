@@ -8,7 +8,7 @@ const AreaChartComponent = ({ data, dataKey1, dataKey2, color1, color2 }) => (
   <ResponsiveContainer width="100%" height={300}>
     <AreaChart data={data}>
       {/* Adding grid lines */}
-      <XAxis dataKey="name" />
+      <XAxis dataKey="_id" />
       <YAxis />
       <Tooltip />
       <Area
