@@ -208,7 +208,7 @@ if (isLoading) {
               <p className="text-3xl font-bold">{formatCurrency(totalCash)}</p>
             </div>
           </div>
-          {(userData.role === 'ADMIN' || userData.role === 'CHIEF FINANCIAL OFFICER')  && (
+          {(userData.role === 'ADMIN')  && (
           <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Cash Deposit</p>
@@ -221,7 +221,7 @@ if (isLoading) {
           </div>
           )}
 
-          {(userData.role === 'ADMIN' || userData.role === 'CHIEF FINANCIAL OFFICER')  && (
+          {(userData.role === 'ADMIN')  && (
           <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Cash Withdrawal</p>
@@ -242,7 +242,7 @@ if (isLoading) {
       <h1 className="text-xl font-bold">Month of {currentMonth}</h1>
         <div className="flex gap-4">
             {/* Revenue Card */}
-           <div className="bg-white/75 shadow-xl w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white/75 shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Sales</p>
               <PiCoinsFill className="text-yellow-500 text-xl" />
@@ -261,7 +261,7 @@ if (isLoading) {
           </div>
 
           {/* Spending Card */}
-          <div className="bg-white shadow-xl w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Spent</p>
               <RiPassPendingLine className="text-red-600 text-xl" />
@@ -419,7 +419,7 @@ if (isLoading) {
 
             <div className="flex items-center justify-end mt-3">
               <button
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-red-800"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
                 onClick={() => {
                   const amountInput = document.getElementById('deposit');
                   if (amountInput.checkValidity()) {
@@ -454,7 +454,7 @@ if (isLoading) {
         />
       </div>
 
-      <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800">
+      <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">
         Confirm
       </button>
     </form>
