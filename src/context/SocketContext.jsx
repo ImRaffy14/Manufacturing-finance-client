@@ -19,7 +19,6 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         if(isAuthenticated()){
-            const token = localStorage.getItem('token');
 
             const newSocket = io.connect(import.meta.env.VITE_SERVER_URL, {
                 withCredentials: true,
