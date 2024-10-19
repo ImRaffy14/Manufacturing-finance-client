@@ -353,7 +353,7 @@ const handleRowClick = (row) => {
       
           <div className="flex justify-between">
             <p className="font-medium"><strong>Total Amount:</strong></p>
-            <p className="text-gray-700">₱{selectedRowOnProcessData.totalRequest}</p>
+            <p className="text-gray-700">{formatCurrency(selectedRowOnProcessData.totalRequest)}</p>
           </div>
       
           <div className="flex justify-between">
@@ -392,12 +392,12 @@ const handleRowClick = (row) => {
             </div>
             <div className="flex justify-between mt-2">
               <span>{selectedRowOnProcessData.reason || 'KUMAIN NG PUDAY'}</span>
-              <span>₱{selectedRowOnProcessData.totalRequest}</span>
+              <span>{formatCurrency(selectedRowOnProcessData.totalRequest)}</span>
             </div>
           </div>
       
           <div className="text-right font-bold mt-4">
-            <p className="text-xl">TOTAL AMOUNT: ₱{selectedRowOnProcessData.totalRequest}</p>
+            <p className="text-xl">TOTAL AMOUNT:{formatCurrency(selectedRowOnProcessData.totalRequest)}</p>
           </div>
         </div>
         </div>
