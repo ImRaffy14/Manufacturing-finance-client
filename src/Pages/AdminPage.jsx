@@ -93,7 +93,7 @@ function AdminPage() {
                         <Route path="collectionReports" element={<CollectionReports />} />
                     )}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (
-                        <Route path="viewCollection" element={<ViewCollection />} />
+                        <Route path="viewCollection" element={<ViewCollection  userData={user}/>} />
                     )}
 
                         {/* Budget Management */}
