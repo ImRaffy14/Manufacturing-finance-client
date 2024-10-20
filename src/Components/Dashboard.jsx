@@ -23,6 +23,7 @@ function Dashboard() {
   const [salesAmount, setSalesAmount] = useState(0);
   const [revenueAmount, setRevenueAmount] = useState(0);
   const [spendingAmount, setSpendingAmount] = useState(0);
+  const currentMonth = new Date().toLocaleString('default', { month: 'long' });
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
@@ -200,6 +201,7 @@ const revenue = [
         {/* Financial chart */}
         <div className="bg-white/75 shadow-xl rounded-lg p-6">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">Analytics</h3>
+          <h2 className="text-xl font-bold mt-10">Month of {currentMonth}</h2>
           <div className="flex gap-4">
             {/* Sales Card */}
           <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">

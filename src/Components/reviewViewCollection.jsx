@@ -12,15 +12,15 @@ import { PiCoinsFill } from "react-icons/pi";
 import { MdAutoGraph } from "react-icons/md";
 import { useSocket } from "../context/SocketContext"
 
+
 function reviewViewCollection() {
     const location = useLocation(); // Get the location object
     const { rowData } = location.state || {}; // Extract rowData from location.state
     if (!rowData) {
       return <p>No data available.</p>;
     }
-
     const socket = useSocket()
-
+    const [data, setData] = useState([])
     const [cashAmount, setCashAmount] = useState(0);
     const [salesAmount, setSalesAmount] = useState(0);
     const [spentAmount, setSpent] = useState(0);
@@ -32,7 +32,47 @@ function reviewViewCollection() {
     const formatCurrency = (value) => {
         return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
       };
+      const inflowColumns = [
+        { name: 'ID', selector: row => row._id },
+        { name: 'Date', selector: row => row.date },
+        { name: 'Total Cash Inflow', selector: row => formatCurrency(row.totalInflows) },
+        { name: 'Net Income', selector: row => formatCurrency(row.netIncome)},
+      ];
+    
+      const outflowColumns = [
+        { name: 'ID', selector: row => row._id },
+        { name: 'Date', selector: row => row.date },
+        { name: 'Total Cash Outflow', selector: row => formatCurrency(row.totalOutflows) },
+        { name: 'Net Income', selector: row => formatCurrency(row.netIncome)},
+      ];
+    
+      const inflowData = [
+        { _id: 1, date: '2022-01-01', totalInflows: 0, netIncome: 0},
+      ]
 
+      const outflowData = [
+        { _id: 1, date: '2022-01-01', totalOutflows: 0, netIncome: 0},
+      ]
+      const handleSearch = (event) => {
+        setSearchText(event.target.value);
+      };
+    
+    // Filter data based on search text
+    const filteredInflowData = inflowData.filter(row =>
+      Object.values(row).some(value =>
+        value.toString().toLowerCase().includes(searchText.toLowerCase())
+      )
+    );
+    
+    const filteredOutflowData = outflowData.filter(row =>
+      Object.values(row).some(value =>
+        value.toString().toLowerCase().includes(searchText.toLowerCase())
+      )
+    );
+    const handleRowClick = (row) => {
+      navigate('/Dashboard/reviewViewCollection', { state: { rowData: row } });
+    };
+    
 
     //FETCHING DATA
     useEffect(() => {
@@ -170,7 +210,7 @@ function reviewViewCollection() {
             </div>
           </div>
             {/* Revenue Card */}
-           <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white/75 shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Sales</p>
               <PiCoinsFill className="text-green-600 text-xl" />
@@ -189,7 +229,7 @@ function reviewViewCollection() {
           </div>
 
           {/* Spending Card */}
-          <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Spent</p>
               <RiPassPendingLine className="text-red-600 text-xl" />
@@ -236,6 +276,59 @@ function reviewViewCollection() {
           </div>
         </div>
       </div>
+      <div className="items-center justify-center bg-white rounded-lg shadow-xl mt-7 mb-7 border border-gray-300">
+                <div className="mx-4">
+                    <div className="overflow-x-auto w-full">
+                        <DataTable
+                            title="Cash Inflow Records"
+                            columns={inflowColumns}
+                            data={filteredInflowData}
+                            pagination
+                            defaultSortField="name"
+                            highlightOnHover
+                            pointerOnHover
+                            onRowClicked={handleRowClick}// Add onRowClicked handler
+                            subHeader
+                            subHeaderComponent={
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchText}
+                                onChange={handleSearch}
+                                className="mb-2 p-2 border border-gray-400 rounded-lg"
+                            />
+                            }
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="items-center justify-center bg-white rounded-lg shadow-xl mt-7 mb-7 border border-gray-300">
+                <div className="mx-4">
+                    <div className="overflow-x-auto w-full">
+                        <DataTable
+                            title="Cash Outflow Records"
+                            columns={outflowColumns}
+                            data={filteredOutflowData}
+                            pagination
+                            defaultSortField="name"
+                            highlightOnHover
+                            pointerOnHover
+                            onRowClicked={handleRowClick}// Add onRowClicked handler
+                            subHeader
+                            subHeaderComponent={
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchText}
+                                onChange={handleSearch}
+                                className="mb-2 p-2 border border-gray-400 rounded-lg"
+                            />
+                            }
+                        />
+                    </div>
+                </div>
+            </div>
       </div>
 </>
   )

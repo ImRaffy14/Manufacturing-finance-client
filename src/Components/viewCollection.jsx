@@ -357,7 +357,6 @@ if (isLoading) {
                       </div>
                   </div>
               </div>
-
         </div>
 
         <dialog id="withdraw_modal" className="modal">
