@@ -1,16 +1,16 @@
-   import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { useNavigate, useLocation, Link  } from 'react-router-dom';
-const { rowData } = location.state || {}; // Extract rowData from location.state
 import { RiPassPendingLine } from "react-icons/ri";
 import { FaIndustry } from "react-icons/fa";
 import { BsCashCoin } from "react-icons/bs";
-import { IoIosArrowUp } from "react-icons/io";  
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";  
 import { PiHandWithdraw } from "react-icons/pi";
 import { FaRegPlusSquare } from "react-icons/fa";
 import AreaChart from '../Components/ReCharts/AreaChart';
 import { PiCoinsFill } from "react-icons/pi";
 import { MdAutoGraph } from "react-icons/md";
+import { useSocket } from "../context/SocketContext"
 
 function reviewViewCollection() {
     const location = useLocation(); // Get the location object
@@ -19,46 +19,127 @@ function reviewViewCollection() {
       return <p>No data available.</p>;
     }
 
+    const socket = useSocket()
+
     const [cashAmount, setCashAmount] = useState(0);
     const [salesAmount, setSalesAmount] = useState(0);
     const [spentAmount, setSpent] = useState(0);
     const [netIncome, setNetIncome] = useState(0);
+    const [response, setResponse] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState('');
     const formatCurrency = (value) => {
         return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
       };
 
-      const inflowsData = [
-        { name: 'First', In: 0 },
-        { name: 'Second', In: 6000 },
-        { name: 'Third', In: 1000 },
-        { name: 'Fourth', In: 6000 },
-      ];
-      
-      const outflowsData = [
-        { name: 'First', Out: 2000 },
-        { name: 'Second',Out: 2500 },
-        { name: 'Fourth', Out: 1800 },
-        { name: 'Fourth', Out: 3200 },
-      ];
 
+    //FETCHING DATA
+    useEffect(() => {
+      socket.emit("get_month_collection", rowData._id)
+    }, [])
+
+    useEffect(() => {
+      if(!socket) return;
+      
+      const handlesMonthCollection = (response) => {
+        setResponse(response)
+        setIsLoading(false)
+        console.log(response)
+      }
+
+      socket.on("receive_month_collection", handlesMonthCollection)
+
+      return () => {
+        socket.off("receive_month_collection")
+      }
+    }, [socket])
+
+
+    //INFLOWS ANALYTICS
+    const inflowsData = response.inflows && response.inflows.length > 0 
+    ? response.inflows.map((inflow) => ({
+        _id: `week ${inflow._id}`,
+        Amount: inflow.totalInflowAmount
+      })) 
+    : [];
+  
+  while (inflowsData.length < 4) {
+    const lastWeekNumber = inflowsData.length > 0
+      ? parseInt(inflowsData[inflowsData.length - 1]._id.replace('week ', ''), 10)
+      : 0;
+  
+    inflowsData.push({
+      _id: `week ${lastWeekNumber + 1}`,
+      Amount: 0
+    });
+  }
+  
+  inflowsData.sort((a, b) => {
+    const weekA = parseInt(a._id.replace('week ', ''), 10);
+    const weekB = parseInt(b._id.replace('week ', ''), 10);
+    return weekA - weekB;
+  });
+  
+
+    // OUTFLOWS ANALYTICS
+  let outflowsData = response.outflows && response.outflows.length > 0 
+    ? response.outflows.map((outflow) => ({
+      _id: `week ${outflow._id}`,
+      Amount: outflow.totalOutflowAmount
+    })) 
+  : [];
+
+  // Fill missing weeks for outflows
+  while (outflowsData.length < 4) {
+    const lastWeekNumber = outflowsData.length > 0
+      ? parseInt(outflowsData[outflowsData.length - 1]._id.replace('week ', ''), 10)
+      : 0;
+
+    outflowsData.push({
+      _id: `week ${lastWeekNumber + 1}`,
+      Amount: 0
+    });
+  }
+
+  // Sort by week number in ascending order
+  outflowsData.sort((a, b) => {
+    const weekA = parseInt(a._id.replace('week ', ''), 10);
+    const weekB = parseInt(b._id.replace('week ', ''), 10);
+    return weekA - weekB;
+  });
+
+
+
+    //GET MONTH NAME AND YEAR FORMAT
+    const formatDateString = (dateString) => {
+      if (!dateString) return 'Unknown Date'
+      const parts = dateString.split('/')
+      if (parts.length !== 3) return 'Invalid Date Format'
+      const month = parseInt(parts[0], 10)
+      const year = parts[2]
     
-    const getMonthNames = () => {
-      const currentDate = new Date();
-      const currentMonthIndex = currentDate.getMonth(); // getMonth() returns month index (0 - January, 11 - December)
-      const months = [
-        'January', 'February', 'March', 'April', 'May', 'June', 
-        'July', 'August', 'September', 'October', 'November', 'December'
-      ];
+      const monthNames = [
+        'January', 'February', 'March', 'April', 
+        'May', 'June', 'July', 'August', 
+        'September', 'October', 'November', 'December'
+      ]
     
-      const currentMonth = months[currentMonthIndex];
-      const nextMonth = months[(currentMonthIndex + 1) % 12]; // Get the next month, using modulo for December -> January
-    
-      return { currentMonth, nextMonth };
+      return `${monthNames[month - 1]} ${year}`
     };
     
-    const { currentMonth, nextMonth } = getMonthNames();
+
+    //LOADER
+    if (isLoading) {
+      return (
+        <div className="flex w-full flex-col gap-4">
+          <div className="skeleton h-[520px] w-full"></div>
+          <div className="skeleton h-20 w-full"></div>
+          <div className="skeleton h-20 w-full"></div>
+          <div className="skeleton h-20 w-full"></div>
+        </div>
+      );
+    }
     
   return (
  <>
@@ -74,7 +155,7 @@ function reviewViewCollection() {
     <div className="flex mb-[80px]">
     <h1 className="text-2xl font-semibold">Details for ID: <strong>{rowData._id}</strong></h1>
     </div>
-      <h2 className="text-xl font-bold mb-4">Month of {currentMonth}</h2>
+      <h2 className="text-xl font-bold mb-4">Month of {formatDateString(response.date)}</h2>
         <div className="flex gap-4">
             {/* Net Income Card */}
            <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
@@ -83,15 +164,9 @@ function reviewViewCollection() {
               <MdAutoGraph className="text-green-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">{formatCurrency(rowData.netIncome)}</p>
-              <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                <IoIosArrowUp className="text-green-700" /> 10.8%
-              </p>
+              <p className="text-3xl font-bold">{formatCurrency(response.netIncome)}</p>
             </div>
             <div className="my-3">
-              <p className="text-green-700 font-semibold">
-              +{formatCurrency(12313)}<span className="text-gray-500"> than past month</span>
-              </p>
             </div>
           </div>
             {/* Revenue Card */}
@@ -101,14 +176,14 @@ function reviewViewCollection() {
               <PiCoinsFill className="text-green-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">{formatCurrency(salesAmount)}</p>
+              <p className="text-3xl font-bold">{formatCurrency(response.totalInflows)}</p>
               <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                <IoIosArrowUp className="text-green-700" /> 10.8%
+              {response.inflowDifferenceArrow == "↑" ?  <IoIosArrowUp className="text-green-700" /> : <IoIosArrowDown className="text-red-700" /> } {response.inflowPercentageChange}
               </p>
             </div>
             <div className="my-3">
               <p className="text-green-700 font-semibold">
-              +{formatCurrency(12313)}<span className="text-gray-500"> than past month</span>
+                {response.inflowPercentageChangeArrow == "↑" ? "+" : "-"} {formatCurrency(response.inflowDifference)}<span className="text-gray-500"> than past month</span>
               </p>
             </div>
           </div>
@@ -120,14 +195,14 @@ function reviewViewCollection() {
               <RiPassPendingLine className="text-red-600 text-xl" />
             </div>
             <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">{formatCurrency(spentAmount)}</p>
+              <p className="text-3xl font-bold">{formatCurrency(response.totalOutflows)}</p>
               <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
-                <IoIosArrowUp className="text-red-700" /> 9.1%
+              {response.outflowDifferenceArrow == "↑" ?  <IoIosArrowUp className="text-red-700" /> : <IoIosArrowDown className="text-red-700" /> } {response.outflowPercentageChange}
               </p>
             </div>
             <div className="my-3">
               <p className="text-red-700 font-semibold">
-                +{formatCurrency(3213)} <span className="text-gray-500">than past month</span>
+                {response.outflowPercentageChangeArrow == "↑" ? "+" : "-"} {formatCurrency(response.outflowDifference)} <span className="text-gray-500">than past month</span>
               </p>
             </div>
           </div>
@@ -139,10 +214,10 @@ function reviewViewCollection() {
           <div className="grid grid-cols-2 gap-4">
             {/* Inflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
-              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Inflows</h4>
+              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Inflow</h4>
               <AreaChart
             data={inflowsData}
-            dataKey1="In"
+            dataKey1="Amount"
             color1="rgb(74 222 128)"
             
           />
@@ -150,10 +225,10 @@ function reviewViewCollection() {
 
             {/* Outflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
-              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Outflows</h4>
+              <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Outflow</h4>
           <AreaChart
             data={outflowsData}
-            dataKey1="Out"
+            dataKey1="Amount"
             color1="rgb(248 113 113)"
             
           />

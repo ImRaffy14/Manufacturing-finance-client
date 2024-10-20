@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { RiPassPendingLine } from "react-icons/ri";
 import { PiCoinsFill } from "react-icons/pi";
 import { BsCashCoin } from "react-icons/bs";
-import { IoIosArrowUp } from "react-icons/io";  
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";  
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PiHandWithdraw } from "react-icons/pi";
 import { PiHandDeposit } from "react-icons/pi";
@@ -13,9 +13,11 @@ import { FaRegPlusSquare } from "react-icons/fa";
 import { FaRegMinusSquare } from "react-icons/fa";
 import AreaChart from '../Components/ReCharts/AreaChart';
 import { useSocket } from '../context/SocketContext'
+import { toast } from 'react-toastify'
 
 
 function viewCollection({ userData }) {
+  const [data, setData] = useState([])
   const [cashAmount, setCashAmount] = useState(0);
   const [salesAmount, setSalesAmount] = useState(0);
   const [spentAmount, setSpentAmount] = useState(0);
@@ -23,8 +25,12 @@ function viewCollection({ userData }) {
   const [outflowsChart, setOutflowsChart] = useState([])
   const [inflowDiff, setInflowDiff] = useState(0)
   const [inflowPercentage, setInflowPercentage] = useState(0)
+  const [inflowDifferenceArrow, setInflowDifferenceArrow] = useState("")
+  const [inflowPercentageArrow, setInflowPercentageArrow] = useState("")
+  const [outflowDifferenceArrow, setOutflowDifferenceArrow] = useState("")
+  const [outflowPercentageArrow, setOutflowPercentageArrow] = useState("")
   const [outflowDiff, setOutflowDiff] = useState(0)
-  const [outflowPercentage, setOutflowPercetage] = useState(0)
+  const [outflowPercentage, setOutflowPercentage] = useState(0)
   const [withdraw, setWithdraw] = useState(0);
   const navigate = useNavigate();
   const [totalCash, setTotalCash] = useState(0);
@@ -36,10 +42,10 @@ function viewCollection({ userData }) {
 
   const socket = useSocket()
 
-  //INFLOWS ANALYTICS
-  const inflowsData = inflowsChart && inflowsChart.length > 0 
+  // INFLOWS ANALYTICS
+  let inflowsData = inflowsChart && inflowsChart.length > 0 
     ? inflowsChart.map((inflows) => ({
-        _id: `week ${inflows._id}`,
+        _id: `week ${inflows._id}`,  // assuming inflows._id contains the week number
         Amount: inflows.totalInflowAmount
       }))
     : [];
@@ -55,12 +61,23 @@ function viewCollection({ userData }) {
     });
   }
 
-  //OUTFLOWS ANALYTICS
-  let outflowsData = outflowsChart.map((outflows) => ({
-    _id: `week ${outflows._id}`,
-    Amount: outflows.totalOutflowAmount
-  }));
+  // Sort inflowsData by the numeric week value
+  inflowsData = inflowsData.sort((a, b) => {
+    const weekA = parseInt(a._id.replace('week ', ''), 10);
+    const weekB = parseInt(b._id.replace('week ', ''), 10);
+    return weekA - weekB;
+  });
 
+
+  // OUTFLOWS ANALYTICS
+  let outflowsData = outflowsChart && outflowsChart.length > 0 
+    ? outflowsChart.map((outflows) => ({
+        _id: `week ${outflows._id}`,  // assuming outflows._id contains the week number
+        Amount: outflows.totalOutflowAmount
+      }))
+    : [];
+
+  // Ensure outflowsData has at least 4 entries
   while (outflowsData.length < 4) {
     const lastWeekNumber = outflowsData.length > 0
       ? parseInt(outflowsData[outflowsData.length - 1]._id.replace('week ', ''), 10)
@@ -72,47 +89,36 @@ function viewCollection({ userData }) {
     });
   }
 
+// Sort outflowsData by the numeric week value
+outflowsData = outflowsData.sort((a, b) => {
+  const weekA = parseInt(a._id.replace('week ', ''), 10);
+  const weekB = parseInt(b._id.replace('week ', ''), 10);
+  return weekA - weekB;
+});
+
+
   
 
   const columns = [
     { name: 'ID', selector: row => row._id },
-    { name: 'Month', selector: row => row.month },
-    { name: 'Year', selector: row => row.year },
+    { name: 'Date', selector: row => row.date },
+    { name: 'Total Cash Inflow', selector: row => formatCurrency(row.totalInflows) },
+    { name: 'Total Cash Outflow', selector: row => formatCurrency(row.totalOutflows) },
     { name: 'Net Income', selector: row => formatCurrency(row.netIncome)},
   ];
 
-  const data = [
-    {
-      _id: 'P001',
-      month: 'October',
-      year: '2024',
-      netIncome: 12121,
-      status: 'On process',
-    },
-    {
-      _id: 'P001',
-      month: 'October',
-      year: '2024',
-      netIncome: 12121,
-      status: 'On process',
-    },
-    {
-      _id: 'P001',
-      month: 'October',
-      year: '2024',
-      netIncome: 12121,
-      status: 'On process',
-    },
-  ];
 
   //FETCHING DATA
   useEffect(() => {
-
-    if(!socket) return;
-
     socket.emit("get_total_cash", {msg: "get total cash"})
     socket.emit("get_collection_analytics", {msg: "get collection analytics"})
     socket.emit("get_monthly_collection_records", {msg: "get monthly collection records"})
+    socket.emit("get_monthly_records", {msg: "get monthly records"})
+  }, [])
+  
+  useEffect(() => {
+
+    if(!socket) return;
 
     const handlesCollectionAnalytics = (response) => {
       setSalesAmount(response.totalInflows)
@@ -122,27 +128,39 @@ function viewCollection({ userData }) {
       setInflowDiff(response.inflowDifference)
       setInflowPercentage(response.inflowPercentageChange)
       setOutflowDiff(response.outflowDifference)
-      setOutflowPercetage(response.outflowPercentageChange)
-      console.log(response)
+      setOutflowPercentage(response.outflowPercentageChange)
+      setInflowDifferenceArrow(response.inflowDifferenceArrow)
+      setInflowPercentageArrow(response.inflowPercentageChangeArrow)
+      setOutflowDifferenceArrow(response.outflowDifferenceArrow)
+      setOutflowPercentageArrow(response.outflowPercentageChange)
+      setIsLoading(false)
     }
 
     const handlesTotalCash = (response) => {
       setTotalCash(response)
-      setIsLoading(false)
     }
 
     const handlesMonthlyRecords = (response) => {
-      // console.log(response)
+      setData(response)
+    }
+
+    const handlesNewMonthlyRecord = (response) => {
+      setData(response)
+      toast.success("New monthly collection record.",{
+        position: "top-right"
+      })
     }
 
     socket.on("receive_total_cash", handlesTotalCash)
     socket.on("receive_collection_analytics", handlesCollectionAnalytics)
-    socket.on("receive_monthly_collection_records", handlesMonthlyRecords)
+    socket.on("receive_collection_records", handlesMonthlyRecords)
+    socket.on("receive_collection_records_notif", handlesNewMonthlyRecord)
 
     return () => {
       socket.off("receive_total_cash")
       socket.off("receive_collection_analytics")
-      socket.off("receive_monthly_collection_records")
+      socket.off("receive_monthly_records")
+      socket.off("receive_collection_records_notif")
     }
 
   }, [socket])
@@ -250,12 +268,12 @@ if (isLoading) {
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(salesAmount)}</p>
               <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                <IoIosArrowUp className="text-green-700" /> {inflowPercentage}
+                {inflowPercentageArrow == "↑" ?  <IoIosArrowUp className="text-green-700" /> : <IoIosArrowDown className="text-red-700" /> } {inflowPercentage}
               </p>
             </div>
             <div className="my-3">
               <p className="text-green-700 font-semibold">
-              +{formatCurrency(inflowDiff)}<span className="text-gray-500"> than past month</span>
+                {inflowDifferenceArrow == "↑" ? "+" : "-"} {formatCurrency(inflowDiff)}<span className="text-gray-500"> than past month</span>
               </p>
             </div>
           </div>
@@ -269,12 +287,12 @@ if (isLoading) {
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(spentAmount)}</p>
               <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
-                <IoIosArrowUp className="text-red-700" /> {outflowPercentage}
+              {outflowDifferenceArrow == "↑" ?  <IoIosArrowUp className="text-red-700" /> : <IoIosArrowDown className="text-red-700" /> } {outflowPercentage}
               </p>
             </div>
             <div className="my-3">
               <p className="text-red-700 font-semibold">
-                +{formatCurrency(outflowDiff)} <span className="text-gray-500">than past month</span>
+                {inflowDifferenceArrow == "↑" ? "+" : "-"} {formatCurrency(outflowDiff)} <span className="text-gray-500">than past month</span>
               </p>
             </div>
           </div>

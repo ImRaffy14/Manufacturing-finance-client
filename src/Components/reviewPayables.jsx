@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { IoCreateOutline } from "react-icons/io5";
@@ -31,6 +31,7 @@ function reviewPayables() {
   const [onProcessData, setOnprocessData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitLoading, setIsSubmitLoading] = useState(false)
+  const fileInputRef = useRef(null);
 
   const socket = useSocket()
 
@@ -149,6 +150,9 @@ function reviewPayables() {
         setTotalRequest(0)
         setReason("")
         setCategory("")
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ""; 
+        }
         setDocuments(null)
         document.getElementById('payable_modal').close()
       }
@@ -476,7 +480,7 @@ const handleRowClick = (row) => {
                         <div className="w-full">
                           <h1 className="text-lg font-bold mb-2">Documents</h1>
                           <h1 className="italic mb-2 text-red-500">Note: PDF documents maximum of 10MB only .</h1>
-                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setDocuments(e.target.files[0])} required />
+                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs "ref={fileInputRef}  onChange={(e) => setDocuments(e.target.files[0])} required />
                             </div>
                         {response && <h1 className="text-red-500 font-bold">{response}</h1>}
                         <div className="w-full">

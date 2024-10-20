@@ -62,22 +62,6 @@ const revenue = [
  
 ];
 
-// Spending Data
-const spending = [
-  { name: 'Jan', expense1: 4500 },
-  { name: 'Feb', expense1: 3200 },
-  { name: 'Mar', expense1: 2500 },
-  { name: 'Apr', expense1: 3000 },
-  { name: 'May', expense1: 2100 },
-  { name: 'Jun', expense1: 4000 },
-  { name: 'Jul', expense1: 5000 },
-  { name: 'Aug', expense1: 4600 },
-  { name: 'Sepr', expense1: 3700 },
-  { name: 'Oct', expense1: 3400 },
-  { name: 'Nov', expense1: 5200 },
-  { name: 'Dec', expense1: 6000 },
-];
-
   // sample data
   const [dashboardData, setDashboardData] = useState({
     accountRequests: 50,
