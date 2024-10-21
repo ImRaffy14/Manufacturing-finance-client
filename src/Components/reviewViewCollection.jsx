@@ -13,6 +13,7 @@ import { MdAutoGraph } from "react-icons/md";
 import { useSocket } from "../context/SocketContext"
 
 
+
 function reviewViewCollection() {
     const location = useLocation(); // Get the location object
     const { rowData } = location.state || {}; // Extract rowData from location.state
@@ -31,6 +32,9 @@ function reviewViewCollection() {
     const [outflowData, setOutflowData] = useState([])
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState('');
+    const [inflowSearchText, setInflowSearchText] = useState('');
+    const [outflowSearchText, setOutflowSearchText] = useState('');
+    const [selectedRowData, setSelectedRowData] = useState(null); // For modal data
     const formatCurrency = (value) => {
         return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
       };
@@ -55,24 +59,34 @@ function reviewViewCollection() {
         { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},  
       ];
     
-      const handleSearch = (event) => {
-        setSearchText(event.target.value);
+      const handleInflowSearch = (event) => {
+        setInflowSearchText(event.target.value);
+      };
+
+      const handleOutflowSearch = (event) => {
+        setOutflowSearchText(event.target.value);
       };
     
     // Filter data based on search text
     const filteredInflowData = inflowData.filter(row =>
       Object.values(row).some(value =>
-        value.toString().toLowerCase().includes(searchText.toLowerCase())
+        value.toString().toLowerCase().includes(inflowSearchText.toLowerCase())
       )
     );
     
     const filteredOutflowData = outflowData.filter(row =>
       Object.values(row).some(value =>
-        value.toString().toLowerCase().includes(searchText.toLowerCase())
+        value.toString().toLowerCase().includes(outflowSearchText.toLowerCase())
       )
     );
-    const handleRowClick = (row) => {
-      navigate('/Dashboard/reviewViewCollection', { state: { rowData: row } });
+    const handleInflowRowClick = (row) => {
+      setSelectedRowData(row);  
+      document.getElementById('inflow_modal').showModal(); // Show modal on row click
+    };
+
+    const handleOutflowRowClick = (row) => {
+      setSelectedRowData(row);  
+      document.getElementById('outflow_modal').showModal(); // Show modal on row click
     };
     
 
@@ -290,14 +304,14 @@ function reviewViewCollection() {
                             defaultSortField="name"
                             highlightOnHover
                             pointerOnHover
-                            onRowClicked={handleRowClick}// Add onRowClicked handler
+                            onRowClicked={handleInflowRowClick}// Add onRowClicked handler
                             subHeader
                             subHeaderComponent={
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                value={searchText}
-                                onChange={handleSearch}
+                                value={inflowSearchText}
+                                onChange={handleInflowSearch}
                                 className="mb-2 p-2 border border-gray-400 rounded-lg"
                             />
                             }
@@ -317,14 +331,14 @@ function reviewViewCollection() {
                             defaultSortField="name"
                             highlightOnHover
                             pointerOnHover
-                            onRowClicked={handleRowClick}// Add onRowClicked handler
+                            onRowClicked={handleOutflowRowClick}// Add onRowClicked handler
                             subHeader
                             subHeaderComponent={
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                value={searchText}
-                                onChange={handleSearch}
+                                value={outflowSearchText}
+                                onChange={handleOutflowSearch}
                                 className="mb-2 p-2 border border-gray-400 rounded-lg"
                             />
                             }
@@ -333,8 +347,107 @@ function reviewViewCollection() {
                 </div>
             </div>
       </div>
-</>
-  )
-}
+      {selectedRowData && (
+        <dialog id="inflow_modal" className="modal">
+             <div className="modal-box w-full max-w-[1200px] rounded-xl shadow-2xl bg-white p-10">
 
+<h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Cash Inflow Preview</h1>
+
+  <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Transaction ID : <strong>{selectedRowData._id}</strong></h2>
+  
+  <div className="space-y-4">
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Date & Time:</strong></p>
+      <p className="text-gray-700">{selectedRowData.dateTime}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Auditor ID:</strong></p>
+      <p className="text-gray-700">{selectedRowData.auditorId}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Auditor:</strong></p>
+      <p className="text-gray-700">{selectedRowData.auditor}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Invoice ID:</strong></p>
+      <p className="text-gray-700">{selectedRowData.invoiceId}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Customer Name:</strong></p>
+      <p className="text-gray-700">{selectedRowData.customerName}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Total Amount:</strong></p>
+      <p className="text-gray-700">{formatCurrency(selectedRowData.totalAmount)}</p>
+    </div>
+</div>
+    </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('inflow_modal').close()}>
+              Close
+            </button>
+          </form>
+        </dialog>
+      )}
+
+{selectedRowData && (
+        <dialog id="outflow_modal" className="modal">
+             <div className="modal-box w-full max-w-[1200px] rounded-xl shadow-2xl bg-white p-10">
+
+<h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Cash Outflow Preview</h1>
+
+  <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">Details for Transaction ID : <strong>{selectedRowData._id}</strong></h2>
+  
+  <div className="space-y-4">
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Date & Time:</strong></p>
+      <p className="text-gray-700">{selectedRowData.dateTime}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Approver ID:</strong></p>
+      <p className="text-gray-700">{selectedRowData.approverId}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Approver:</strong></p>
+      <p className="text-gray-700">{selectedRowData.approver}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Payable ID:</strong></p>
+      <p className="text-gray-700">{selectedRowData.payableId}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Category:</strong></p>
+      <p className="text-gray-700">{selectedRowData.category}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Department:</strong></p>
+      <p className="text-gray-700">{selectedRowData.department}</p>
+    </div>
+
+    <div className="flex justify-between">
+      <p className="font-medium"><strong>Total Amount:</strong></p>
+      <p className="text-gray-700">{formatCurrency(selectedRowData.totalAmount)}</p>
+    </div>
+</div>
+    </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('outflow_modal').close()}>
+              Close
+            </button>
+          </form>
+        </dialog>
+      )}
+</>
+  );
+};
 export default reviewViewCollection

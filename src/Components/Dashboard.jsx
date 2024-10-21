@@ -265,7 +265,7 @@ const revenue = [
           </div>
 
            {/* Revenue Card */}
-           <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+           <div className="bg-white/75 shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Sales</p>
               <HiOutlineCurrencyDollar className="text-green-600 text-xl" />
@@ -284,7 +284,7 @@ const revenue = [
           </div>
 
           {/* Spending Card */}
-          <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Spending</p>
               <RiPassPendingLine className="text-red-600 text-xl" />

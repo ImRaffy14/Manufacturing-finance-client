@@ -110,8 +110,7 @@ const handleRowClick = (row) => {
   {/* Modal for displaying row data */}
 {selectedRowData && (
         <dialog id="budgetReports_modal" className="modal">
-             <div className="modal-box w-full max-w-[1200px] bg-white shadow-lg rounded-lg">
-    <div className='rounded-xl shadow-2xl bg-white p-10'>
+             <div className="modal-box w-full max-w-[1200px] rounded-xl shadow-2xl bg-white p-10">
 
 <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Budget Preview</h1>
 
@@ -152,17 +151,7 @@ const handleRowClick = (row) => {
       <p className="font-medium"><strong>Total Amount:</strong></p>
       <p className="text-gray-700">{formatCurrency(selectedRowData.totalAmount)}</p>
     </div>
-
 </div>
-  </div>
-      <div className="mt-6 flex justify-end">
-        <button
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          onClick={() => document.getElementById('row_modal').close()}
-        >
-          Close
-        </button>
-      </div>
     </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('budgetReports_modal').close()}>
