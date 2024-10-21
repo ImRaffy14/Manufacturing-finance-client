@@ -114,12 +114,14 @@ function viewBudgetRequest({userData}) {
     
   return (
     <>
+    <div className="max-w-screen-2xl mx-auto">
       <div className="breadcrumbs text-xl mt-8">
         <ul>
           <li><a> <Link to="/Dashboard/budgetRequest">Return</Link></a></li>
           <li><a className='text-blue-500 underline'>Documents</a></li>
         </ul>
       </div>
+    </div>
     <div className="max-w-screen-2xl mx-auto mb-10 p-10 bg-white">
       <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Budget Request Preview</h1>
       <h2 className="text-2xl font-semibold mb-4 mt-10 border-b pb-2 border-gray-300">Details for Request ID : <strong>{rowData.requestId}</strong></h2>

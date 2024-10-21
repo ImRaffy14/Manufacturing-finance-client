@@ -45,7 +45,7 @@ function viewCollection({ userData }) {
   // INFLOWS ANALYTICS
   let inflowsData = inflowsChart && inflowsChart.length > 0 
     ? inflowsChart.map((inflows) => ({
-        _id: `week ${inflows._id}`,  // assuming inflows._id contains the week number
+        _id: `week ${inflows._id}`, 
         Amount: inflows.totalInflowAmount
       }))
     : [];
@@ -56,7 +56,7 @@ function viewCollection({ userData }) {
       : 0;
 
     inflowsData.push({
-      _id: `week ${lastWeekNumber + 1}`,
+      _id: `week`,
       Amount: 0
     });
   }
@@ -72,7 +72,7 @@ function viewCollection({ userData }) {
   // OUTFLOWS ANALYTICS
   let outflowsData = outflowsChart && outflowsChart.length > 0 
     ? outflowsChart.map((outflows) => ({
-        _id: `week ${outflows._id}`,  // assuming outflows._id contains the week number
+        _id: `week ${outflows._id}`, 
         Amount: outflows.totalOutflowAmount
       }))
     : [];
@@ -84,7 +84,7 @@ function viewCollection({ userData }) {
       : 0;
 
     outflowsData.push({
-      _id: `week ${lastWeekNumber + 1}`,
+      _id: `week`,
       Amount: 0
     });
   }
@@ -132,7 +132,7 @@ outflowsData = outflowsData.sort((a, b) => {
       setInflowDifferenceArrow(response.inflowDifferenceArrow)
       setInflowPercentageArrow(response.inflowPercentageChangeArrow)
       setOutflowDifferenceArrow(response.outflowDifferenceArrow)
-      setOutflowPercentageArrow(response.outflowPercentageChange)
+      setOutflowPercentageArrow(response.outflowPercentageChangeArrow)
       setIsLoading(false)
     }
 
@@ -287,12 +287,12 @@ if (isLoading) {
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(spentAmount)}</p>
               <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
-              {outflowDifferenceArrow == "↑" ?  <IoIosArrowUp className="text-red-700" /> : <IoIosArrowDown className="text-red-700" /> } {outflowPercentage}
+                {outflowPercentageArrow == "↑" ?  <IoIosArrowUp className="text-red-700" /> : <IoIosArrowDown className="text-red-700" /> } {outflowPercentage}
               </p>
             </div>
             <div className="my-3">
               <p className="text-red-700 font-semibold">
-                {inflowDifferenceArrow == "↑" ? "+" : "-"} {formatCurrency(outflowDiff)} <span className="text-gray-500">than past month</span>
+                {outflowDifferenceArrow == "↑" ? "+" : "-"} {formatCurrency(outflowDiff)} <span className="text-gray-500">than past month</span>
               </p>
             </div>
           </div>

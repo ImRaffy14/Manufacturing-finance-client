@@ -27,32 +27,34 @@ function reviewViewCollection() {
     const [netIncome, setNetIncome] = useState(0);
     const [response, setResponse] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const [inflowData, setInflowData] = useState([])
+    const [outflowData, setOutflowData] = useState([])
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState('');
     const formatCurrency = (value) => {
         return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
       };
       const inflowColumns = [
-        { name: 'ID', selector: row => row._id },
-        { name: 'Date', selector: row => row.date },
-        { name: 'Total Cash Inflow', selector: row => formatCurrency(row.totalInflows) },
-        { name: 'Net Income', selector: row => formatCurrency(row.netIncome)},
+        { name: 'Transaction ID', selector: row => row._id },
+        { name: 'Date & Time', selector: row => row.dateTime },
+        { name: 'Auditor ID', selector: row => row.auditorId },
+        { name: 'Auditor', selector: row => row.auditor },
+        { name: 'Invoice ID', selector: row => row.invoiceId },
+        { name: 'Customer Name', selector: row => row.customerName },
+        { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
       ];
     
       const outflowColumns = [
-        { name: 'ID', selector: row => row._id },
-        { name: 'Date', selector: row => row.date },
-        { name: 'Total Cash Outflow', selector: row => formatCurrency(row.totalOutflows) },
-        { name: 'Net Income', selector: row => formatCurrency(row.netIncome)},
+        { name: 'Transaction ID', selector: row => row._id },
+        { name: 'Date & Time', selector: row => row.dateTime, width: '200px' },
+        { name: 'Approver', selector: row => row.approver, width: '100px' },
+        { name: 'Approver ID', selector: row => row.approverId },
+        { name: 'Payable ID', selector: row => row.payableId },
+        { name: 'Category', selector: row => row.category },
+        { name: 'Department', selector: row => row.department },
+        { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},  
       ];
     
-      const inflowData = [
-        { _id: 1, date: '2022-01-01', totalInflows: 0, netIncome: 0},
-      ]
-
-      const outflowData = [
-        { _id: 1, date: '2022-01-01', totalOutflows: 0, netIncome: 0},
-      ]
       const handleSearch = (event) => {
         setSearchText(event.target.value);
       };
@@ -85,7 +87,8 @@ function reviewViewCollection() {
       const handlesMonthCollection = (response) => {
         setResponse(response)
         setIsLoading(false)
-        console.log(response)
+        setInflowData(response.inflowRecords)
+        setOutflowData(response.outflowRecords)
       }
 
       socket.on("receive_month_collection", handlesMonthCollection)
@@ -110,7 +113,7 @@ function reviewViewCollection() {
       : 0;
   
     inflowsData.push({
-      _id: `week ${lastWeekNumber + 1}`,
+      _id: `week`,
       Amount: 0
     });
   }
@@ -137,7 +140,7 @@ function reviewViewCollection() {
       : 0;
 
     outflowsData.push({
-      _id: `week ${lastWeekNumber + 1}`,
+      _id: `week`,
       Amount: 0
     });
   }

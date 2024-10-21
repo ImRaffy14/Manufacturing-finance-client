@@ -15,6 +15,7 @@ function viewAuditHistory() {
   };
 
   const columns = [
+    { name: 'Transaction ID', selector: row => row._id },
     { name: 'Date & Time', selector: row => row.dateTime },
     { name: 'Auditor ID', selector: row => row.auditorId },
     { name: 'Auditor', selector: row => row.auditor },
@@ -36,7 +37,7 @@ function viewAuditHistory() {
     });
 
     return () => {
-      socket.off('receive_audit_history'); // Cleanup listener on component unmount
+      socket.off('receive_audit_history');
     };
   }, [socket]);
 

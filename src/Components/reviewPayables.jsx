@@ -166,6 +166,9 @@ function reviewPayables() {
       setTotalRequest(0)
       setReason("")
       setCategory("")
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""; 
+      }
       setDocuments(null)
       document.getElementById('payable_modal').close()
       console.error(error)
