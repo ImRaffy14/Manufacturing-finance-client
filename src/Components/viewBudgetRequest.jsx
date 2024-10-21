@@ -30,10 +30,25 @@ function viewBudgetRequest({userData}) {
         toast.success(response.msg, {
           position: "top-right"
         })
+
+        const accountCreationTrails = {
+          userId: userData._id,
+          userName: userData.userName,
+          role: userData.role,
+          action: response.status === "Approved" ? "APPROVED BUDGET REQUEST" : "DECLINED BUDGET REQUEST",
+          description: response.status === "Approved" ? `${userData.userName} approved the budget request for ${rowData.department} with a total budget of ${rowData.totalRequest}`
+          : `${userData.userName} declined the budget request for ${rowData.department}. Reason: ${response.comment}`,
+    
+        };
+        
+        
+        socket.emit("addAuditTrails", accountCreationTrails);
+
         setPassword("")
         setComment("")
         setIsSubmitted(true)
         setIsLoading(false)
+
         document.getElementById("approve_modal").close()
         document.getElementById("decline_modal").close()
         document.getElementById("confirm_decline_modal").close()
