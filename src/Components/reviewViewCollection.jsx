@@ -114,57 +114,88 @@ function reviewViewCollection() {
 
 
     //INFLOWS ANALYTICS
+    const currentDate = new Date();
+    const currentWeek = Math.ceil((currentDate.getDate() + 6 - currentDate.getDay()) / 7); // Current week number of the month
+
     const inflowsData = response.inflows && response.inflows.length > 0 
-    ? response.inflows.map((inflow) => ({
-        _id: `week ${inflow._id}`,
-        Amount: inflow.totalInflowAmount
+      ? response.inflows.map((inflow) => ({
+          _id: `week ${inflow._id}`,
+          Amount: inflow.totalInflowAmount
+        }))
+      : [];
+
+
+    const latestWeekInflows = inflowsData.length > 0
+      ? Math.max(...inflowsData.map(inflow => parseInt(inflow._id.replace('week ', ''), 10)))
+      : currentWeek;
+
+
+    const startWeekInflows = latestWeekInflows - 3;
+    const completeWeeksInflows = Array.from({ length: 4 }, (_, i) => startWeekInflows + i).map(week => `week ${week}`);
+
+    const finalInflowsData = completeWeeksInflows.map(week => {
+      const weekData = inflowsData.find(inflow => inflow._id === week);
+      
+      if (weekData) {
+
+        return weekData;
+      } else if (week === `week ${currentWeek}`) {
+
+        return { _id: week, Amount: 0 };
+      } else {
+
+        return { _id: week, Amount: 0 };
+      }
+    });
+
+    // Sort inflowsData by the numeric week value
+    finalInflowsData.sort((a, b) => {
+      const weekA = parseInt(a._id.replace('week ', ''), 10);
+      const weekB = parseInt(b._id.replace('week ', ''), 10);
+      return weekA - weekB;
+    });
+      
+
+    
+    // OUTFLOWS ANALYTICS
+    let outflowsData = response.outflows && response.outflows.length > 0 
+    ? response.outflows.map((outflow) => ({
+        _id: `week ${outflow._id}`,
+        Amount: outflow.totalOutflowAmount
       })) 
     : [];
   
-  while (inflowsData.length < 4) {
-    const lastWeekNumber = inflowsData.length > 0
-      ? parseInt(inflowsData[inflowsData.length - 1]._id.replace('week ', ''), 10)
-      : 0;
-  
-    inflowsData.push({
-      _id: `week`,
-      Amount: 0
+
+    const latestWeekOutflows = outflowsData.length > 0
+      ? Math.max(...outflowsData.map(outflow => parseInt(outflow._id.replace('week ', ''), 10)))
+      : currentWeek;
+    
+
+    const startWeekOutflows = latestWeekOutflows - 3;
+    const completeWeeksOutflows = Array.from({ length: 4 }, (_, i) => startWeekOutflows + i).map(week => `week ${week}`);
+    
+
+    const finalOutflowsData = completeWeeksOutflows.map(week => {
+      const weekData = outflowsData.find(outflow => outflow._id === week);
+      
+      if (weekData) {
+
+        return weekData;
+      } else if (week === `week ${currentWeek}`) {
+
+        return { _id: week, Amount: 0 };
+      } else {
+
+        return { _id: week, Amount: 0 };
+      }
     });
-  }
-  
-  inflowsData.sort((a, b) => {
-    const weekA = parseInt(a._id.replace('week ', ''), 10);
-    const weekB = parseInt(b._id.replace('week ', ''), 10);
-    return weekA - weekB;
-  });
-  
-
-    // OUTFLOWS ANALYTICS
-  let outflowsData = response.outflows && response.outflows.length > 0 
-    ? response.outflows.map((outflow) => ({
-      _id: `week ${outflow._id}`,
-      Amount: outflow.totalOutflowAmount
-    })) 
-  : [];
-
-  // Fill missing weeks for outflows
-  while (outflowsData.length < 4) {
-    const lastWeekNumber = outflowsData.length > 0
-      ? parseInt(outflowsData[outflowsData.length - 1]._id.replace('week ', ''), 10)
-      : 0;
-
-    outflowsData.push({
-      _id: `week`,
-      Amount: 0
+    
+    // Sort outflowsData by the numeric week value
+    finalOutflowsData.sort((a, b) => {
+      const weekA = parseInt(a._id.replace('week ', ''), 10);
+      const weekB = parseInt(b._id.replace('week ', ''), 10);
+      return weekA - weekB;
     });
-  }
-
-  // Sort by week number in ascending order
-  outflowsData.sort((a, b) => {
-    const weekA = parseInt(a._id.replace('week ', ''), 10);
-    const weekB = parseInt(b._id.replace('week ', ''), 10);
-    return weekA - weekB;
-  });
 
 
 
@@ -273,7 +304,7 @@ function reviewViewCollection() {
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Inflow</h4>
               <AreaChart
-            data={inflowsData}
+            data={finalInflowsData}
             dataKey1="Amount"
             color1="rgb(74 222 128)"
             
@@ -284,7 +315,7 @@ function reviewViewCollection() {
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Outflow</h4>
           <AreaChart
-            data={outflowsData}
+            data={finalOutflowsData}
             dataKey1="Amount"
             color1="rgb(248 113 113)"
             

@@ -101,7 +101,7 @@ function AdminPage() {
                         <Route path="approvedBudgets" element={<ApprovedBudgets />} />
                     )}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
-                        <Route path="budgetRequest" element={<BudgetRequest />} />
+                        <Route path="budgetRequest" element={<BudgetRequest userData={user} />} />
                     )}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
                         <Route path="budgetApproval" element={<BudgetApproval />} />

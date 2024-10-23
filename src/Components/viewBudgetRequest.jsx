@@ -31,18 +31,18 @@ function viewBudgetRequest({userData}) {
           position: "top-right"
         })
 
-        const accountCreationTrails = {
+        const processedBudgetTrails = {
           userId: userData._id,
           userName: userData.userName,
           role: userData.role,
           action: response.status === "Approved" ? "APPROVED BUDGET REQUEST" : "DECLINED BUDGET REQUEST",
-          description: response.status === "Approved" ? `${userData.userName} approved the budget request for ${rowData.department} with a total budget of ${rowData.totalRequest}`
+          description: response.status === "Approved" ? `${userData.userName} approved the budget request for ${rowData.department} with a total budget of ${formatCurrency(rowData.totalRequest)}`
           : `${userData.userName} declined the budget request for ${rowData.department}. Reason: ${response.comment}`,
     
         };
         
         
-        socket.emit("addAuditTrails", accountCreationTrails);
+        socket.emit("addAuditTrails", processedBudgetTrails);
 
         setPassword("")
         setComment("")

@@ -43,59 +43,73 @@ function viewCollection({ userData }) {
   const socket = useSocket()
 
   // INFLOWS ANALYTICS
+  const currentDate = new Date();
+  const currentWeek = Math.ceil((currentDate.getDate() + 6 - currentDate.getDay()) / 7); // Current week number of the month
+  
+
   let inflowsData = inflowsChart && inflowsChart.length > 0 
     ? inflowsChart.map((inflows) => ({
         _id: `week ${inflows._id}`, 
         Amount: inflows.totalInflowAmount
       }))
     : [];
+  
+  const latestWeek = inflowsChart.length > 0
+    ? Math.max(...inflowsChart.map(inflow => inflow._id)) 
+    : currentWeek;
+  
+  const startWeek = latestWeek - 3; 
+  const completeWeeks = Array.from({ length: 4 }, (_, i) => startWeek + i).map(week => `week ${week}`);
+  
+  // Create the final output by checking against completeWeeks
+  const finalInflowsData = completeWeeks.map(week => {
+    const weekData = inflowsData.find(inflow => inflow._id === week);
+    
+    if (weekData) {
 
-  while (inflowsData.length < 4) {
-    const lastWeekNumber = inflowsData.length > 0
-      ? parseInt(inflowsData[inflowsData.length - 1]._id.replace('week ', ''), 10)
-      : 0;
+      return weekData;
+    } else if (week === `week ${currentWeek}`) {
 
-    inflowsData.push({
-      _id: `week`,
-      Amount: 0
-    });
-  }
+      return { _id: week, Amount: 0 };
+    } else {
 
-  // Sort inflowsData by the numeric week value
-  inflowsData = inflowsData.sort((a, b) => {
-    const weekA = parseInt(a._id.replace('week ', ''), 10);
-    const weekB = parseInt(b._id.replace('week ', ''), 10);
-    return weekA - weekB;
+      return { _id: week, Amount: 0 };
+    }
   });
 
 
   // OUTFLOWS ANALYTICS
   let outflowsData = outflowsChart && outflowsChart.length > 0 
-    ? outflowsChart.map((outflows) => ({
-        _id: `week ${outflows._id}`, 
-        Amount: outflows.totalOutflowAmount
-      }))
-    : [];
+  ? outflowsChart.map((outflows) => ({
+      _id: `week ${outflows._id}`, 
+      Amount: outflows.totalOutflowAmount
+    }))
+  : [];
 
-  // Ensure outflowsData has at least 4 entries
-  while (outflowsData.length < 4) {
-    const lastWeekNumber = outflowsData.length > 0
-      ? parseInt(outflowsData[outflowsData.length - 1]._id.replace('week ', ''), 10)
-      : 0;
 
-    outflowsData.push({
-      _id: `week`,
-      Amount: 0
-    });
-  }
+  const latestWeekOutflows = outflowsChart.length > 0
+    ? Math.max(...outflowsChart.map(outflow => outflow._id)) 
+    : currentWeek;
 
-// Sort outflowsData by the numeric week value
-outflowsData = outflowsData.sort((a, b) => {
-  const weekA = parseInt(a._id.replace('week ', ''), 10);
-  const weekB = parseInt(b._id.replace('week ', ''), 10);
-  return weekA - weekB;
-});
 
+  const startWeekOutflows = latestWeekOutflows - 3; 
+  const completeWeeksOutflows = Array.from({ length: 4 }, (_, i) => startWeekOutflows + i).map(week => `week ${week}`);
+
+  // Create the final output by checking against completeWeeks
+  const finalOutflowsData = completeWeeksOutflows.map(week => {
+    const weekData = outflowsData.find(outflow => outflow._id === week);
+    
+    if (weekData) {
+
+      return weekData;
+    } else if (week === `week ${currentWeek}`) {
+
+      return { _id: week, Amount: 0 };
+    } else {
+
+      return { _id: week, Amount: 0 };
+    }
+  });
 
   
 
@@ -307,7 +321,7 @@ if (isLoading) {
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Inflow</h4>
               <AreaChart
-            data={inflowsData}
+            data={finalInflowsData}
             dataKey1="Amount"
             color1="rgb(74 222 128)"
             
@@ -318,7 +332,7 @@ if (isLoading) {
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Outflow</h4>
           <AreaChart
-            data={outflowsData}
+            data={finalOutflowsData}
             dataKey1="Amount"
             color1="rgb(248 113 113)"
             

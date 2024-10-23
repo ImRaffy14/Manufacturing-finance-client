@@ -13,10 +13,11 @@ import CryptoJS from 'crypto-js';
 import { GiExpense } from "react-icons/gi";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { GiPiggyBank } from "react-icons/gi";
+import { toast } from "react-toastify"
 
 
 
-function budgetRequest() {
+function budgetRequest({ userData }) {
   const navigate = useNavigate();
   const [budgetRequest, setBudgetRequest] = useState(0);
   const [operatingExpenses, setOperatingExpenses] = useState(0);
@@ -25,12 +26,13 @@ function budgetRequest() {
   const [reason, setReason] = useState('');
   const [password, setPassword] = useState('');
   const [searchText, setSearchText] = useState('');
-  const [requestId, setRequestId] = useState('');
   const [category, setCategory] = useState('Emergency Reserve');
   const [typeOfRequest, setTypeOfRequest] = useState ('Budget');
   const [isLoading, setIsLoading] = useState(true)
+  const [isSubmit, setIsSubmit]= useState(false)
   const [data, setData] = useState([])
-  const [totalRequest, setTotalRequest] = useState();
+  const [totalRequest, setTotalRequest] = useState(0);
+  const [authError, setAuthError] = useState("")
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
@@ -96,12 +98,63 @@ function budgetRequest() {
       setEmergencyReserve(response.emergencyReserve)
     }
     
+    const handlesAuthError = (response) => {
+      setAuthError(response.msg)
+      setPassword("")
+      setIsSubmit(false)
+    }
+
+    const handlesBudgetRequestSuccess = (response) => {
+      toast.success(response.msg, {
+        position: "top-right"
+      })
+      
+      
+      const processedBudgetTrails = {
+        userId: userData._id,
+        userName: userData.userName,
+        role: userData.role,
+        action: "CLAIMED EMERGENCY RESERVE BUDGET",
+        description: `${userData.userName} claims emergency reserved with a total of ${formatCurrency(response.amount)} for the company.`,
+  
+      };
+      
+      
+      socket.emit("addAuditTrails", processedBudgetTrails);
+
+      setIsSubmit(false)
+      setPassword("")
+      setTotalRequest(0)
+      setReason("")
+      document.getElementById('budget_reserve').close()
+      document.getElementById('budget_modal').close()
+    }
+
+    const handlesNoBudget = (response) => {
+      toast.error(response.msg, {
+        position: "top-right"
+      })
+
+      setIsSubmit(false)
+      setPassword("")
+      setTotalRequest(0)
+      setReason("")
+      document.getElementById('budget_reserve').close()
+      document.getElementById('budget_modal').close()
+    }
+
     socket.on("receive_budget_request_pending", handlesRequestPending)
     socket.on("receive_budget_allocation", handlesBudgetAllocation)
+    socket.on("receive_budget_reserve_authUser_invalid", handlesAuthError)
+    socket.on("saved_budget_reserved", handlesBudgetRequestSuccess)
+    socket.on("budget_reserve_no_budget", handlesNoBudget)
 
     return () => {
       socket.off("receive_budget_request_pending")
       socket.off("receive_budget_allocation")
+      socket.off("receive_budget_reserve_authUser_invalid")
+      socket.off("saved_budget_reserved")
+      socket.off("budget_reserve_no_budget")
     }
   }, [socket])
 
@@ -124,7 +177,9 @@ function budgetRequest() {
   //HANDLE EMERGENCY RESERVE SUBMIT
   const handlesSubmit = async (e) => {
     e.preventDefault()
-    console.log({ category, reason, typeOfRequest, totalRequest})
+    
+    setIsSubmit(true)
+    socket.emit("add_budget_reserve", { category, reason, typeOfRequest, totalRequest, password, userName: userData.userName, department: "Finance"})
   }
   
 
@@ -155,12 +210,12 @@ function budgetRequest() {
             </div>
             <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
               <div className="flex items-center justify-between">
-                <p className="text-gray-600 font-semibold text-sm">Add Emergency Reserve</p>
+                <p className="text-gray-600 font-semibold text-sm">Claim Emergency Reserve</p>
                 <MdContactEmergency className="text-gray-600 text-xl" />
               </div>
               <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('budget_modal').showModal()}>
               <FaRegPlusSquare className="text-blue-600 text-2xl my-2" />
-                <p className="text-3xl font-bold">Create</p>
+                <p className="text-3xl font-bold">Claim</p>
               </div>
             </div>
         </div>
@@ -235,7 +290,7 @@ function budgetRequest() {
 
         <dialog id="budget_modal" className="modal">
             <div className="modal-box shadow-xl">
-                  <form onSubmit={handlesSubmit}>
+                  <form onSubmit={(e) => {e.preventDefault(); document.getElementById('budget_reserve').showModal()}}>
                     <div className="flex flex-col justify-center items-center gap-4">
                         <h1 className="font-bold mb-4 text-lg">CREATE BUDGET</h1>
                         <div className="flex gap-4 w-full">
@@ -278,14 +333,14 @@ function budgetRequest() {
                               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalRequest">
                                   Category
                               </label>
-                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="totalRequest" 
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="emergencyReserve" 
                               type="text" 
                               value='Emergency Reserve'
                               onChange={(e) => setCategory(e.target.value)} required/>
                           </div>
                         </div>
                         <div className="w-full">
-                          <button className="btn btn-primary w-full font-bold" onClick={() => document.getElementById('budget_reserve').showModal()}>Submit</button>
+                          <button className="btn btn-primary w-full font-bold">Submit</button>
                         </div>
                     </div>
                   </form>    
@@ -297,7 +352,7 @@ function budgetRequest() {
             
             <dialog id="budget_reserve" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" >
+          <form className="space-y-4" onSubmit={handlesSubmit}>
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Submit Budget</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -310,12 +365,20 @@ function budgetRequest() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
               </div>
-                <button
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800"
+
+              {authError && <h1 className="text-red-500">{authError}</h1> }
+
+                {!isSubmit && <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
                 >
-                Submit Budget  
-                </button>
+                Submit 
+                </button>}
           </form>
+              {isSubmit && <button
+              className="px-4 py-2 mt-3 w-[80px] bg-green-600 text-white rounded hover:bg-green-800"
+              >
+              <span className="loading loading-spinner loading-md"></span>
+              </button>}
         </div>
           <form method="dialog" className="modal-backdrop">
             <button>close</button>
