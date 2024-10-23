@@ -23,6 +23,7 @@ function budgetRequest() {
   const [capitalExpenditure, setCapitalExpenditure] = useState (0);
   const [emergencyReserve, setEmergencyReserve] = useState(0);
   const [reason, setReason] = useState('');
+  const [password, setPassword] = useState('');
   const [searchText, setSearchText] = useState('');
   const [requestId, setRequestId] = useState('');
   const [category, setCategory] = useState('Emergency Reserve');
@@ -284,7 +285,7 @@ function budgetRequest() {
                           </div>
                         </div>
                         <div className="w-full">
-                          <button className="btn btn-primary w-full font-bold">Submit</button>
+                          <button className="btn btn-primary w-full font-bold" onClick={() => document.getElementById('budget_reserve').showModal()}>Submit</button>
                         </div>
                     </div>
                   </form>    
@@ -293,7 +294,33 @@ function budgetRequest() {
                     <button>Close</button>
                 </form>
             </dialog>
-    
+            
+            <dialog id="budget_reserve" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Submit Budget</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+                <button
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800"
+                >
+                Submit Budget  
+                </button>
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog>                  
     </>
   )
 }
