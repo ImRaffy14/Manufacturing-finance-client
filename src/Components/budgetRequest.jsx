@@ -25,11 +25,11 @@ function budgetRequest() {
   const [reason, setReason] = useState('');
   const [searchText, setSearchText] = useState('');
   const [requestId, setRequestId] = useState('');
-  const [category, setCategory] = useState('');
-  const [typeOfRequest, setTypeOfRequest] = useState ('');
+  const [category, setCategory] = useState('Emergency Reserve');
+  const [typeOfRequest, setTypeOfRequest] = useState ('Budget');
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
-  const [totalRequest, setTotalRequest] = useState(0);
+  const [totalRequest, setTotalRequest] = useState();
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
@@ -119,6 +119,13 @@ function budgetRequest() {
   const handleRowClick = (row) => {
     navigate('/Dashboard/viewBudgetRequest', { state: { rowData: row } });
   };
+
+  //HANDLE EMERGENCY RESERVE SUBMIT
+  const handlesSubmit = async (e) => {
+    e.preventDefault()
+    console.log({ category, reason, typeOfRequest, totalRequest})
+  }
+  
 
   if (isLoading) {
     return (
@@ -227,7 +234,7 @@ function budgetRequest() {
 
         <dialog id="budget_modal" className="modal">
             <div className="modal-box shadow-xl">
-                  <form>
+                  <form onSubmit={handlesSubmit}>
                     <div className="flex flex-col justify-center items-center gap-4">
                         <h1 className="font-bold mb-4 text-lg">CREATE BUDGET</h1>
                         <div className="flex gap-4 w-full">
@@ -273,7 +280,7 @@ function budgetRequest() {
                               <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="totalRequest" 
                               type="text" 
                               value='Emergency Reserve'
-                              onChange={(e) => setTotalRequest(e.target.value)} required/>
+                              onChange={(e) => setCategory(e.target.value)} required/>
                           </div>
                         </div>
                         <div className="w-full">
