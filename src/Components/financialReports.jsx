@@ -43,7 +43,7 @@ function financialReports({ userData }) {
           <div className="mx-4">
               <div className="overflow-x-auto w-full">
                   <DataTable
-                      title="Budget Requests"
+                      title="Financial Reports"
                       columns={columns}
                       data={filteredData}
                       pagination
