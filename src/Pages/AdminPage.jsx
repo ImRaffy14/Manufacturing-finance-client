@@ -40,6 +40,7 @@ import ReviewViewCollection from '../Components/reviewViewCollection';
 import ViewRequestPayable from '../Components/viewRequestPayable';
 import ViewReviewPaymentTransactions from '../Components/viewReviewPaymentTransactions';
 import ViewBudgetRequest from '../Components/viewBudgetRequest';
+import ViewFinancialReports from '../Components/viewFinancialReports';
 import { getProfile } from '../authentication/auth';
 
 function AdminPage() {
@@ -140,7 +141,7 @@ function AdminPage() {
                         <Route path="viewAuditHistory" element={<ViewAuditHistory />} />
                     )}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
-                        <Route path="financialReports" element={<FinancialReports />} />
+                        <Route path="financialReports" element={<FinancialReports userData={user}/>} />
                     )}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
                         <Route path="transactionRecords" element={<TransactionRecords />} />
@@ -164,6 +165,7 @@ function AdminPage() {
                         <Route path="anomalyDetection" element={<AnomalyDetection />} />
                     )}
 
+                    <Route path="viewFinancialReports" element={<ViewFinancialReports userData={user}/>}/>
                     <Route path="auditRecords" element={<AuditRecords />} />    
                     <Route path="budgetReports" element={<BudgetReports />} />
                     <Route path="createBudget" element={<CreateBudget />} />

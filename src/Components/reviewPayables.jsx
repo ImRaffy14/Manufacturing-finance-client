@@ -306,7 +306,7 @@ const handleRowClick = (row) => {
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                value={onPorcessSearchText}
+                                value={onProcessSearchText}
                                 onChange={handleOnProcessSearch}
                                 className="mb-2 p-2 border border-gray-400 rounded-lg"
                             />
