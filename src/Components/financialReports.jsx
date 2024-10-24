@@ -9,11 +9,11 @@ function financialReports({ userData }) {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
   const columns = [
-    { name: 'Financial Report ID', selector: row => row._id, width: '250px' },
-    { name: 'Date', selector: row => row.date, width: '250px' },
-    { name: 'Total Liabilities and Equity', selector: row => row.liabilitiesAndEquity, width: '150px' },
-    { name: 'Net Income', selector: row => row.netIncome, width: '200px' },
-    { name: 'Ending Balance', selector: row => row.endingBalance, width: '150px'  },
+    { name: 'Financial Report ID', selector: row => row._id, },
+    { name: 'Date', selector: row => row.date,  },
+    { name: 'Total Liabilities and Equity', selector: row => row.liabilitiesAndEquity, },
+    { name: 'Net Income', selector: row => row.netIncome,},
+    { name: 'Ending Balance', selector: row => row.endingBalance,},
   ];
 
   const data = [
