@@ -75,36 +75,57 @@ const viewFinancialReports = ({userData}) => {
   ];
 
   const exportToPDF = () => {
-    const input = document.getElementById('financial-report');
     const exportBtn = document.getElementById('export-button');
-
     exportBtn.style.display = 'none';
-
-    html2canvas(input, { scale: 2 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210;
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+  
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const sections = [
+      document.getElementById('report-header-and-narrative'), // Capture header + narrative as a single section
+      document.getElementById('balance-sheet'),
+      document.getElementById('income-statement'),
+      document.getElementById('cash-flow'),
+    ];
+  
+    let isFirstPage = true;
+  
+    const captureSection = (section, callback) => {
+      if (!section) {
+        console.error('Invalid section element. Skipping this section.');
+        callback();
+        return;
       }
-
-      pdf.save('financial-report.pdf');
-      exportBtn.style.display = 'block';
-    });
+  
+      html2canvas(section, { scale: 3, useCORS: true }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
+        if (!isFirstPage) pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, 10, imgWidth, imgHeight);
+  
+        isFirstPage = false;
+        callback();
+      }).catch((error) => {
+        console.error('Error capturing section:', error);
+        callback();
+      });
+    };
+  
+    const processSections = (index) => {
+      if (index < sections.length) {
+        captureSection(sections[index], () => processSections(index + 1));
+      } else {
+        pdf.save('financial-report.pdf');
+        exportBtn.style.display = 'block';
+      }
+    };
+  
+    processSections(0);
   };
-
+  
+  
+  
   return (
     <>      
     <div className="max-w-screen-2xl mx-auto mt-8  mb-10">
@@ -116,40 +137,51 @@ const viewFinancialReports = ({userData}) => {
     </div>
     <div className="p-4 md:p-10">
       <div className="bg-white rounded-lg p-4 md:p-10">
-        <div
+      <div
           id="financial-report"
-          className="container mx-auto p-4 bg-white rounded"
-        >
-          <header className="text-center mb-8">
-            <div className="flex items-center justify-center w-full mb-4">
-              <img src={JJM} className="h-20 w-20" alt="Logo" />
-            </div>
-            <h2 className="text-xl md:text-2xl">Financial Report ID {rowData._id}</h2>
-            <h3 className="text-lg md:text-xl">For the Period Ended {currentDate}</h3>
-            <p className="mt-2">Prepared by: {preparedBy}</p>
-            <p>Position: {position}</p>
-            <p>Date: {rowData.date}</p>
-          </header>
+          style={{
+            width: '800px', // Set a fixed width that matches A4 width in pixels for consistency
+            padding: '20px',
+            margin: '0 auto', // Center-align in PDF
+            backgroundColor: '#ffffff', // Ensure background is white for PDF
+          }}
+          >
+    <section
+      id="report-header-and-narrative"
+      className="max-w-screen-md mx-auto p-4 md:p-10 bg-white  rounded-lg"
+    >
+      {/* Header */}
+      <header className="text-center mb-8">
+        <div className="flex items-center justify-center w-full mb-4">
+          <img src={JJM} className="h-20 w-20" alt="Logo" />
+        </div>
+        <h2 className="text-xl md:text-2xl">Financial Report ID {rowData._id}</h2>
+        <h3 className="text-lg md:text-xl">For the Period Ended {currentDate}</h3>
+        <p className="mt-2">Prepared by: {preparedBy}</p>
+        <p>Position: {position}</p>
+        <p>Date: {rowData.date}</p>
+      </header>
 
-          {/* Narrative Report */}
-          <section id="narrative" className="mt-20 mb-8">
-            <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
-            <p className="mt-2">
-              For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(incomeStatementData[0].salesRevenue)}, with a gross profit of {formatCurrency(incomeStatementData[0].grossProfit)}.
-            </p>
-            <p className="mt-2">
-              The cost of goods sold (COGS) was {formatCurrency(parseFloat(incomeStatementData[0].rawMaterials) + parseFloat(incomeStatementData[0].laborCosts))}, constituting approximately {(parseFloat(incomeStatementData[0].grossProfit) / parseFloat(incomeStatementData[0].salesRevenue) * 100).toFixed(2)}% of total revenue.
-            </p>
-            <p className="mt-2">
-              Operating expenses totaled {formatCurrency(parseFloat(incomeStatementData[0].salariesAndWages) + parseFloat(incomeStatementData[0].utilities))}, which affected the overall profitability. The net profit for the period stands at {formatCurrency(incomeStatementData[0].operatingIncome)}.
-            </p>
-            <p className="mt-2">
-              The outlook remains positive, with a healthy cash flow of {formatCurrency(cashFlowData[0].netCashFlow)} and strong asset management, positioning the company for future growth.
-            </p>
-          </section>
+        {/* Narrative Report */}
+        <section id="narrative" className="text-sm md:text-base">
+          <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
+          <p className="mt-2">
+            For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(incomeStatementData[0].salesRevenue)}, with a gross profit of {formatCurrency(incomeStatementData[0].grossProfit)}.
+          </p>
+          <p className="mt-2">
+            The cost of goods sold (COGS) was {formatCurrency(parseFloat(incomeStatementData[0].rawMaterials) + parseFloat(incomeStatementData[0].laborCosts))}, constituting approximately {(parseFloat(incomeStatementData[0].grossProfit) / parseFloat(incomeStatementData[0].salesRevenue) * 100).toFixed(2)}% of total revenue.
+          </p>
+          <p className="mt-2">
+            Operating expenses totaled {formatCurrency(parseFloat(incomeStatementData[0].salariesAndWages) + parseFloat(incomeStatementData[0].utilities))}, which affected the overall profitability. The net profit for the period stands at {formatCurrency(incomeStatementData[0].operatingIncome)}.
+          </p>
+          <p className="mt-2">
+            The outlook remains positive, with a healthy cash flow of {formatCurrency(cashFlowData[0].netCashFlow)} and strong asset management, positioning the company for future growth.
+          </p>
+        </section>
+      </section>
 
           {/* Balance Sheet */}
-          <section id="balance-sheet" className="mt-20 mb-8">
+          <section id="balance-sheet" style={{ width: '800px', padding: '20px', margin: '0 auto' }}>
             <h2 className="text-lg md:text-xl font-semibold text-center">BALANCE SHEET</h2>
             <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
             <div className="overflow-x-auto">
@@ -192,7 +224,7 @@ const viewFinancialReports = ({userData}) => {
           </section>
 
           {/* Income Statement */}
-          <section id="income-statement" className="mt-20 mb-8">
+          <section id="income-statement" style={{ width: '800px', padding: '20px', margin: '0 auto' }}>
             <h2 className="text-lg md:text-xl font-semibold text-center">INCOME STATEMENT</h2>
             <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
             <div className="overflow-x-auto">
@@ -234,12 +266,8 @@ const viewFinancialReports = ({userData}) => {
               </table>
             </div>
           </section>
-
-          {/* Page Break Here for PDF */}
-          <div className="page-break" style={{ pageBreakBefore: 'always' }}></div>
-
           {/* Cash Flow */}
-          <section id="cash-flow" className="mt-20 mb-8">
+          <section id="cash-flow" style={{ width: '800px', padding: '20px', margin: '0 auto' }}>
             <h2 className="text-lg md:text-xl font-semibold text-center">CASH FLOW</h2>
             <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
             <div className="overflow-x-auto">

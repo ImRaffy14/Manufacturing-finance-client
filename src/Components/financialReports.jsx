@@ -1,27 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
-const SummaryStatistics = ({ data, formatCurrency }) => {
-  const totalLiabilities = data.reduce((acc, item) => acc + item.liabilitiesAndEquity, 0);
-  const totalNetIncome = data.reduce((acc, item) => acc + item.netIncome, 0);
-  const totalEndingBalance = data.reduce((acc, item) => acc + item.endingBalance, 0);
-  return (
-    <div className="flex justify-between bg-white p-6 rounded-lg mb-6 shadow-md">
-      <div className="flex flex-col items-center">
-        <span className="text-lg font-semibold text-gray-800">Total Liabilities</span>
-        <span className="text-2xl font-bold text-blue-600">{formatCurrency(totalLiabilities)}</span>
-      </div>
-      <div className="flex flex-col items-center">
-        <span className="text-lg font-semibold text-gray-800">Total Net Income</span>
-        <span className="text-2xl font-bold text-green-600">{formatCurrency(totalNetIncome)}</span>
-      </div>
-      <div className="flex flex-col items-center">
-        <span className="text-lg font-semibold text-gray-800">Total Ending Balance</span>
-        <span className="text-2xl font-bold text-purple-600">{formatCurrency(totalEndingBalance)}</span>
-      </div>
-    </div>
-  );
-};
 
 function FinancialReports({ userData }) {
   const navigate = useNavigate();
@@ -63,7 +42,6 @@ function FinancialReports({ userData }) {
     <>
       <div className="max-w-screen-2xl mx-auto mt-[20px]">
         <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 mb-10 p-6">
-          <SummaryStatistics data={filteredData} formatCurrency={formatCurrency} />
           <div className="overflow-x-auto w-full">
             <DataTable
               title="Financial Reports"
