@@ -34,10 +34,12 @@ function viewCollection({ userData }) {
   const [depositAmount, setDepositAmount] = useState(0)
   const [withdrawAmount, setWithdrawAmount] = useState(0);
   const [password, setPassword] = useState("")
+  const [authError, setAuthError] = useState("")
   const navigate = useNavigate();
   const [totalCash, setTotalCash] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [isLoading, setIsLoading] = useState(true)
+  const [isSubmit, setIsSubmit] = useState(false)
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
@@ -167,16 +169,88 @@ function viewCollection({ userData }) {
       })
     }
 
+    const handlesDepositAuthError = (response) => {
+      setAuthError(response.msg)
+      setIsSubmit(false)
+      setPassword("")
+    }
+
+    const handlesWithdrawAuthError = (response) => {
+      setAuthError(response.msg)
+      setIsSubmit(false)
+      setPassword("")
+    }
+    
+    const handlesReceiveDeposit = (response) => {
+
+      document.getElementById('confirm_deposit_modal').close();
+      document.getElementById('deposit_modal').close();
+      toast.success(response.msg, {
+        position: "top-right"
+      })
+
+      const depositTrails = {
+        userId: userData._id,
+        userName: userData.userName,
+        role: userData.role,
+        action: "DEPOSITS CASH TO THE COMPANY",
+        description: `${userData.userName} deposits cash with a total of ${formatCurrency(response.amount)} to the total company cash.`,
+  
+      };
+      
+      
+      socket.emit("addAuditTrails", depositTrails);
+
+      setDepositAmount(0)
+      setPassword("")
+      setAuthError("")
+      setIsSubmit(false)
+    }
+
+    const handlesReceiveWithdraw = (response) => {
+      
+      document.getElementById('confirm_withdraw_modal').close();
+      document.getElementById('withdraw_modal').close();
+      toast.success(response.msg, {
+        position: "top-right"
+      })
+
+      const withdrawTrails = {
+        userId: userData._id,
+        userName: userData.userName,
+        role: userData.role,
+        action: "WITHDRAW CASH FROM THE COMPANY",
+        description: `${userData.userName} withdraw cash with a total of ${formatCurrency(response.amount)} from the total company cash.`,
+  
+      };
+      
+      
+      socket.emit("addAuditTrails", withdrawTrails);
+
+      setWithdrawAmount(0)
+      setPassword("")
+      setAuthError("")
+      setIsSubmit(false)
+    }
+    
     socket.on("receive_total_cash", handlesTotalCash)
     socket.on("receive_collection_analytics", handlesCollectionAnalytics)
     socket.on("receive_collection_records", handlesMonthlyRecords)
     socket.on("receive_collection_records_notif", handlesNewMonthlyRecord)
+    socket.on("receive_deposit_authUser_invalid", handlesDepositAuthError)
+    socket.on("receive_withdraw_authUser_invalid", handlesWithdrawAuthError)
+    socket.on("receive_deposit", handlesReceiveDeposit)
+    socket.on("receive_withdraw", handlesReceiveWithdraw)
 
     return () => {
       socket.off("receive_total_cash")
       socket.off("receive_collection_analytics")
       socket.off("receive_monthly_records")
       socket.off("receive_collection_records_notif")
+      socket.off("receive_deposit_authUser_invalid")
+      socket.off("receive_withdraw_authUser_invalid")
+      socket.off("receive_deposit")
+      socket.off("receive_withdraw")
     }
 
   }, [socket])
@@ -216,14 +290,32 @@ const { currentMonth, nextMonth } = getMonthNames();
 const handlesDepositSubmit = (e) =>{
   e.preventDefault()
 
-  console.log({password, depositAmount})
+  setIsSubmit(true)
+
+  const depositData = {
+    username: userData.userName,
+    password,
+    totalAmount: depositAmount
+  }
+
+  socket.emit("add_new_deposit", depositData)
+
 }
 
 //HANDLES SUBMIT WITHDRAW
 const handlesWithdrawSubmit = (e) =>{
   e.preventDefault()
 
-  console.log({password, withdrawAmount})
+  setIsSubmit(true)
+
+  const withdrawData = {
+    username: userData.userName,
+    password,
+    totalAmount: withdrawAmount
+  }
+
+  socket.emit("add_new_withdraw", withdrawData)
+
 }
 
 //LOADER
@@ -398,6 +490,7 @@ if (isLoading) {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="number" 
                 placeholder="PHP"
+                value={withdrawAmount}
                 onChange={(e) => setWithdrawAmount(e.target.value)}
                 required
                 id="withdrawal"
@@ -442,11 +535,14 @@ if (isLoading) {
           required
         />
       </div>
-
-      <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800">
+      {authError && <h1 className="text-red-500">{authError}</h1> }
+      {!isSubmit && <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">
         Confirm
-      </button>
+      </button>}
     </form>
+    {isSubmit && <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-3 w-[90px]">
+      <span className="loading loading-spinner loading-md"></span>
+      </button>}
   </div>
   <form method="dialog" className="modal-backdrop">
     <button>close</button>
@@ -461,7 +557,8 @@ if (isLoading) {
               <input 
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="number" 
-                placeholder="PHP" 
+                placeholder="PHP"
+                value={depositAmount}
                 onChange={(e) => setDepositAmount(e.target.value)}
                 required
                 id="deposit"
@@ -506,11 +603,14 @@ if (isLoading) {
           required
         />
       </div>
-
-      <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">
+      {authError && <h1 className="text-red-500">{authError}</h1> }
+      {!isSubmit && <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">
         Confirm
-      </button>
+      </button>}
     </form>
+    {isSubmit && <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-3 w-[90px]">
+      <span className="loading loading-spinner loading-md"></span>
+      </button>}
   </div>
   <form method="dialog" className="modal-backdrop">
     <button>close</button>

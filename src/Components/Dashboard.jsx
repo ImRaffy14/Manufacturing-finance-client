@@ -32,22 +32,6 @@ function Dashboard() {
   const socket = useSocket()
   
 
-// Revenue Data
-const revenue = [
-  { name: 'Jan', product1: 4500 },
-  { name: 'Feb', product1: 3200 },
-  { name: 'Mar', product1: 2500 },
-  { name: 'Apr', product1: 3000 },
-  { name: 'May', product1: 2100 },
-  { name: 'Jun', product1: 6100 },
-  { name: 'Jul', product1: 4100 },
-  { name: 'Aug', product1: 1100 },
-  { name: 'Sep', product1: 8100 },
-  { name: 'Oct', product1: 1100 },
-  { name: 'Nov', product1: 2100 },
-  { name: 'Dec', product1: 100 },
- 
-];
 
   // sample data
   const [dashboardData, setDashboardData] = useState({
