@@ -31,7 +31,9 @@ function viewCollection({ userData }) {
   const [outflowPercentageArrow, setOutflowPercentageArrow] = useState("")
   const [outflowDiff, setOutflowDiff] = useState(0)
   const [outflowPercentage, setOutflowPercentage] = useState(0)
-  const [withdraw, setWithdraw] = useState(0);
+  const [depositAmount, setDepositAmount] = useState(0)
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
+  const [password, setPassword] = useState("")
   const navigate = useNavigate();
   const [totalCash, setTotalCash] = useState(0);
   const [searchText, setSearchText] = useState('');
@@ -210,6 +212,20 @@ const getMonthNames = () => {
 
 const { currentMonth, nextMonth } = getMonthNames();
 
+//HANDLES SUBMIT DEPOSIT
+const handlesDepositSubmit = (e) =>{
+  e.preventDefault()
+
+  console.log({password, depositAmount})
+}
+
+//HANDLES SUBMIT WITHDRAW
+const handlesWithdrawSubmit = (e) =>{
+  e.preventDefault()
+
+  console.log({password, withdrawAmount})
+}
+
 //LOADER
 if (isLoading) {
   return (
@@ -381,7 +397,8 @@ if (isLoading) {
               <input 
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="number" 
-                placeholder="PHP" 
+                placeholder="PHP"
+                onChange={(e) => setWithdrawAmount(e.target.value)}
                 required
                 id="withdrawal"
               />
@@ -412,7 +429,7 @@ if (isLoading) {
 
 <dialog id="confirm_withdraw_modal" className="modal">
   <div className="modal-box">
-    <form className="space-y-4">
+    <form className="space-y-4" onSubmit={handlesWithdrawSubmit}>
       <div>
         <h3 className="font-bold text-lg text-center">Enter Password to Confirm Withdrawal</h3>
         <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -420,6 +437,8 @@ if (isLoading) {
           type="password"
           placeholder="Enter your password"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
@@ -443,6 +462,7 @@ if (isLoading) {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="number" 
                 placeholder="PHP" 
+                onChange={(e) => setDepositAmount(e.target.value)}
                 required
                 id="deposit"
               />
@@ -473,7 +493,7 @@ if (isLoading) {
 
         <dialog id="confirm_deposit_modal" className="modal">
   <div className="modal-box">
-    <form className="space-y-4">
+    <form className="space-y-4" onSubmit={handlesDepositSubmit}>
       <div>
         <h3 className="font-bold text-lg text-center">Enter Password to Confirm Deposit</h3>
         <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -481,6 +501,8 @@ if (isLoading) {
           type="password"
           placeholder="Enter your password"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
