@@ -10,9 +10,11 @@ const viewFinancialReports = ({userData}) => {
   const [currentDate, setCurrentDate] = useState('');
   const location = useLocation();
   const { rowData } = location.state || {};
-    if (!rowData) {
+  
+  if (!rowData) {
     return <p>No data available.</p>;
-}
+  }
+
   useEffect(() => {
     const today = new Date();
     const formattedDate = today.toLocaleDateString('en-US', {
@@ -80,15 +82,11 @@ const viewFinancialReports = ({userData}) => {
   
     const pdf = new jsPDF('p', 'mm', 'a4');
     const sections = [
-      document.getElementById('report-header-and-narrative'), // Capture header + narrative as a single section
-      document.getElementById('balance-sheet'),
-      document.getElementById('income-statement'),
-      document.getElementById('cash-flow'),
+      document.getElementById('report-header-and-narrative-balance-sheet'), // Page 1
+      document.getElementById('income-statement-and-cash-flow'),            // Page 2
     ];
   
-    let isFirstPage = true;
-  
-    const captureSection = (section, callback) => {
+    const captureSection = (section, isLastSection, callback) => {
       if (!section) {
         console.error('Invalid section element. Skipping this section.');
         callback();
@@ -98,13 +96,13 @@ const viewFinancialReports = ({userData}) => {
       html2canvas(section, { scale: 3, useCORS: true }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
         const imgWidth = 210; // A4 width in mm
-        const pageHeight = 297; // A4 height in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
   
-        if (!isFirstPage) pdf.addPage();
         pdf.addImage(imgData, 'PNG', 0, 10, imgWidth, imgHeight);
   
-        isFirstPage = false;
+        // Add a new page only if it's not the last section
+        if (!isLastSection) pdf.addPage();
+  
         callback();
       }).catch((error) => {
         console.error('Error capturing section:', error);
@@ -113,8 +111,9 @@ const viewFinancialReports = ({userData}) => {
     };
   
     const processSections = (index) => {
+      const isLastSection = index === sections.length - 1;
       if (index < sections.length) {
-        captureSection(sections[index], () => processSections(index + 1));
+        captureSection(sections[index], isLastSection, () => processSections(index + 1));
       } else {
         pdf.save('financial-report.pdf');
         exportBtn.style.display = 'block';
@@ -124,199 +123,198 @@ const viewFinancialReports = ({userData}) => {
     processSections(0);
   };
   
-  
-  
   return (
     <>      
-    <div className="max-w-screen-2xl mx-auto mt-8  mb-10">
-    <div className="breadcrumbs text-xl mt-4">
-        <ul>
-        <li><a> <Link to="/Dashboard/financialReports">Return</Link></a></li>
-        <li><a className='text-blue-500 underline'>Documents</a></li>  
-        </ul>
-    </div>
-    <div className="p-4 md:p-10">
-      <div className="bg-white rounded-lg p-4 md:p-10">
-      <div
-          id="financial-report"
-          style={{
-            width: '800px', // Set a fixed width that matches A4 width in pixels for consistency
-            padding: '20px',
-            margin: '0 auto', // Center-align in PDF
-            backgroundColor: '#ffffff', // Ensure background is white for PDF
-          }}
-          >
-    <section
-      id="report-header-and-narrative"
-      className="max-w-screen-md mx-auto p-4 md:p-10 bg-white  rounded-lg"
-    >
-      {/* Header */}
-      <header className="text-center mb-8">
-        <div className="flex items-center justify-center w-full mb-4">
-          <img src={JJM} className="h-20 w-20" alt="Logo" />
+      <div className="max-w-screen-2xl mx-auto mt-8 mb-10">
+        <div className="breadcrumbs text-xl mt-4">
+          <ul>
+            <li><Link to="/Dashboard/financialReports">Return</Link></li>
+            <li><span className='text-blue-500 underline'>Documents</span></li>  
+          </ul>
         </div>
-        <h2 className="text-xl md:text-2xl">Financial Report ID {rowData._id}</h2>
-        <h3 className="text-lg md:text-xl">For the Period Ended {currentDate}</h3>
-        <p className="mt-2">Prepared by: {preparedBy}</p>
-        <p>Position: {position}</p>
-        <p>Date: {rowData.date}</p>
-      </header>
-
-        {/* Narrative Report */}
-        <section id="narrative" className="text-sm md:text-base">
-          <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
-          <p className="mt-2">
-            For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(incomeStatementData[0].salesRevenue)}, with a gross profit of {formatCurrency(incomeStatementData[0].grossProfit)}.
-          </p>
-          <p className="mt-2">
-            The cost of goods sold (COGS) was {formatCurrency(parseFloat(incomeStatementData[0].rawMaterials) + parseFloat(incomeStatementData[0].laborCosts))}, constituting approximately {(parseFloat(incomeStatementData[0].grossProfit) / parseFloat(incomeStatementData[0].salesRevenue) * 100).toFixed(2)}% of total revenue.
-          </p>
-          <p className="mt-2">
-            Operating expenses totaled {formatCurrency(parseFloat(incomeStatementData[0].salariesAndWages) + parseFloat(incomeStatementData[0].utilities))}, which affected the overall profitability. The net profit for the period stands at {formatCurrency(incomeStatementData[0].operatingIncome)}.
-          </p>
-          <p className="mt-2">
-            The outlook remains positive, with a healthy cash flow of {formatCurrency(cashFlowData[0].netCashFlow)} and strong asset management, positioning the company for future growth.
-          </p>
-        </section>
-      </section>
-
-          {/* Balance Sheet */}
-          <section id="balance-sheet" style={{ width: '800px', padding: '20px', margin: '0 auto' }}>
-            <h2 className="text-lg md:text-xl font-semibold text-center">BALANCE SHEET</h2>
-            <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full border mt-4">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="border px-4 py-2 text-left">ASSETS</th>
-                    <th className="border px-4 py-2 text-left">LIABILITIES</th>
-                    <th className="border px-4 py-2 text-left">EQUITY</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border px-4 py-2">Cash – {formatCurrency(balanceSheetData[0].cash)}</td>
-                    <td className="border px-4 py-2">Accounts Payable – {formatCurrency(balanceSheetData[0].accountsPayable)}</td>
-                    <td className="border px-4 py-2">Owner’s Equity – {formatCurrency(balanceSheetData[0].ownersEquity)}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2">Inventory (unsold Product) – {formatCurrency(balanceSheetData[0].inventory)}</td>
-                    <td className="border px-4 py-2">Total Liabilities – {formatCurrency(balanceSheetData[0].totalLiabilities)}</td>
-                    <td className="border px-4 py-2">Retained Earnings – {formatCurrency(balanceSheetData[0].retainedEarnings)}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2">Accounts Receivable – {formatCurrency(balanceSheetData[0].accountsReceivable)}</td>
-                    <td className="border px-4 py-2"></td>
-                    <td className="border px-4 py-2"></td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-bold">Total Assets – {formatCurrency(balanceSheetData[0].totalAssets)}</td>
-                    <td className="border px-4 py-2 font-bold">Total Liabilities – {formatCurrency(balanceSheetData[0].totalLiabilities)}</td>
-                    <td className="border px-4 py-2 font-bold">Total Equity – {formatCurrency(balanceSheetData[0].totalEquity)}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-bold" ></td>
-                    <td className="border px-4 py-2 font-bold" colSpan="2">Total Liabilities and Equity – {formatCurrency(rowData.liabilitiesAndEquity)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          {/* Income Statement */}
-          <section id="income-statement" style={{ width: '800px', padding: '20px', margin: '0 auto' }}>
-            <h2 className="text-lg md:text-xl font-semibold text-center">INCOME STATEMENT</h2>
-            <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full border mt-4">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="border px-4 py-2 text-left">REVENUE</th>
-                    <th className="border px-4 py-2 text-left">COST OF GOODS SOLD</th>
-                    <th className="border px-4 py-2 text-left">OPERATING EXPENSES</th>
-                    <th className="border px-4 py-2 text-left">NET PROFITS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border px-4 py-2">Sales Revenue – {formatCurrency(incomeStatementData[0].salesRevenue)}</td>
-                    <td className="border px-4 py-2">Raw Materials – {formatCurrency(incomeStatementData[0].rawMaterials)}</td>
-                    <td className="border px-4 py-2">Salaries and Wages – {formatCurrency(incomeStatementData[0].salariesAndWages)}</td>
-                    <td className="border px-4 py-2">Gross Profit – {formatCurrency(incomeStatementData[0].grossProfit)}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2"></td>
-                    <td className="border px-4 py-2">Labor Costs – {formatCurrency(incomeStatementData[0].laborCosts)}</td>
-                    <td className="border px-4 py-2">Utilities – {formatCurrency(incomeStatementData[0].utilities)}</td>
-                    <td className="border px-4 py-2">Operating Income – {formatCurrency(incomeStatementData[0].operatingIncome)}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2"></td>
-                    <td className="border px-4 py-2"></td>
-                    <td className="border px-4 py-2">Marketing Expenses – {formatCurrency(incomeStatementData[0].marketingExpenses)}</td>
-                    <td className="border px-4 py-2"></td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-bold">Total Revenue – {formatCurrency(incomeStatementData[0].totalRevenue)}</td>
-                    <td className="border px-4 py-2 font-bold">Total COGS – {formatCurrency(incomeStatementData[0].totalCOGS)}</td>
-                    <td className="border px-4 py-2 font-bold">Total Operating Expenses – {formatCurrency(incomeStatementData[0].totalOperatingExpenses)}</td>
-                    <td className="border px-4 py-2 font-bold">Net Income – {formatCurrency(rowData.netIncome)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-          {/* Cash Flow */}
-          <section id="cash-flow" style={{ width: '800px', padding: '20px', margin: '0 auto' }}>
-            <h2 className="text-lg md:text-xl font-semibold text-center">CASH FLOW</h2>
-            <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full border mt-4">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="border px-4 py-2 text-left">CASH INFLOWS</th>
-                    <th className="border px-4 py-2 text-left">CASH OUTFLOWS (Operating Activities)</th>
-                    <th className="border px-4 py-2 text-left">CASH OUTFLOWS (Investing Activities)</th>
-                    <th className="border px-4 py-2 text-left">TOTAL CASH FLOW</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border px-4 py-2">Customer Payments – {formatCurrency(cashFlowData[0].customerPayments)}</td>
-                    <td className="border px-4 py-2">Payments to Supplier – {formatCurrency(cashFlowData[0].paymentsToSupplier)}</td>
-                    <td className="border px-4 py-2">Purchase of New Equipment – {formatCurrency(cashFlowData[0].purchaseOfNewEquipment)}</td>
-                    <td className="border px-4 py-2">Net Cash Flow – {formatCurrency(cashFlowData[0].netCashFlow)}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2">Sale of Old Equipment – {formatCurrency(cashFlowData[0].saleOfOldEquipment)}</td>
-                    <td className="border px-4 py-2">Salaries and Wages – {formatCurrency(cashFlowData[0].salariesAndWages)}</td>
-                    <td className="border px-4 py-2">Utilities – {formatCurrency(cashFlowData[0].utilities)}</td>
-                    <td className="border px-4 py-2">Beginning Balance – {formatCurrency(cashFlowData[0].beginningBalance)}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-bold">Total Inflows – {formatCurrency(cashFlowData[0].totalInflows)}</td>
-                    <td className="border px-4 py-2 font-bold">Total Outflows – {formatCurrency(cashFlowData[0].totalOutflowsOperating)}</td>
-                    <td className="border px-4 py-2 font-bold">Total Outflows – {formatCurrency(cashFlowData[0].totalOutflowsInvesting)}</td>
-                    <td className="border px-4 py-2 font-bold">Ending Balance – {formatCurrency(rowData.endingBalance)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          {/* Export to PDF Button */}
-          <div id="export-button" className="text-center mt-20">
-            <button
-              onClick={exportToPDF}
-              className="px-4 py-2 bg-green-500 text-white rounded"
+        <div className="p-4 md:p-10">
+          <div className="bg-white rounded-lg p-4 md:p-10">
+            <div
+              id="financial-report"
+              style={{
+                width: '800px',
+                padding: '20px',
+                margin: '0 auto',
+                backgroundColor: '#ffffff',
+              }}
             >
-              Export to PDF
-            </button>
+              <section id="report-header-and-narrative-balance-sheet" className="max-w-screen-md mx-auto p-4 md:p-10 bg-white rounded-lg">
+                {/* Header */}
+                <header className="text-center mb-8">
+                  <div className="flex items-center justify-center w-full mb-4">
+                    <img src={JJM} className="h-20 w-20" alt="Logo" />
+                  </div>
+                  <h2 className="text-xl md:text-2xl">Financial Report ID {rowData._id}</h2>
+                  <h3 className="text-lg md:text-xl">For the Period Ended {currentDate}</h3>
+                  <p className="mt-2">Prepared by: {preparedBy}</p>
+                  <p>Position: {position}</p>
+                  <p>Date: {rowData.date}</p>
+                </header>
+
+                {/* Narrative Report */}
+                <section id="narrative" className="text-sm md:text-base">
+                  <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
+                  <p className="mt-2">
+                    For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(incomeStatementData[0].salesRevenue)}, with a gross profit of {formatCurrency(incomeStatementData[0].grossProfit)}.
+                  </p>
+                  <p className="mt-2">
+                    The cost of goods sold (COGS) was {formatCurrency(parseFloat(incomeStatementData[0].rawMaterials) + parseFloat(incomeStatementData[0].laborCosts))}, constituting approximately {(parseFloat(incomeStatementData[0].grossProfit) / parseFloat(incomeStatementData[0].salesRevenue) * 100).toFixed(2)}% of total revenue.
+                  </p>
+                  <p className="mt-2">
+                    Operating expenses totaled {formatCurrency(parseFloat(incomeStatementData[0].salariesAndWages) + parseFloat(incomeStatementData[0].utilities))}, which affected the overall profitability. The net profit for the period stands at {formatCurrency(incomeStatementData[0].operatingIncome)}.
+                  </p>
+                  <p className="mt-2">
+                    The outlook remains positive, with a healthy cash flow of {formatCurrency(cashFlowData[0].netCashFlow)} and strong asset management, positioning the company for future growth.
+                  </p>
+                </section>
+
+              {/* Balance Sheet */}
+              <section id="balance-sheet" className="mt-10">
+                <h2 className="text-lg md:text-xl font-semibold text-center">BALANCE SHEET</h2>
+                <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border mt-4">
+                    <thead className="bg-gray-200">
+                      <tr>
+                        <th className="border px-4 py-2 text-left">ASSETS</th>
+                        <th className="border px-4 py-2 text-left">LIABILITIES</th>
+                        <th className="border px-4 py-2 text-left">EQUITY</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border px-4 py-2">Cash – {formatCurrency(balanceSheetData[0].cash)}</td>
+                        <td className="border px-4 py-2">Accounts Payable – {formatCurrency(balanceSheetData[0].accountsPayable)}</td>
+                        <td className="border px-4 py-2">Owner’s Equity – {formatCurrency(balanceSheetData[0].ownersEquity)}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">Inventory (unsold Product) – {formatCurrency(balanceSheetData[0].inventory)}</td>
+                        <td className="border px-4 py-2">Total Liabilities – {formatCurrency(balanceSheetData[0].totalLiabilities)}</td>
+                        <td className="border px-4 py-2">Retained Earnings – {formatCurrency(balanceSheetData[0].retainedEarnings)}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">Accounts Receivable – {formatCurrency(balanceSheetData[0].accountsReceivable)}</td>
+                        <td className="border px-4 py-2"></td>
+                        <td className="border px-4 py-2"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2 font-bold">Total Assets – {formatCurrency(balanceSheetData[0].totalAssets)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Liabilities – {formatCurrency(balanceSheetData[0].totalLiabilities)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Equity – {formatCurrency(balanceSheetData[0].totalEquity)}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2 font-bold" ></td>
+                        <td className="border px-4 py-2 font-bold" colSpan="2">Total Liabilities and Equity – {formatCurrency(rowData.liabilitiesAndEquity)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+              </section>
+
+
+              {/* Income Statement */}
+            <section id="income-statement-and-cash-flow" className="max-w-screen-md mx-auto p-4 md:p-10 bg-white rounded-lg">
+              <section id="income-statement">
+                <h2 className="text-lg md:text-xl font-semibold text-center">INCOME STATEMENT</h2>
+                <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border mt-4">
+                    <thead className="bg-gray-200">
+                      <tr>
+                        <th className="border px-4 py-2 text-left">REVENUE</th>
+                        <th className="border px-4 py-2 text-left">COST OF GOODS SOLD</th>
+                        <th className="border px-4 py-2 text-left">OPERATING EXPENSES</th>
+                        <th className="border px-4 py-2 text-left">NET PROFITS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border px-4 py-2">Sales Revenue – {formatCurrency(incomeStatementData[0].salesRevenue)}</td>
+                        <td className="border px-4 py-2">Raw Materials – {formatCurrency(incomeStatementData[0].rawMaterials)}</td>
+                        <td className="border px-4 py-2">Salaries and Wages – {formatCurrency(incomeStatementData[0].salariesAndWages)}</td>
+                        <td className="border px-4 py-2">Gross Profit – {formatCurrency(incomeStatementData[0].grossProfit)}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2"></td>
+                        <td className="border px-4 py-2">Labor Costs – {formatCurrency(incomeStatementData[0].laborCosts)}</td>
+                        <td className="border px-4 py-2">Utilities – {formatCurrency(incomeStatementData[0].utilities)}</td>
+                        <td className="border px-4 py-2">Operating Income – {formatCurrency(incomeStatementData[0].operatingIncome)}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2"></td>
+                        <td className="border px-4 py-2"></td>
+                        <td className="border px-4 py-2">Marketing Expenses – {formatCurrency(incomeStatementData[0].marketingExpenses)}</td>
+                        <td className="border px-4 py-2"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2 font-bold">Total Revenue – {formatCurrency(incomeStatementData[0].totalRevenue)}</td>
+                        <td className="border px-4 py-2 font-bold">Total COGS – {formatCurrency(incomeStatementData[0].totalCOGS)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Operating Expenses – {formatCurrency(incomeStatementData[0].totalOperatingExpenses)}</td>
+                        <td className="border px-4 py-2 font-bold">Net Income – {formatCurrency(rowData.netIncome)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                </section>
+
+              {/* Cash Flow */}
+              <section id="cash-flow" className="mt-10">
+                <h2 className="text-lg md:text-xl font-semibold text-center">CASH FLOW</h2>
+                <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border mt-4">
+                    <thead className="bg-gray-200">
+                      <tr>
+                        <th className="border px-4 py-2 text-left">CASH INFLOWS</th>
+                        <th className="border px-4 py-2 text-left">CASH OUTFLOWS (Operating Activities)</th>
+                        <th className="border px-4 py-2 text-left">CASH OUTFLOWS (Investing Activities)</th>
+                        <th className="border px-4 py-2 text-left">TOTAL CASH FLOW</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border px-4 py-2">Customer Payments – {formatCurrency(cashFlowData[0].customerPayments)}</td>
+                        <td className="border px-4 py-2">Payments to Supplier – {formatCurrency(cashFlowData[0].paymentsToSupplier)}</td>
+                        <td className="border px-4 py-2">Purchase of New Equipment – {formatCurrency(cashFlowData[0].purchaseOfNewEquipment)}</td>
+                        <td className="border px-4 py-2">Net Cash Flow – {formatCurrency(cashFlowData[0].netCashFlow)}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">Sale of Old Equipment – {formatCurrency(cashFlowData[0].saleOfOldEquipment)}</td>
+                        <td className="border px-4 py-2">Salaries and Wages – {formatCurrency(cashFlowData[0].salariesAndWages)}</td>
+                        <td className="border px-4 py-2">Utilities – {formatCurrency(cashFlowData[0].utilities)}</td>
+                        <td className="border px-4 py-2">Beginning Balance – {formatCurrency(cashFlowData[0].beginningBalance)}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2 font-bold">Total Inflows – {formatCurrency(cashFlowData[0].totalInflows)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Outflows – {formatCurrency(cashFlowData[0].totalOutflowsOperating)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Outflows – {formatCurrency(cashFlowData[0].totalOutflowsInvesting)}</td>
+                        <td className="border px-4 py-2 font-bold">Ending Balance – {formatCurrency(rowData.endingBalance)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </section>
+
+              {/* Export to PDF Button */}
+              <div id="export-button" className="text-center mt-20">
+                <button
+                  onClick={exportToPDF}
+                  className="px-4 py-2 bg-green-500 text-white rounded"
+                >
+                  Export to PDF
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    </div>
     </>
   );
 };

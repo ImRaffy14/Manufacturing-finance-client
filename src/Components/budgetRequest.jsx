@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from "react";
-import { IoIosArrowUp } from "react-icons/io";
 import { BsCashCoin } from "react-icons/bs";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 import { FaRegPlusSquare } from "react-icons/fa";
@@ -12,7 +11,6 @@ import  axios from "axios";
 import CryptoJS from 'crypto-js';
 import { GiExpense } from "react-icons/gi";
 import { GiTakeMyMoney } from "react-icons/gi";
-import { GiPiggyBank } from "react-icons/gi";
 import { toast } from "react-toastify"
 
 
@@ -118,7 +116,6 @@ function budgetRequest({ userData }) {
         description: `${userData.userName} claims emergency reserved with a total of ${formatCurrency(response.amount)} for the company.`,
   
       };
-      
       
       socket.emit("addAuditTrails", processedBudgetTrails);
 
