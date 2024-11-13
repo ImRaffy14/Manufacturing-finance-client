@@ -203,12 +203,11 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="p-4">
+        <div className="mt-5">
           <div className="bg-white/75 shadow-xl rounded-lg p-6">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">Analytics</h3>
             <h2 className="text-xl font-bold mt-10">Month of {currentMonth}</h2>
             <div className="flex gap-4">
-
               <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
                 <div className="flex items-center justify-between">
                   <p className="text-gray-600 font-semibold text-sm">Sales Volume</p>
