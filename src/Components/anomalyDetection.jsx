@@ -12,51 +12,34 @@ function anomalyDetection() {
   };
 
   const columns = [
-    { name: 'Payable ID', selector: row => row._id },
-    { name: 'Request ID', selector: row => row.requestId },
-    { name: 'Category', selector: row => row.category },
-    { name: 'Type of Request', selector: row => row.typeOfRequest },
-    { name: 'Documents', selector: row => row.documents },
-    { name: 'Reason', selector: row => row.reason },
-    { name: 'Total Amount', selector: row => formatCurrency(row.totalRequest)},  
-    { name: 'Status', selector: row => ( 
-                                <span style={{ color: row.status === 'On process' ? 'blue' : 'red',
-                                  fontWeight: 'bold' 
-                                 }}>
-                                {row.status}
-                                </span>) },
+    { name: 'Transaction ID', selector: row => row.transactionId },
+    { name: 'Transaction Date', selector: row => row.transactionDate },
+    { name: 'Amount', selector: row => formatCurrency(row.amount) },
+    { name: 'Transaction Type', selector: row => row.transactionType },
+    { name: 'Anomaly Score', selector: row => row.anomalyScore.toFixed(2) },
   ];
-
+  
   const data = [
     {
-      _id: 'P001',
-      requestId: 'REQ1001',
-      category: 'Office Supplies',
-      typeOfRequest: 'Purchase',
-      documents: 'Invoice123.pdf',
-      reason: 'For restocking office supplies',
-      totalRequest: 5000.75,
-      status: 'On process',
+      transactionId: 'TX001',
+      transactionDate: '2024-11-10',
+      amount: 50000,
+      transactionType: 'Purchase',
+      anomalyScore: 0.95, // High anomaly score indicating possible fraud
     },
     {
-      _id: 'P002',
-      requestId: 'REQ1002',
-      category: 'Travel Expenses',
-      typeOfRequest: 'Reimbursement',
-      documents: 'Receipt789.jpg',
-      reason: 'Business trip to client site',
-      totalRequest: 15000.25,
-      status: 'On process',
+      transactionId: 'TX002',
+      transactionDate: '2024-11-11',
+      amount: 1500,
+      transactionType: 'Refund',
+      anomalyScore: 0.10, // Low anomaly score, likely a normal transaction
     },
     {
-      _id: 'P003',
-      requestId: 'REQ1003',
-      category: 'IT Equipment',
-      typeOfRequest: 'Purchase',
-      documents: 'Quote567.pdf',
-      reason: 'Purchase of new laptops for development team',
-      totalRequest: 80000.00,
-      status: 'On process',
+      transactionId: 'TX003',
+      transactionDate: '2024-11-12',
+      amount: 120000,
+      transactionType: 'Purchase',
+      anomalyScore: 0.85, // High anomaly score due to large amount
     },
   ];
 
@@ -85,7 +68,6 @@ const filteredData = data.filter(row =>
                 defaultSortField="name"
                 highlightOnHover
                 pointerOnHover
-
                 subHeader
                 subHeaderComponent={
                   <input
