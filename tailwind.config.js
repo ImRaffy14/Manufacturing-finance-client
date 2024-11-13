@@ -6,9 +6,6 @@ export default {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'BG': "url('/src/assets/BG2.jpg')",
-      },
     },
     
   },

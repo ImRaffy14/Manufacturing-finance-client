@@ -139,25 +139,19 @@ const toggleSidebar = () => {
 
 
   return (
-    <>
-    <div
-      className={`flex flex-col overflow-auto bg-white text-black border-r-2 sticky top-0 max-md:hidden transition-all duration-300 ${
-        isCollapsed ? "w-20 px-4 py-4" : "w-72 lg:w-80 px-2 py-4"
-      }`}
-      aria-label="Sidebar"
-    >
-      {/* Toggle Button */}
+   <>
+    <div className={`flex flex-col overflow-auto bg-white text-black border-r-2 sticky top-0 max-md:hidden transition-all duration-300 
+      ${isCollapsed ? "w-20 px-4 py-4" : "w-72 lg:w-80 px-2 py-4"}`} aria-label="Sidebar">
+          {/* Toggle Button */}
       <div className="flex justify-e">
-      <button
-        onClick={toggleSidebar}
-        className={`mb-4 p-1 text-black border border-gray-300 rounded-md hover:bg-gray-200 transition duration-200  ${
-          isCollapsed ? "w-11" : "w-11 "
-        }`}
-        aria-expanded={!isCollapsed}
-        aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-      >
-        {isCollapsed ? "▶" : "◀"}
-      </button>
+        <button
+          onClick={toggleSidebar}
+          className={`mb-4 p-1 text-black border border-gray-300 rounded-md hover:bg-gray-200 transition duration-200 ${isCollapsed ? "w-11" : "w-11"}`}
+          aria-expanded={!isCollapsed}
+          aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+        >
+          {isCollapsed ? "▶" : "◀"}
+        </button>
       </div>
       {/* Logo */}
       <div
@@ -168,92 +162,89 @@ const toggleSidebar = () => {
         {!isCollapsed && <Link to="" ></Link>}
       </div>
 
-    {/* DASHBOARD PUTANGINAMO */}
-    <ul className="menu rounded-box w-56">
-  {isCollapsed && <MdOutlineScreenshotMonitor className="w-5 h-5" />}
-  {!isCollapsed && (
-    <li>
-      <NavLink
-        to="/Dashboard/overview"
-        className="relative flex items-center hover:text-blue-500"
-        activeClassName="bg-gray-200"
-      >
-        <summary className="flex items-center">
-          <MdOutlineScreenshotMonitor className="w-5 h-5 mr-2" /> 
-          Dashboard
-        </summary>
-      </NavLink>
-    </li>
-  )}
-</ul>
-
-
-
+      {/* Dashboard */}
+      <ul className="menu rounded-box w-56">
+        {isCollapsed && <MdOutlineScreenshotMonitor className="w-5 h-5" />}
+        {!isCollapsed && (
+          <li>
+            <NavLink
+              to="/Dashboard/overview"
+              className="relative flex items-center hover:text-blue-500"
+              activeClassName="bg-gray-200"
+            >
+              <summary className="flex items-center">
+                <MdOutlineScreenshotMonitor className="w-5 h-5 mr-2" />
+                Dashboard
+              </summary>
+            </NavLink>
+          </li>
+        )}
+      </ul>
 
       {/* Apps */}
       <div className="mb-2">
-        <p
-          className={`text-gray-500 mb-2 font-semibold text-sm ${
-            isCollapsed ? "hidden" : ""
-          }`}
-        >
-          Modules
-        </p>
-        
-        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
-        <ul className="menu  rounded-box w-56">
-          {isCollapsed && <TbBrandCashapp className="w-5 h-5" />}   
-          {!isCollapsed && 
-            <li>
-            <details open>
-              <summary><TbBrandCashapp className="w-5 h-5" /> Cash Management</summary>
-                <ul>
-                 <li>
-                    <details open>  
-                      <summary><MdOutlineCallReceived/>Cash Collection</summary>
-                            <ul>
-                              <li className="flex hover:text-blue-500">
-                                <NavLink to="viewCollection" activeClassName="text-blue-500">
-                                  ● View Collection
-                                </NavLink>
-                              </li>
-                           </ul>
-                    </details>
+        <p className={`text-gray-500 mb-2 font-semibold text-sm ${isCollapsed ? "hidden" : ""}`}>Modules</p>
+          {/* View Collection */}        
+          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
+            <ul className="menu rounded-box w-56">
+              {isCollapsed && <TbBrandCashapp className="w-5 h-5" />}
+              {!isCollapsed && (
+                <li>
+                  <details open>
+                    <summary>
+                      <TbBrandCashapp className="w-5 h-5" /> Cash Management
+                    </summary>
+                    <ul>
+                      <li>
+                        <details open>
+                          <summary><MdOutlineCallReceived /> Cash Collection</summary>
+                          <ul>
+                            <li className="flex hover:text-blue-500">
+                              <NavLink to="viewCollection" activeClassName="text-blue-500">
+                                ● View Collection
+                              </NavLink>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                    </ul>
+                  </details>
                 </li>
-              </ul>
-          </details>
-          </li>
-          }
-        </ul>
-        )}
-
-
-             {/* Budget Management */}
-{(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' ||  userData.role === 'ADMIN') && (
-         <ul className="menu  rounded-box w-56">
-          {isCollapsed && <TbPigMoney className="w-5 h-5" />}   
-          {!isCollapsed && 
-            <li>
-            <details open>
-              <summary><TbPigMoney className="w-5 h-5" />Budget Management
-              {budgetLength > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}
-              </summary>
-                <ul>
-                 <li>
-                    <details open>
-                      <summary><TbZoomMoney/>Manage Budget
+            </ul>
+          )}
+
+          {/* Budget Management */}
+          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
+            <ul className="menu rounded-box w-56">
+              {isCollapsed && <TbPigMoney className="w-5 h-5" />}
+              {!isCollapsed && (
+                <li>
+                  <details open>
+                    <summary>
+                      <TbPigMoney className="w-5 h-5" /> Budget Management
                       {budgetLength > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-              )}</summary>
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                      )}
+                    </summary>
+                    <ul>
+                      <li>
+                        <details open>
+                          <summary>
+                            <TbZoomMoney /> Manage Budget
+                            {budgetLength > 0 && (
+                              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                            )}
+                          </summary>
                           <ul>
                             <li className="hover:text-blue-500">
                               <NavLink to="budgetRequest" activeClassName="text-blue-500">
                                 ● Budget Requests
                                 {budgetLength > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{budgetLength >= 100 ? "99+" :  budgetLength }</span>
-                           )}
+                                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
+                                    {budgetLength >= 100 ? "99+" : budgetLength}
+                                  </span>
+                                )}
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
@@ -262,94 +253,101 @@ const toggleSidebar = () => {
                               </NavLink>
                             </li>
                           </ul>
-                    </details>
+                        </details>
+                      </li>
+                    </ul>
+                  </details>
                 </li>
-              </ul>
-          </details>
-          </li>
-          }
-        </ul>
-)}
-        
-            {/* Accounts Receivable */}
-            {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ACCOUNTANT' ||  userData.role === 'ADMIN') && (           
-            <ul className="menu rounded-box w-56">
-      {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}
-      {!isCollapsed && (
-        <li>
-          <details open>
-            <summary>
-              <RiUserReceived2Fill className="w-5 h-5" />
-              Accounts Receivable
-              {notifications.createInvoice > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
               )}
-            </summary>
-
-            <ul>
-              <li>
-                <details open>
-                  <summary>
-                    <FaFileInvoiceDollar />
-                    Invoice Generation
-              {notifications.createInvoice > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-              )}
-                  </summary>
-
-                  <ul>
-                    <li className="hover:text-blue-500">
-                        <NavLink to="createInvoice" activeClassName="text-blue-500">
-                          ● Invoice Request
-                            {notifications.createInvoice > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{notifications.createInvoice}</span>
-                           )}
-                        </NavLink>
-                    </li>
-                    <li className="hover:text-blue-500">
-                      <NavLink to="pendingInvoice" activeClassName="text-blue-500">
-                        ● View Pending Invoice
-                      </NavLink>
-                    </li>
-                    <li className="hover:text-blue-500">
-                      <NavLink to="paidInvoice" activeClassName="text-blue-500">
-                        ● Paid/Closed Invoice
-                      </NavLink>
-                    </li>
-                  </ul>
-                </details>
-              </li>
             </ul>
-          </details>
-        </li>
-      )}
-    </ul>
-            )}
-        {/* Accounts Payable */}
-        {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' ||  userData.role === 'ADMIN') && (           
-        <ul className="menu  rounded-box w-56">
-          {isCollapsed && <TbCreditCardPay className="w-5 h-5" />}   
-          {!isCollapsed && 
-            <li>
-            <details open>
-              <summary><TbCreditCardPay className="w-5 h-5" /> Accounts Payable
-              {payableLength > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-              )}</summary>
-                <ul>
-                 <li>
-                    <details open>
-                      <summary><MdOutlinePayments/>Manage Payables
+          )}
+
+                    {/* Accounts Receivable */}
+          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
+            <ul className="menu rounded-box w-56">
+              {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}
+              {!isCollapsed && (
+                <li>
+                  <details open>
+                    <summary>
+                      <RiUserReceived2Fill className="w-5 h-5" />
+                      Accounts Receivable
+                      {notifications.createInvoice > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                      )}
+                    </summary>
+                    <ul>
+                      <li>
+                        <details open>
+                          <summary>
+                            <FaFileInvoiceDollar />
+                            Invoice Generation
+                            {notifications.createInvoice > 0 && (
+                              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                            )}
+                          </summary>
+                          <ul>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="createInvoice" activeClassName="text-blue-500">
+                                ● Invoice Request
+                                {notifications.createInvoice > 0 && (
+                                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
+                                    {notifications.createInvoice}
+                                  </span>
+                                )}
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="pendingInvoice" activeClassName="text-blue-500">
+                                ● View Pending Invoice
+                              </NavLink>
+                            </li>
+                            <li className="hover:text-blue-500">
+                              <NavLink to="paidInvoice" activeClassName="text-blue-500">
+                                ● Paid/Closed Invoice
+                              </NavLink>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                    </ul>
+                  </details>
+                </li>
+              )}
+            </ul>
+          )}
+
+          {/* Accounts Payable */}
+          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
+            <ul className="menu rounded-box w-56">
+              {isCollapsed && <TbCreditCardPay className="w-5 h-5" />}
+              {!isCollapsed && (
+                <li>
+                  <details open>
+                    <summary>
+                      <TbCreditCardPay className="w-5 h-5" /> Accounts Payable
                       {payableLength > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-              )}</summary>
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                      )}
+                    </summary>
+                    <ul>
+                      <li>
+                        <details open>
+                          <summary>
+                            <MdOutlinePayments /> Manage Payables
+                            {payableLength > 0 && (
+                              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                            )}
+                          </summary>
                           <ul>
                             <li className="hover:text-blue-500">
                               <NavLink to="reviewPayables" activeClassName="text-blue-500">
                                 ● Review Payables
                                 {payableLength > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">{payableLength >= 100 ? "99+" : payableLength}</span>
-                           )}
+                                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
+                                    {payableLength >= 100 ? "99+" : payableLength}
+                                  </span>
+                                )}
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
@@ -358,41 +356,46 @@ const toggleSidebar = () => {
                               </NavLink>
                             </li>
                           </ul>
-                    </details>
+                        </details>
+                      </li>
+                    </ul>
+                  </details>
                 </li>
-              </ul>
-          </details>
-          </li>
-          }
-        </ul>
-        )}
+              )}
+            </ul>
+          )}
 
-        {/* General Ledger */}
-        {(userData.role === 'CHIEF FINANCIAL OFFICER' ||  userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (           
-        <ul className="menu  rounded-box w-56">
-          {isCollapsed && <FaList className="w-5 h-5" />}   
-          {!isCollapsed && 
-            <li>
-            <details open>
-              <summary><FaList className="w-5 h-5" />General Ledger
-              {paidLength > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-              )}</summary>
-                <ul>
-                 <li>
-                    <details open>
-                      <summary><AiOutlineAudit/>Internal Audit and Controls
+          {/* General Ledger */}
+          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
+            <ul className="menu rounded-box w-56">
+              {isCollapsed && <FaList className="w-5 h-5" />}
+              {!isCollapsed && (
+                <li>
+                  <details open>
+                    <summary>
+                      <FaList className="w-5 h-5" /> General Ledger
                       {paidLength > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-              )}</summary>
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                      )}
+                    </summary>
+                    <ul>
+                      <li>
+                        <details open>
+                          <summary>
+                            <AiOutlineAudit /> Internal Audit and Controls
+                            {paidLength > 0 && (
+                              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                            )}
+                          </summary>
                           <ul>
-                          <li className="hover:text-blue-500">
+                            <li className="hover:text-blue-500">
                               <NavLink to="reviewPaymentTransactions" activeClassName="text-blue-500">
                                 ● Review Payment Transactions
                                 {paidLength > 0 && (
                                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
                                     {paidLength >= 100 ? "99+" : paidLength}
-                                  </span>)}
+                                  </span>
+                                )}
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
@@ -401,12 +404,13 @@ const toggleSidebar = () => {
                               </NavLink>
                             </li>
                           </ul>
-                    </details>
-                </li>
-
-                <li>
-                    <details open>
-                      <summary><TbReportSearch/>Financial Reporting</summary>
+                        </details>
+                      </li>
+                      <li>
+                        <details open>
+                          <summary>
+                            <TbReportSearch /> Financial Reporting
+                          </summary>
                           <ul>
                             <li className="hover:text-blue-500">
                               <NavLink to="financialReports" activeClassName="text-blue-500">
@@ -419,43 +423,45 @@ const toggleSidebar = () => {
                               </NavLink>
                             </li>
                           </ul>
-                    </details>
+                        </details>
+                      </li>
+                    </ul>
+                  </details>
                 </li>
-              </ul>
-          </details>
-          </li>
-          }
-        </ul>
-        )}
-        {/* Accounts Management */}
-        {(userData.role === 'ADMIN' || userData.role === 'CHIEF FINANCIAL OFFICER')  && (
-        <ul className="menu  rounded-box w-56">
-          {isCollapsed && <MdAccountCircle className="w-5 h-5" />}   
-          {!isCollapsed && 
-            <li>
-            <details open>
-              <summary><MdAccountCircle className="w-5 h-5" />Accounts Management
-                    {notifications.accountRequest > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-                    )}
-              </summary>
-                <ul>
-                 <li>
-                    <details open>
-                      <summary><MdManageAccounts/>Manage Accounts
-                          {notifications.accountRequest > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-                          )}
-                      </summary>
-                            {/* Account Request */}
+              )}
+            </ul>
+          )}
+          {/* Accounts Management */}
+          {(userData.role === 'ADMIN' || userData.role === 'CHIEF FINANCIAL OFFICER') && (
+            <ul className="menu rounded-box w-56">
+              {isCollapsed && <MdAccountCircle className="w-5 h-5" />}
+              {!isCollapsed && (
+                <li>
+                  <details open>
+                    <summary>
+                      <MdAccountCircle className="w-5 h-5" /> Accounts Management
+                      {notifications.accountRequest > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                      )}
+                    </summary>
+                    <ul>
+                      <li>
+                        <details open>
+                          <summary>
+                            <MdManageAccounts /> Manage Accounts
+                            {notifications.accountRequest > 0 && (
+                              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                            )}
+                          </summary>
                           <ul>
                             <li className="hover:text-blue-500">
                               <NavLink to="accountCreation" activeClassName="text-blue-500">
                                 ● Account Requests
-                                  {notifications.accountRequest > 0 && (
+                                {notifications.accountRequest > 0 && (
                                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
                                     {notifications.accountRequest}
-                                  </span>)}
+                                  </span>
+                                )}
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
@@ -464,57 +470,56 @@ const toggleSidebar = () => {
                               </NavLink>
                             </li>
                           </ul>
-                    </details>
+                        </details>
+                      </li>
+                    </ul>
+                  </details>
                 </li>
-              </ul>
-          </details>
-          </li>
-          }
-        </ul>
-        )}
+              )}
+            </ul>
+          )}
 
-      {/* Audit putanginamo raffy */}
-      {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (      
-<ul className="menu rounded-box w-56">
-  {isCollapsed && <SiAdobeaudition className="w-5 h-5" />}
-  {!isCollapsed && (
-    <li>
-      <NavLink
-        to="auditTrails"
-        className="relative flex items-center hover:text-blue-500"
-        activeClassName="bg-gray-200"
-      >
-        <summary className="flex items-center">
-          <SiAdobeaudition className="w-5 h-5 mr-2" />
-          Audit Trails
-        </summary>
-      </NavLink>
-    </li>
-  )}
-</ul>
-      )}
+          {/* Audit Section */}
+          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (
+            <ul className="menu rounded-box w-56">
+              {isCollapsed && <SiAdobeaudition className="w-5 h-5" />}
+              {!isCollapsed && (
+                <li>
+                  <NavLink
+                    to="auditTrails"
+                    className="relative flex items-center hover:text-blue-500"
+                    activeClassName="bg-gray-200"
+                  >
+                    <summary className="flex items-center">
+                      <SiAdobeaudition className="w-5 h-5 mr-2" />
+                      Audit Trails
+                    </summary>
+                  </NavLink>
+                </li>
+              )}
+            </ul>
+          )}
 
-{/* Nagdedetect ng burat */}
-{(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (   
-        <ul className="menu rounded-box w-56">
-  {isCollapsed && <VscBracketError className="w-5 h-5" />}
-  {!isCollapsed && (
-    <li>
-      <NavLink
-        to="anomalyDetection"
-        className="relative flex items-center hover:text-blue-500"
-        activeClassName="bg-gray-200"
-      >
-        <summary className="flex items-center">
-          <VscBracketError className="w-5 h-5 mr-2" /> 
-          Anomaly Detection
-        </summary>
-      </NavLink>
-    </li>
-  )}
-</ul>
-)}
-        
+          {/* Anomaly Detection */}
+          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (
+            <ul className="menu rounded-box w-56">
+              {isCollapsed && <VscBracketError className="w-5 h-5" />}
+              {!isCollapsed && (
+                <li>
+                  <NavLink
+                    to="anomalyDetection"
+                    className="relative flex items-center hover:text-blue-500"
+                    activeClassName="bg-gray-200"
+                  >
+                    <summary className="flex items-center">
+                      <VscBracketError className="w-5 h-5 mr-2" />
+                      Anomaly Detection
+                    </summary>
+                  </NavLink>
+                </li>
+              )}
+            </ul>
+          )}        
       </div>
     </div>
     </>

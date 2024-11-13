@@ -218,201 +218,177 @@ function ViewAllAccounts({ userData }) {
         </div>
       </div>
 
-
-
      {/* Modal for displaying and editing row data */}
-{selectedRowData && (
-  <dialog id="row_modal" className="modal">
-    <div className="modal-box p-6 bg-white rounded-lg shadow-lg w-full max-w-xl ">
-      <h3 className="font-bold text-xl text-gray-800 mb-4">
-        Details for User: {selectedRowData.userName}
-      </h3>
+        {selectedRowData && (
+          <dialog id="row_modal" className="modal">
+            <div className="modal-box p-6 bg-white rounded-lg shadow-lg w-full max-w-xl">
+              <h3 className="font-bold text-xl text-gray-800 mb-4">
+                Details for User: {selectedRowData.userName}
+              </h3>
 
-      <div className="py-4 space-y-3">
-        {isEditing ? (
-          <>
-            {/* Edit Mode */}
-            <div>
-              <label className="block text-gray-600 font-medium mb-1">Full Name:</label>
-              <input
-                name="fullName"
-                value={editData.fullName}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 font-medium mb-1">Username:</label>
-              <input
-                name="userName"
-                value={editData.userName}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 font-medium mb-1">Password:</label>
-              <input
-                name="password"
-                type="password"
-                value={editData.password}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 font-medium mb-1">Email:</label>
-              <input
-                name="email"
-                type="email"
-                value={editData.email}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div>
-            <label className="block text-gray-600 font-medium mb-1">Role:</label>
-            <select
-              name="role"
-              value={editData.role}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            >
-              {/* Placeholder showing the current role */}
-              <option value="" disabled>
-                {editData.role || 'Select a role'}
-              </option>
-              {/* Role options */}
-              <option value="ADMIN">ADMIN</option>
-              <option value="CHIEF FINANCIAL OFFICER">CHIEF FINANCIAL OFFICER</option>
-              <option value="FINANCE MANAGER">FINANCE MANAGER</option>
-              <option value="ACCOUNTANT">ACCOUNTANT</option>
-            </select>
-          </div>
+              <div className="py-4 space-y-3">
+                {isEditing ? (
+                  <>
+                    {/* Edit Mode */}
+                    <div>
+                      <label className="block text-gray-600 font-medium mb-1">Full Name:</label>
+                      <input
+                        name="fullName"
+                        value={editData.fullName}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-600 font-medium mb-1">Username:</label>
+                      <input
+                        name="userName"
+                        value={editData.userName}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-600 font-medium mb-1">Password:</label>
+                      <input
+                        name="password"
+                        type="password"
+                        value={editData.password}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-600 font-medium mb-1">Email:</label>
+                      <input
+                        name="email"
+                        type="email"
+                        value={editData.email}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-600 font-medium mb-1">Role:</label>
+                      <select
+                        name="role"
+                        value={editData.role}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                      >
+                        <option value="" disabled>{editData.role || 'Select a role'}</option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="CHIEF FINANCIAL OFFICER">CHIEF FINANCIAL OFFICER</option>
+                        <option value="FINANCE MANAGER">FINANCE MANAGER</option>
+                        <option value="ACCOUNTANT">ACCOUNTANT</option>
+                      </select>
+                    </div>
 
-          {/* Error message for invalid change */}
-          {invalidChange && <h1 className='text-red-500 font-medium'>No input changes</h1>}
-          </>
-        ) : (
-          <>
-            {/* View Mode */}
-            <div >
-              <label className="block text-gray-600 font-medium mb-1"><strong>Profile:</strong></label>
-              <img
-                src={selectedRowData.image.secure_url}
-                alt="User profile"
-                className="w-24 h-24 rounded-full border border-gray-300"
-              />
+                    {invalidChange && <h1 className='text-red-500 font-medium'>No input changes</h1>}
+                  </>
+                ) : (
+                  <>
+                    {/* View Mode */}
+                    <div>
+                      <label className="block text-gray-600 font-medium mb-1"><strong>Profile:</strong></label>
+                      <img
+                        src={selectedRowData.image.secure_url}
+                        alt="User profile"
+                        className="w-24 h-24 rounded-full border border-gray-300"
+                      />
+                    </div>
+                    <div><p><strong>Full Name:</strong> {selectedRowData.fullName}</p></div>
+                    <div><p><strong>Username:</strong> {selectedRowData.userName}</p></div>
+                    <div><p><strong>Email:</strong> {selectedRowData.email}</p></div>
+                    <div><p><strong>Role:</strong> {selectedRowData.role}</p></div>
+                  </>
+                )}
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-end gap-4 mt-6">
+                <button
+                  className={`px-4 py-2 font-medium text-white rounded ${isEditing ? 'bg-gray-600 hover:bg-gray-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                  onClick={handleEditToggle}
+                >
+                  {isEditing ? 'Cancel' : 'Edit'}
+                </button>
+
+                {isEditing && (
+                  <button
+                    className="px-4 py-2 bg-green-600 text-white font-medium rounded hover:bg-green-700"
+                    onClick={handleSave}
+                  >
+                    Save
+                  </button>
+                )}
+
+                {!isEditing && (
+                  <button
+                    className="px-4 py-2 bg-red-600 text-white font-medium rounded hover:bg-red-700"
+                    onClick={() => document.getElementById('login_modal').showModal()}
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
+
+              {/* Login Modal */}
+              <dialog id="login_modal" className="modal">
+                <div className="modal-box flex flex-col mr-6">
+                  <h3 className="font-bold text-lg text-center">Enter Password to Confirm Deletion</h3>
+
+                  <form className="space-y-4" onSubmit={handleDelete}>
+                    <div>
+                      <label className="block text-gray-600 font-medium mb-1">Password</label>
+                      <input
+                        type="password"
+                        placeholder="Enter your password"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+
+                    {error && <h1 className="text-red-500">{error}</h1>}
+
+                    <div className="flex justify-between mt-4">
+                      {!isSubmitLoading ? (
+                        <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-blue-700">
+                          Confirm Deletion
+                        </button>
+                      ) : (
+                        <button className="px-4 py-2 w-[150px] bg-red-600 text-white rounded hover:bg-blue-700">
+                          <span className="loading loading-spinner loading-md"></span>
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                        onClick={() => document.getElementById('login_modal').close()}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <form method="dialog" className="modal-backdrop">
+                  <button type="button" onClick={() => document.getElementById('login_modal').close()}>
+                    Close
+                  </button>
+                </form>
+              </dialog>
             </div>
-            <div>
-              <p><strong>Full Name:</strong> {selectedRowData.fullName}</p>
-            </div>
-            <div>
-              <p><strong>Username:</strong> {selectedRowData.userName}</p>
-            </div>
-            <div>
-              <p><strong>Email:</strong> {selectedRowData.email}</p>
-            </div>
-            <div>
-              <p><strong>Role:</strong> {selectedRowData.role}</p>
-            </div>
-          </>
+
+            <form method="dialog" className="modal-backdrop">
+              <button type="button" onClick={() => document.getElementById('row_modal').close()}>
+                Close
+              </button>
+            </form>
+          </dialog>
         )}
-      </div>
-
-      {/* Buttons */}
-      <div className="flex justify-end gap-4 mt-6">
-        <button
-          className={`px-4 py-2 font-medium text-white rounded ${isEditing ? 'bg-gray-600 hover:bg-gray-700' : 'bg-blue-600 hover:bg-blue-700'}`}
-          onClick={handleEditToggle}
-        >
-          {isEditing ? 'Cancel' : 'Edit'}
-        </button>
-
-        {isEditing && (
-          <button
-            className="px-4 py-2 bg-green-600 text-white font-medium rounded hover:bg-green-700"
-            onClick={handleSave}
-          >
-            Save
-          </button>
-        )}
-
-{!isEditing && (
-  <button
-    className="px-4 py-2 bg-red-600 text-white font-medium rounded hover:bg-red-700"
-    onClick={() => document.getElementById('login_modal').showModal()}
-  >
-    Delete
-  </button>
-)}
-
-{/* Login Modal */}
-<dialog id="login_modal" className="modal">
-  <div className="modal-box flex flex-col mr-6">
-    <h3 className="font-bold text-lg text-center">Enter Password to Confirm Deletion</h3>
-
-    {/* Login Form */}
-    <form className="space-y-4" onSubmit={handleDelete}>
-      <div>
-        <label className="block text-gray-600 font-medium mb-1">Password</label>
-        <input
-          type="password"
-          placeholder="Enter your password"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      {error && <h1 className="text-red-500">{error}</h1>}
-
-      <div className="flex justify-between mt-4">
-      {!isSubmitLoading && 
-          <button
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-blue-700"
-        >
-          Confirm Deletion  
-        </button>
-        }
-        {isSubmitLoading && 
-          <button
-          className="px-4 py-2 w-[150px] bg-red-600 text-white rounded hover:bg-blue-700"
-        >
-          <span className="loading loading-spinner loading-md"></span>  
-        </button>
-        }
-        <button
-          type="button"
-          className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-          onClick={() => document.getElementById('login_modal').close()}
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <form method="dialog" className="modal-backdrop">
-    <button type="button" onClick={() => document.getElementById('login_modal').close()}>
-      Close
-    </button>
-  </form>
-</dialog>
-
-      </div>
-    </div>
-
-    <form method="dialog" className="modal-backdrop">
-      <button type="button" onClick={() => document.getElementById('row_modal').close()}>
-        Close
-      </button>
-    </form>
-  </dialog>
-)}
-
-
     </>
   );
 }
