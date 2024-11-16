@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import axios from 'axios'
 
 const SocketContext = createContext();
 
@@ -20,10 +19,7 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
         if(isAuthenticated()){
 
-            const newSocket = io.connect(import.meta.env.VITE_SERVER_URL, {
-                withCredentials: true,
-                transports: ['websocket'],
-            });
+            const newSocket = io.connect(import.meta.env.VITE_SERVER_URL);
             setSocket(newSocket);
             return () => {
                 newSocket.disconnect();
