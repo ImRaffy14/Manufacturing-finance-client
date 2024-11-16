@@ -32,9 +32,9 @@ function accountCreation({ userData }) {
       ];
       
       const data = [
-        {fullName: 'Muhammed Sahklahami', email: 'suwqkeqen@gmail.com', createInvoice: '' },
-        {fullName: 'Sumbul Almuete', email: 'Sumbul@gmail.com', createInvoice: '' },
-        {fullName: 'Daniel Akhmalahibi', email: 'suwqDanielkeqen@gmail.com', createInvoice: '' },
+        {fullName: 'Daniel Matthews', email: 'danielmatthiews@gmail.com', createInvoice: '' },
+        {fullName: 'Nathaniel Marshlow', email: 'nathanielmarshlow@gmail.com', createInvoice: '' },
+        {fullName: 'Joshua Lycan', email: 'joshualycan@gmail.com', createInvoice: '' },
         // Add more data as needed
       ];
 

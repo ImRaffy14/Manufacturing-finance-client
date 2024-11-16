@@ -13,21 +13,6 @@ const Search = ({ userData }) => {
     { id: 1, message: "New message from HR", read: false },
     { id: 2, message: "System maintenance scheduled", read: false },
     { id: 3, message: "New user registered", read: false },
-    { id: 4, message: "Kumain ng burat", read: false }, 
-    { id: 5, message: "Usman Abdal Jaleel Shisha", read: false },
-    { id: 6, message: "Usman Abdal Jaleel Shisha", read: false },
-    { id: 7, message: "Usman Abdal Jaleel Shisha", read: false },
-    { id: 8, message: "Usman Abdal Jaleel Shisha", read: false },
-    { id: 9, message: "Usman Abdal Jaleel Shisha", read: false },
-    { id: 10, message: "Usman Abdal Jaleel Shisha", read: false },
-    { id: 11, message: "Muhammad Sumbul", read: false },
-    { id: 12, message: "Usman Abdal Jaleel Shisha", read: false },
-    { id: 13, message: "Muhammad Sumbul", read: false },
-    { id: 14, message: "Usman Abdal Jaleel Shisha", read: false },
-    { id: 15, message: "Muhammad Sumbul", read: false },
-    { id: 16, message: "Muhammad Sumbul", read: false },
-    { id: 17, message: "Muhammad Sumbul", read: false },
-    { id: 18, message: "Muhammad Sumbul", read: false },
   ]);
 
   const [showNotifications, setShowNotifications] = useState(false); // Toggle notifications
