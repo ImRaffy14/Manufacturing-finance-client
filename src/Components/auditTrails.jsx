@@ -129,11 +129,11 @@ function AuditTrails() {
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Description:</strong></p>
-                      <p className="text-gray-700">{selectedRowData.description}</p>
+                      <p className="text-gray-700 max-w-xl text-justify">
+                        {selectedRowData.description}
+                      </p>
                     </div>
-                </div>
-            <div>
-            </div>
+                  </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('row_modal').close()}>
