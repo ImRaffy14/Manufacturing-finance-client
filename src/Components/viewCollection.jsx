@@ -334,55 +334,52 @@ if (isLoading) {
     <>
     
 
-        <div className="max-w-screen-2xl mx-auto flex flex-col ">
-    <div className="">
-      
-      <div className="flex gap-4">
-          {/* Sales Card */}
-          <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
-            <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-sm">Total Cash of the Company</p>
-              <BsCashCoin className="text-green-600 text-xl" />
-            </div>
-            <div className="flex gap-3 my-3">
-              <p className="text-3xl font-bold">{formatCurrency(totalCash)}</p>
-            </div>
-          </div>
-          {(userData.role === 'ADMIN')  && (
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
-            <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-sm">Cash Deposit</p>
-              <PiHandDeposit className="text-green-600 text-xl" />
-            </div>
-            <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('deposit_modal').showModal()}>
-            <FaRegPlusSquare className="text-green-600 text-2xl my-2" />
-              <p className="text-3xl font-bold">Deposit</p>
-            </div>
-          </div>
-          )}
-
-          {(userData.role === 'ADMIN')  && (
-          <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
-            <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-sm">Cash Withdrawal</p>
-              <PiHandWithdraw className="text-red-600 text-xl" />
-            </div>
-            <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('withdraw_modal').showModal()}>
-            <FaRegMinusSquare className="text-red-600 text-2xl my-2" />
-              <p className="text-3xl font-bold">Withdraw</p>
-            </div>
-          </div>
-          )}
+  <div className="max-w-screen-2xl mx-auto flex flex-col ">
+    <div className="flex gap-4">
+      {/* Company Cash Card */}
+      <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
+        <div className="flex items-center justify-between">
+          <p className="text-gray-600 font-semibold text-sm">Total Cash of the Company</p>
+          <BsCashCoin className="text-green-600 text-xl" />
         </div>
-          </div>
+        <div className="flex gap-3 my-3">
+          <p className="text-3xl font-bold">{formatCurrency(totalCash)}</p>
+        </div>
+      </div>
 
-          <div className="">
+      {(userData.role === 'ADMIN')  && (
+      <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
+        <div className="flex items-center justify-between">
+          <p className="text-gray-600 font-semibold text-sm">Cash Deposit</p>
+          <PiHandDeposit className="text-green-600 text-xl" />
+        </div>
+        <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('deposit_modal').showModal()}>
+          <FaRegPlusSquare className="text-green-600 text-2xl my-2" />
+          <p className="text-3xl font-bold">Deposit</p>
+        </div>
+      </div>
+          )}
+
+      {(userData.role === 'ADMIN')  && (
+      <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
+        <div className="flex items-center justify-between">
+          <p className="text-gray-600 font-semibold text-sm">Cash Withdrawal</p>
+          <PiHandWithdraw className="text-red-600 text-xl" />
+        </div>
+        <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('withdraw_modal').showModal()}>
+          <FaRegMinusSquare className="text-red-600 text-2xl my-2" />
+          <p className="text-3xl font-bold">Withdraw</p>
+        </div>
+      </div>
+          )}
+     </div>
+
       {/* Financial chart */}
-      <div className="bg-white/75 shadow-xl rounded-lg p-6 mt-7">
+    <div className="bg-white/75 shadow-xl rounded-lg p-6 mt-7">
       <h1 className="text-xl font-bold">Month of {currentMonth}</h1>
         <div className="flex gap-4">
-            {/* Revenue Card */}
-           <div className="bg-white/75 shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          {/* Revenue Card */}
+          <div className="bg-white/75 shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Sales</p>
               <PiCoinsFill className="text-yellow-500 text-xl" />
@@ -401,7 +398,7 @@ if (isLoading) {
           </div>
 
           {/* Spending Card */}
-          <div className="bg-white shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div className="bg-white shadow-xl w-[370px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Spent</p>
               <RiPassPendingLine className="text-red-600 text-xl" />
@@ -418,7 +415,7 @@ if (isLoading) {
               </p>
             </div>
           </div>
-            </div>
+        </div>
 
         {/* Bar Charts Section */}
         <div className="mt-10 mb-10">
@@ -429,170 +426,106 @@ if (isLoading) {
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Inflow</h4>
               <AreaChart
-            data={finalInflowsData}
-            dataKey1="Amount"
-            color1="rgb(74 222 128)"
-            
-          />
+                data={finalInflowsData}
+                dataKey1="Amount"
+                color1="rgb(74 222 128)"
+              />
             </div>
 
             {/* Outflows Chart */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Outflow</h4>
-          <AreaChart
-            data={finalOutflowsData}
-            dataKey1="Amount"
-            color1="rgb(248 113 113)"
-            
-          />
+              <AreaChart
+                data={finalOutflowsData}
+                dataKey1="Amount"
+                color1="rgb(248 113 113)"
+              />
             </div>
           </div>
+        </div>
+    </div>
+  </div>
+        
+  <div className="max-w-screen-2xl mx-auto flex flex-col">
+    <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 p-4 my-7">
+      <div className="mx-4">
+        <div className="overflow-x-auto w-full">
+          <DataTable
+            title="Collection Reports"
+            columns={columns}
+            data={filteredData}
+            pagination
+            defaultSortField="name"
+            highlightOnHover
+            pointerOnHover
+            onRowClicked={handleRowClick}
+            subHeader
+            subHeaderComponent={
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchText}
+              onChange={handleSearch}
+              className="mb-2 p-2 border border-gray-400 rounded-lg"
+            />
+            }
+          />
         </div>
       </div>
     </div>
+  </div>
 
-        </div>
-        <div className="max-w-screen-2xl mx-auto flex flex-col">
-          <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 p-4 my-7">
-                  <div className="mx-4">
-                      <div className="overflow-x-auto w-full">
-                          <DataTable
-                              title="Collection Reports"
-                              columns={columns}
-                              data={filteredData}
-                              pagination
-                              defaultSortField="name"
-                              highlightOnHover
-                              pointerOnHover
-                              onRowClicked={handleRowClick}
-                              subHeader
-                              subHeaderComponent={
-                              <input
-                                  type="text"
-                                  placeholder="Search..."
-                                  value={searchText}
-                                  onChange={handleSearch}
-                                  className="mb-2 p-2 border border-gray-400 rounded-lg"
-                              />
-                              }
-                          />
-                      </div>
-                  </div>
-              </div>
-        </div>
-
-        <dialog id="withdraw_modal" className="modal">
-          <div className="modal-box">
-            <h3 className="flex items-center justify-center font-bold text-lg">Enter Amount to Withdraw</h3>
-            <div className="w-full mt-2">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="withdrawal">Amount</label>
-              <input 
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="number" 
-                placeholder="PHP"
-                value={withdrawAmount}
-                onChange={(e) => setWithdrawAmount(e.target.value)}
-                required
-                id="withdrawal"
-              />
-            </div>
-
-            <div className="flex items-center justify-end mt-3">
-              <button
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800"
-                onClick={() => {
-                  const amountInput = document.getElementById('withdrawal');
-                  if (amountInput.checkValidity()) {
-                    // Open the confirm modal if the input is valid
-                    document.getElementById('confirm_withdraw_modal').showModal();
-                  } else {
-                    // Show validation error if input is invalid
-                    amountInput.reportValidity();
-                  }
-                }}
-              >
-                Withdraw
-              </button>
-            </div>
-          </div>
-          <form method="dialog" className="modal-backdrop">
-            <button>close</button>
-          </form>
-        </dialog>
-
-<dialog id="confirm_withdraw_modal" className="modal">
+  <dialog id="withdraw_modal" className="modal">
   <div className="modal-box">
-    <form className="space-y-4" onSubmit={handlesWithdrawSubmit}>
-      <div>
-        <h3 className="font-bold text-lg text-center">Enter Password to Confirm Withdrawal</h3>
-        <label className="block text-gray-600 font-medium mb-1">Password</label>
-        <input
-          type="password"
-          placeholder="Enter your password"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </div>
-      {authError && <h1 className="text-red-500">{authError}</h1> }
-      {!isSubmit && <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">
-        Confirm
-      </button>}
-    </form>
-    {isSubmit && <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-3 w-[90px]">
-      <span className="loading loading-spinner loading-md"></span>
-      </button>}
+    <h3 className="flex items-center justify-center font-bold text-lg">
+      Enter Amount to Withdraw
+    </h3>
+    
+    <div className="w-full mt-2">
+      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="withdrawal">
+        Amount
+      </label>
+      <input 
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        type="number" 
+        placeholder="PHP"
+        value={withdrawAmount}
+        onChange={(e) => setWithdrawAmount(e.target.value)}
+        required
+        id="withdrawal"
+      />
+    </div>
+
+    <div className="flex items-center justify-end mt-3">
+      <button
+        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800"
+        onClick={() => {
+          const amountInput = document.getElementById('withdrawal');
+          if (amountInput.checkValidity()) {
+            // Open the confirm modal if the input is valid
+            document.getElementById('confirm_withdraw_modal').showModal();
+          } else {
+            // Show validation error if input is invalid
+            amountInput.reportValidity();
+          }
+        }}
+      >
+        Withdraw
+      </button>
+    </div>
   </div>
   <form method="dialog" className="modal-backdrop">
     <button>close</button>
   </form>
 </dialog>
 
-<dialog id="deposit_modal" className="modal">
-          <div className="modal-box">
-            <h3 className="flex items-center justify-center font-bold text-lg">Enter Amount to Deposit</h3>
-            <div className="w-full mt-2">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="deposit">Amount</label>
-              <input 
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="number" 
-                placeholder="PHP"
-                value={depositAmount}
-                onChange={(e) => setDepositAmount(e.target.value)}
-                required
-                id="deposit"
-              />
-            </div>
-
-            <div className="flex items-center justify-end mt-3">
-              <button
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
-                onClick={() => {
-                  const amountInput = document.getElementById('deposit');
-                  if (amountInput.checkValidity()) {
-                    // Open the confirm modal if the input is valid
-                    document.getElementById('confirm_deposit_modal').showModal();
-                  } else {
-                    // Show validation error if input is invalid
-                    amountInput.reportValidity();
-                  }
-                }}
-              >
-                Deposit
-              </button>
-            </div>
-          </div>
-          <form method="dialog" className="modal-backdrop">
-            <button>close</button>
-          </form>
-        </dialog>
-
-        <dialog id="confirm_deposit_modal" className="modal">
+<dialog id="confirm_withdraw_modal" className="modal">
   <div className="modal-box">
-    <form className="space-y-4" onSubmit={handlesDepositSubmit}>
+    <form className="space-y-4" onSubmit={handlesWithdrawSubmit}>
       <div>
-        <h3 className="font-bold text-lg text-center">Enter Password to Confirm Deposit</h3>
+        <h3 className="font-bold text-lg text-center">
+          Enter Password to Confirm Withdrawal
+        </h3>
         <label className="block text-gray-600 font-medium mb-1">Password</label>
         <input
           type="password"
@@ -603,15 +536,106 @@ if (isLoading) {
           required
         />
       </div>
-      {authError && <h1 className="text-red-500">{authError}</h1> }
-      {!isSubmit && <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">
-        Confirm
-      </button>}
+      
+      {authError && <h1 className="text-red-500">{authError}</h1>}
+      
+      {!isSubmit && (
+        <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">
+          Confirm
+        </button>
+      )}
     </form>
-    {isSubmit && <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-3 w-[90px]">
-      <span className="loading loading-spinner loading-md"></span>
-      </button>}
+    
+    {isSubmit && (
+      <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-3 w-[90px]">
+        <span className="loading loading-spinner loading-md"></span>
+      </button>
+    )}
   </div>
+  
+  <form method="dialog" className="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<dialog id="deposit_modal" className="modal">
+  <div className="modal-box">
+    <h3 className="flex items-center justify-center font-bold text-lg">
+      Enter Amount to Deposit
+    </h3>
+    
+    <div className="w-full mt-2">
+      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="deposit">
+        Amount
+      </label>
+      <input 
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        type="number" 
+        placeholder="PHP"
+        value={depositAmount}
+        onChange={(e) => setDepositAmount(e.target.value)}
+        required
+        id="deposit"
+      />
+    </div>
+
+    <div className="flex items-center justify-end mt-3">
+      <button
+        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
+        onClick={() => {
+          const amountInput = document.getElementById('deposit');
+          if (amountInput.checkValidity()) {
+            // Open the confirm modal if the input is valid
+            document.getElementById('confirm_deposit_modal').showModal();
+          } else {
+            // Show validation error if input is invalid
+            amountInput.reportValidity();
+          }
+        }}
+      >
+        Deposit
+      </button>
+    </div>
+  </div>
+  <form method="dialog" className="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<dialog id="confirm_deposit_modal" className="modal">
+  <div className="modal-box">
+    <form className="space-y-4" onSubmit={handlesDepositSubmit}>
+      <div>
+        <h3 className="font-bold text-lg text-center">
+          Enter Password to Confirm Deposit
+        </h3>
+        <label className="block text-gray-600 font-medium mb-1">Password</label>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      
+      {authError && <h1 className="text-red-500">{authError}</h1>}
+      
+      {!isSubmit && (
+        <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">
+          Confirm
+        </button>
+      )}
+    </form>
+    
+    {isSubmit && (
+      <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-3 w-[90px]">
+        <span className="loading loading-spinner loading-md"></span>
+      </button>
+    )}
+  </div>
+  
   <form method="dialog" className="modal-backdrop">
     <button>close</button>
   </form>

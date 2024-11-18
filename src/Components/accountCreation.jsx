@@ -107,7 +107,8 @@ function accountCreation({ userData }) {
 
     return (
         <>
-              <div className="max-w-screen-2xl mx-auto mt-4">
+        {/* Account Requests Table */}
+        <div className="max-w-screen-2xl mx-auto mt-4">
             <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
                 <div className="mx-4">
                     <div className="overflow-x-auto w-full">
@@ -120,82 +121,98 @@ function accountCreation({ userData }) {
                             highlightOnHover
                             subHeader
                             subHeaderComponent={
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                value={searchText}
-                                onChange={handleSearch}
-                                className="mb-2 p-2 border border-gray-400 rounded-lg"
-                            />
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    value={searchText}
+                                    onChange={handleSearch}
+                                    className="mb-2 p-2 border border-gray-400 rounded-lg"
+                                />
                             }
                         />
                     </div>
                 </div>
             </div>
         </div>
-        
-            {/* Modal */}
-            <dialog id="account_modal" className="modal">
-                <div className="modal-box shadow-xl">
 
-                
+        {/* Account Creation Modal */}
+        <dialog id="account_modal" className="modal">
+            <div className="modal-box shadow-xl">
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col justify-center items-center gap-4">
                         <h1 className="font-bold mb-4 text-lg">CREATE ACCOUNT</h1>
 
+                        {/* Username and Password */}
                         <div className="flex gap-4 w-full">
                             <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
                                     Username
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username"
-                                type="text" 
-                                placeholder="Username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)} required />
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="username"
+                                    type="text"
+                                    placeholder="Username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                />
                             </div>
-
                             <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                                     Password
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" 
-                                type="password" 
-                                placeholder="******************" 
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)} required/>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="password"
+                                    type="password"
+                                    placeholder="******************"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
                             </div>
                         </div>
 
+                        {/* Email and Full Name */}
                         <div className="flex gap-4 w-full">
                             <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                                     Email Address
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" 
-                                type="email" 
-                                placeholder="Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)} required/> 
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="email"
+                                    type="email"
+                                    placeholder="Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
                             </div>
-
                             <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
                                     Full Name
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                                id="name" 
-                                type="text" 
-                                placeholder="Full Name"
-                                value={fullName}
-                                onChange={(e) => setFullName(e.target.value)} required/> 
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="name"
+                                    type="text"
+                                    placeholder="Full Name"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    required
+                                />
                             </div>
                         </div>
 
+                        {/* Role Selection */}
                         <div className="mt-2 w-full flex">
-                            <select className="select select-bordered w-[230px]"
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}>
+                            <select
+                                className="select select-bordered w-[230px]"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                            >
                                 <option selected>Select Role</option>
                                 <option>ADMIN</option>
                                 <option>CHIEF FINANCIAL OFFICER</option>
@@ -204,22 +221,37 @@ function accountCreation({ userData }) {
                             </select>
                         </div>
 
+                        {/* File Input */}
                         <div className="w-full">
-                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs " onChange={(e) => setImage(e.target.files[0])} required />
-                            </div>
+                            <input
+                                type="file"
+                                className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+                                onChange={(e) => setImage(e.target.files[0])}
+                                required
+                            />
+                        </div>
+
+                        {/* Response Message */}
                         {response && <h1 className="text-red-500 font-bold">{response}</h1>}
+
+                        {/* Submit Button */}
                         <div className="w-full">
-                            {!isLoading && <button className="btn btn-primary w-full font-bold">Submit</button>}
+                            {!isLoading ? (
+                                <button className="btn btn-primary w-full font-bold">Submit</button>
+                            ) : (
+                                <button className="btn btn-primary w-full font-bold">
+                                    <span className="loading loading-spinner loading-md"></span>
+                                </button>
+                            )}
                         </div>
                     </div>
-                    </form>
-                        {isLoading && <button className="btn btn-primary w-full font-bold"><span className="loading loading-spinner loading-md"></span></button>}
-                </div>
-                <form method="dialog" className="modal-backdrop">
-                    <button>Close</button>
                 </form>
-            </dialog>
-        </>
+            </div>
+            <form method="dialog" className="modal-backdrop">
+                <button>Close</button>
+            </form>
+        </dialog>
+    </>
     );
 }
 

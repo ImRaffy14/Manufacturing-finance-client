@@ -124,54 +124,58 @@ const viewFinancialReports = ({userData}) => {
   };
   
   return (
-    <>      
-      <div className="max-w-screen-2xl mx-auto mt-8 mb-10">
-        <div className="breadcrumbs text-xl mt-4">
-          <ul>
-            <li><Link to="/Dashboard/financialReports">Return</Link></li>
-            <li><span className='text-blue-500 underline'>Documents</span></li>  
-          </ul>
-        </div>
-        <div className="p-4 md:p-10">
-          <div className="bg-white rounded-lg p-4 md:p-10">
-            <div
-              id="financial-report"
-              style={{
-                width: '800px',
-                padding: '20px',
-                margin: '0 auto',
-                backgroundColor: '#ffffff',
-              }}
-            >
-              <section id="report-header-and-narrative-balance-sheet" className="max-w-screen-md mx-auto p-4 md:p-10 bg-white rounded-lg">
-                {/* Header */}
-                <header className="text-center mb-8">
-                  <div className="flex items-center justify-center w-full mb-4">
-                    <img src={JJM} className="h-20 w-20" alt="Logo" />
-                  </div>
-                  <h2 className="text-xl md:text-2xl">Financial Report ID {rowData._id}</h2>
-                  <h3 className="text-lg md:text-xl">For the Period Ended {currentDate}</h3>
-                  <p className="mt-2">Prepared by: {preparedBy}</p>
-                  <p>Position: {position}</p>
-                  <p>Date: {rowData.date}</p>
-                </header>
+  <>      
+    <div className="max-w-screen-2xl mx-auto mt-8 mb-10">
+      {/* Breadcrumbs */}
+      <div className="breadcrumbs text-xl mt-4">
+        <ul>
+          <li><Link to="/Dashboard/financialReports">Return</Link></li>
+          <li><span className="text-blue-500 underline">Documents</span></li>
+        </ul>
+      </div>
 
-                {/* Narrative Report */}
-                <section id="narrative" className="text-sm md:text-base">
-                  <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
-                  <p className="mt-2">
-                    For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(incomeStatementData[0].salesRevenue)}, with a gross profit of {formatCurrency(incomeStatementData[0].grossProfit)}.
-                  </p>
-                  <p className="mt-2">
-                    The cost of goods sold (COGS) was {formatCurrency(parseFloat(incomeStatementData[0].rawMaterials) + parseFloat(incomeStatementData[0].laborCosts))}, constituting approximately {(parseFloat(incomeStatementData[0].grossProfit) / parseFloat(incomeStatementData[0].salesRevenue) * 100).toFixed(2)}% of total revenue.
-                  </p>
-                  <p className="mt-2">
-                    Operating expenses totaled {formatCurrency(parseFloat(incomeStatementData[0].salariesAndWages) + parseFloat(incomeStatementData[0].utilities))}, which affected the overall profitability. The net profit for the period stands at {formatCurrency(incomeStatementData[0].operatingIncome)}.
-                  </p>
-                  <p className="mt-2">
-                    The outlook remains positive, with a healthy cash flow of {formatCurrency(cashFlowData[0].netCashFlow)} and strong asset management, positioning the company for future growth.
-                  </p>
-                </section>
+      {/* Content Container */}
+      <div className="p-4 md:p-10">
+        <div className="bg-white rounded-lg p-4 md:p-10">
+          {/* Financial Report */}
+          <div
+            id="financial-report"
+            style={{
+              width: '800px',
+              padding: '20px',
+              margin: '0 auto',
+              backgroundColor: '#ffffff',
+            }}
+          >
+            {/* Report Header */}
+            <section id="report-header-and-narrative-balance-sheet" className="max-w-screen-md mx-auto p-4 md:p-10 bg-white rounded-lg">
+              <header className="text-center mb-8">
+                <div className="flex items-center justify-center w-full mb-4">
+                  <img src={JJM} className="h-20 w-20" alt="Logo" />
+                </div>
+                <h2 className="text-xl md:text-2xl">Financial Report ID {rowData._id}</h2>
+                <h3 className="text-lg md:text-xl">For the Period Ended {currentDate}</h3>
+                <p className="mt-2">Prepared by: {preparedBy}</p>
+                <p>Position: {position}</p>
+                <p>Date: {rowData.date}</p>
+              </header>
+
+              {/* Narrative Report */}
+              <section id="narrative" className="text-sm md:text-base">
+                <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
+                <p className="mt-2">
+                  For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(incomeStatementData[0].salesRevenue)}, with a gross profit of {formatCurrency(incomeStatementData[0].grossProfit)}.
+                </p>
+                <p className="mt-2">
+                  The cost of goods sold (COGS) was {formatCurrency(parseFloat(incomeStatementData[0].rawMaterials) + parseFloat(incomeStatementData[0].laborCosts))}, constituting approximately {(parseFloat(incomeStatementData[0].grossProfit) / parseFloat(incomeStatementData[0].salesRevenue) * 100).toFixed(2)}% of total revenue.
+                </p>
+                <p className="mt-2">
+                  Operating expenses totaled {formatCurrency(parseFloat(incomeStatementData[0].salariesAndWages) + parseFloat(incomeStatementData[0].utilities))}, which affected the overall profitability. The net profit for the period stands at {formatCurrency(incomeStatementData[0].operatingIncome)}.
+                </p>
+                <p className="mt-2">
+                  The outlook remains positive, with a healthy cash flow of {formatCurrency(cashFlowData[0].netCashFlow)} and strong asset management, positioning the company for future growth.
+                </p>
+              </section>
 
               {/* Balance Sheet */}
               <section id="balance-sheet" className="mt-10">
@@ -208,18 +212,18 @@ const viewFinancialReports = ({userData}) => {
                         <td className="border px-4 py-2 font-bold">Total Equity – {formatCurrency(balanceSheetData[0].totalEquity)}</td>
                       </tr>
                       <tr>
-                        <td className="border px-4 py-2 font-bold" ></td>
+                        <td className="border px-4 py-2 font-bold"></td>
                         <td className="border px-4 py-2 font-bold" colSpan="2">Total Liabilities and Equity – {formatCurrency(rowData.liabilitiesAndEquity)}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </section>
-              </section>
+            </section>
 
-
-              {/* Income Statement */}
+            {/* Income Statement and Cash Flow */}
             <section id="income-statement-and-cash-flow" className="max-w-screen-md mx-auto p-4 md:p-10 bg-white rounded-lg">
+              {/* Income Statement */}
               <section id="income-statement">
                 <h2 className="text-lg md:text-xl font-semibold text-center">INCOME STATEMENT</h2>
                 <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
@@ -261,7 +265,7 @@ const viewFinancialReports = ({userData}) => {
                     </tbody>
                   </table>
                 </div>
-                </section>
+              </section>
 
               {/* Cash Flow */}
               <section id="cash-flow" className="mt-10">
@@ -302,20 +306,20 @@ const viewFinancialReports = ({userData}) => {
               </section>
             </section>
 
-              {/* Export to PDF Button */}
-              <div id="export-button" className="text-center mt-20">
-                <button
-                  onClick={exportToPDF}
-                  className="px-4 py-2 bg-green-500 text-white rounded"
-                >
-                  Export to PDF
-                </button>
-              </div>
+            {/* Export to PDF Button */}
+            <div id="export-button" className="text-center mt-20">
+              <button
+                onClick={exportToPDF}
+                className="px-4 py-2 bg-green-500 text-white rounded"
+              >
+                Export to PDF
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
+  </>
   );
 };
 
