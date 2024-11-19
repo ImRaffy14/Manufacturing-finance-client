@@ -151,13 +151,14 @@ const viewFinancialReports = ({userData}) => {
                   </div>
                   <h2 className="text-xl md:text-2xl">Financial Report ID {rowData._id}</h2>
                   <h3 className="text-lg md:text-xl">For the Period Ended {currentDate}</h3>
-                  <p className="mt-2">Prepared by: Financial Management</p>
+                  <p className="mt-2">Prepared by: {preparedBy}</p>
+                  <p>Position: {position}</p>
                   <p>Date: {rowData.date}</p>
                 </header>
 
                 {/* Narrative Report */}
                 <section id="narrative" className="text-sm md:text-base">
-                  <h2 className="text-lg md:text-xl font-semibold">Narrative Report</h2>
+                  <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
                   <p className="mt-2">
                     For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(incomeStatementData[0].salesRevenue)}, with a gross profit of {formatCurrency(incomeStatementData[0].grossProfit)}.
                   </p>
@@ -207,18 +208,18 @@ const viewFinancialReports = ({userData}) => {
                         <td className="border px-4 py-2 font-bold">Total Equity – {formatCurrency(balanceSheetData[0].totalEquity)}</td>
                       </tr>
                       <tr>
-                        <td className="border px-4 py-2 font-bold" ></td>
+                        <td className="border px-4 py-2 font-bold"></td>
                         <td className="border px-4 py-2 font-bold" colSpan="2">Total Liabilities and Equity – {formatCurrency(rowData.liabilitiesAndEquity)}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </section>
-              </section>
+            </section>
 
-
-              {/* Income Statement */}
+            {/* Income Statement and Cash Flow */}
             <section id="income-statement-and-cash-flow" className="max-w-screen-md mx-auto p-4 md:p-10 bg-white rounded-lg">
+              {/* Income Statement */}
               <section id="income-statement">
                 <h2 className="text-lg md:text-xl font-semibold text-center">INCOME STATEMENT</h2>
                 <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
@@ -260,7 +261,7 @@ const viewFinancialReports = ({userData}) => {
                     </tbody>
                   </table>
                 </div>
-                </section>
+              </section>
 
               {/* Cash Flow */}
               <section id="cash-flow" className="mt-10">
@@ -301,20 +302,20 @@ const viewFinancialReports = ({userData}) => {
               </section>
             </section>
 
-              {/* Export to PDF Button */}
-              <div id="export-button" className="text-center mt-20">
-                <button
-                  onClick={exportToPDF}
-                  className="px-4 py-2 bg-green-500 text-white rounded"
-                >
-                  Export to PDF
-                </button>
-              </div>
+            {/* Export to PDF Button */}
+            <div id="export-button" className="text-center mt-20">
+              <button
+                onClick={exportToPDF}
+                className="px-4 py-2 bg-green-500 text-white rounded"
+              >
+                Export to PDF
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
+  </>
   );
 };
 
