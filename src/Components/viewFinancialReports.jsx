@@ -5,7 +5,7 @@ import JJM from '../assets/JJM.jfif';
 import html2canvas from 'html2canvas-pro';
 
 const viewFinancialReports = ({userData}) => {
-  const [preparedBy, setPreparedBy] = useState('John Doe');
+  const [preparedBy, setPreparedBy] = useState('Financial Management');
   const [position, setPosition] = useState('Finance Manager');
   const [currentDate, setCurrentDate] = useState('');
   const location = useLocation();
@@ -37,7 +37,7 @@ const viewFinancialReports = ({userData}) => {
       salariesAndWages: 123213,
       utilities: 123131,
       grossProfit: 121321,
-      operatingIncome: 1232113,
+      operatingExpenses: 1232113,
       employeeExpenses: 123131,
       totalRevenue: 2222222,
       totalCOGS: 22222213,
@@ -146,9 +146,7 @@ const viewFinancialReports = ({userData}) => {
                     <img src={JJM} className="h-20 w-20" alt="Logo" />
                   </div>
                   <h2 className="text-xl md:text-2xl">Financial Report ID {rowData._id}</h2>
-                  <h3 className="text-lg md:text-xl">For the Period Ended {currentDate}</h3>
                   <p className="mt-2">Prepared by: {preparedBy}</p>
-                  <p>Position: {position}</p>
                   <p>Date: {rowData.date}</p>
                 </header>
 
@@ -162,7 +160,7 @@ const viewFinancialReports = ({userData}) => {
                     The cost of goods sold (COGS) was {formatCurrency(parseFloat(incomeStatementData[0].rawMaterials) + parseFloat(incomeStatementData[0].laborCosts))}, constituting approximately {(parseFloat(incomeStatementData[0].grossProfit) / parseFloat(incomeStatementData[0].salesRevenue) * 100).toFixed(2)}% of total revenue.
                   </p>
                   <p className="mt-2">
-                    Operating expenses totaled {formatCurrency(parseFloat(incomeStatementData[0].salariesAndWages) + parseFloat(incomeStatementData[0].utilities))}, which affected the overall profitability. The net profit for the period stands at {formatCurrency(incomeStatementData[0].operatingIncome)}.
+                    Operating expenses totaled {formatCurrency(parseFloat(incomeStatementData[0].salariesAndWages) + parseFloat(incomeStatementData[0].utilities))}, which affected the overall profitability. The net profit for the period stands at {formatCurrency(incomeStatementData[0].operatingExpenses)}.
                   </p>
                   <p className="mt-2">
                     The outlook remains positive, with a healthy cash flow of {formatCurrency(cashFlowData[0].netCashFlow)} and strong asset management, positioning the company for future growth.
@@ -240,7 +238,7 @@ const viewFinancialReports = ({userData}) => {
                         <td className="border px-4 py-2"></td>
                         <td className="border px-4 py-2">Labor Costs – {formatCurrency(incomeStatementData[0].laborCosts)}</td>
                         <td className="border px-4 py-2">Utilities – {formatCurrency(incomeStatementData[0].utilities)}</td>
-                        <td className="border px-4 py-2">Operating Income – {formatCurrency(incomeStatementData[0].operatingIncome)}</td>
+                        <td className="border px-4 py-2">Operating Expenses – {formatCurrency(incomeStatementData[0].operatingExpenses)}</td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2"></td>
