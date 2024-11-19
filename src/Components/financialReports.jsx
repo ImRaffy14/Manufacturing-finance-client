@@ -1,28 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
+import { useSocket } from "../context/SocketContext";
 
 function FinancialReports({ userData }) {
   const navigate = useNavigate();
+  const socket = useSocket()
+
   const [searchText, setSearchText] = useState('');
+  const [data, setData] = useState([])
   
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
+  const dateFormat = (value) => {
+    const date = new Date(value);
+    const formattedDate = date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',  
+    });
+    return formattedDate
+  }
+
   const columns = [
     { name: 'Financial Report ID', selector: row => row._id, },
-    { name: 'Date', selector: row => row.date,  },
-    { name: 'Total Liabilities and Equity', selector: row => row.liabilitiesAndEquity, },
-    { name: 'Net Income', selector: row => row.netIncome, },
-    { name: 'Ending Balance', selector: row => row.endingBalance, },
+    { name: 'Date', selector: row => dateFormat(row.date),  },
+    { name: 'Total Liabilities and Equity', selector: row => formatCurrency(row.totalLiabilitiesAndEquity), },
+    { name: 'Net Income', selector: row => formatCurrency(row.netIncome), },
+    { name: 'Net Cash Flow', selector: row => formatCurrency(row.netCashFlow), },
   ];
 
-  const data = [
-    { _id: 1, date: '2022-01-01', liabilitiesAndEquity: 22222, netIncome: 22222, endingBalance: 22222 },
-    { _id: 2, date: '2022-01-01', liabilitiesAndEquity: 2222, netIncome: 22222, endingBalance: 22222 },
-    { _id: 3, date: '2022-01-01', liabilitiesAndEquity: 22222, netIncome: 22222, endingBalance: 22222 },
-  ];
+
+
+  useEffect(() => {
+    if(!socket) return;
+
+    socket.emit('get_financial_report', 'get financial reports')
+
+    const handleFinancialReport = (response) => {
+      setData(response)
+    }
+
+    socket.on('receive_financial_report', handleFinancialReport)
+
+    return () => {
+      socket.off('receive_financial_report')
+    }
+  },[socket])
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);

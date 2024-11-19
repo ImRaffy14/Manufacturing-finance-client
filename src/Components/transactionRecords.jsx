@@ -1,41 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
+import { useSocket } from "../context/SocketContext";
 
 function transactionRecords() {
   const navigate = useNavigate();
+  const socket = useSocket()
   const [inflowSearchText, setInflowSearchText] = useState('');
   const [outflowSearchText, setOutflowSearchText] = useState('');
+  const [inflowData, setInflowData] = useState([])
+  const [outflowData, setOutflowData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
   const inflowColumns = [
-    { name: 'Financial Report ID', selector: row => row._id, },
-    { name: 'Date', selector: row => row.date,  },
-    { name: 'Total Liabilities and Equity', selector: row => row.liabilitiesAndEquity, },
-    { name: 'Net Income', selector: row => row.netIncome, },
-    { name: 'Ending Balance', selector: row => row.endingBalance, },
+    { name: 'Transaction ID', selector: row => row._id },
+    { name: 'Date & Time', selector: row => row.dateTime },
+    { name: 'Auditor ID', selector: row => row.auditorId },
+    { name: 'Auditor', selector: row => row.auditor },
+    { name: 'Invoice ID', selector: row => row.invoiceId },
+    { name: 'Customer Name', selector: row => row.customerName },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
   ];
   const outflowColumns = [
-    { name: 'Financial Report ID', selector: row => row._id, },
-    { name: 'Date', selector: row => row.date,  },
-    { name: 'Total Liabilities and Equity', selector: row => row.liabilitiesAndEquity, },
-    { name: 'Net Income', selector: row => row.netIncome, },
-    { name: 'Ending Balance', selector: row => row.endingBalance, },
+    { name: 'Transaction ID', selector: row => row._id },
+    { name: 'Date & Time', selector: row => row.dateTime, width: '200px' },
+    { name: 'Approver', selector: row => row.approver, width: '100px' },
+    { name: 'Approver ID', selector: row => row.approverId },
+    { name: 'Payable ID', selector: row => row.payableId },
+    { name: 'Category', selector: row => row.category },
+    { name: 'Department', selector: row => row.department },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount) },
   ];
 
-  const inflowData = [
-    { _id: 1, date: '2022-01-01', liabilitiesAndEquity: 22222, netIncome: 22222, endingBalance: 22222 },
-    { _id: 2, date: '2022-01-01', liabilitiesAndEquity: 2222, netIncome: 22222, endingBalance: 22222 },
-    { _id: 3, date: '2022-01-01', liabilitiesAndEquity: 22222, netIncome: 22222, endingBalance: 22222 },
-  ];
 
-  const outflowData = [
-    { _id: 1, date: '2022-01-01', liabilitiesAndEquity: 22222, netIncome: 22222, endingBalance: 22222 },
-    { _id: 2, date: '2022-01-01', liabilitiesAndEquity: 2222, netIncome: 22222, endingBalance: 22222 },
-    { _id: 3, date: '2022-01-01', liabilitiesAndEquity: 22222, netIncome: 22222, endingBalance: 22222 },
-  ];
+  //FETCHING DATA
+  useEffect(() => {
+    if(!socket) return;
+
+    socket.emit('get_budget_reports', 'get budget report')
+    socket.emit('get_audit_history', 'get audit history')
+
+    const handleAuditHistory = (response) => {
+      setInflowData(response)
+    }
+
+    const handleBudgetReports = (response) => {
+      setOutflowData(response)
+      setIsLoading(false)
+    }
+
+    socket.on('receive_audit_history', handleAuditHistory)
+    socket.on("receive_budget_reports", handleBudgetReports);
+
+    return () => {
+      socket.off('receive_budget_reports')
+      socket.off('receive_audit_history')
+    }
+  }, [socket])
 
 
   const handleInflowSearch = (event) => {
@@ -60,6 +84,17 @@ function transactionRecords() {
   const handleRowClick = (row) => {
     navigate('/Dashboard/transactionRecords', { state: { rowData: row } });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-[520px] w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+      </div>
+    );
+  }
 
   return (
     <>

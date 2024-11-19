@@ -3,77 +3,57 @@ import { useLocation, Link } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
 import JJM from '../assets/JJM.jfif';
 import html2canvas from 'html2canvas-pro';
+import { useSocket } from '../context/SocketContext';
 
 const viewFinancialReports = ({userData}) => {
   const [preparedBy, setPreparedBy] = useState('Financial Management');
   const [position, setPosition] = useState('Finance Manager');
   const [currentDate, setCurrentDate] = useState('');
+  const [reportData, setReportData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const location = useLocation();
   const { rowData } = location.state || {};
+  const socket = useSocket()
   
   if (!rowData) {
     return <p>No data available.</p>;
   }
 
+  //SOCKET CONNECTION
   useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('en-US', {
+    if (!socket || !rowData?._id) return;
+  
+    socket.emit('get_specific_financial_report', rowData._id);
+  
+    const handleSpecificFinancialReport = (response) => {
+      setIsLoading(false)
+      setReportData(response);
+    };
+  
+    socket.on('receive_specific_financial_report', handleSpecificFinancialReport);
+  
+    return () => {
+      socket.off('receive_specific_financial_report', handleSpecificFinancialReport);
+    };
+  }, [socket, rowData?._id]);
+  
+
+
+  useEffect(() => {
+    const date = new Date(rowData.date);
+    const formattedDate = date.toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+      month: 'long', 
+      day: 'numeric', 
     });
     setCurrentDate(formattedDate);
+    
   }, []);
 
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
-  const incomeStatementData = [
-    {
-      salesRevenue: 123123,
-      rawMaterials: 123213,
-      laborCosts: 123123,
-      salariesAndWages: 123213,
-      utilities: 123131,
-      grossProfit: 121321,
-      operatingExpenses: 1232113,
-      employeeExpenses: 123131,
-      totalRevenue: 2222222,
-      totalCOGS: 22222213,
-      totalOperatingExpenses: 1231231,
-    },
-  ];
-
-  const cashFlowData = [
-    {
-      customerPayments: 12321312,
-      paymentsToSupplier: 12313123,
-      saleOfOldEquipment: 12311,
-      salariesAndWages: 12321313,
-      utilities: 123131,
-      totalInflows: 123213123,
-      totalOutflowsOperating: 1231321312,
-      totalOutflowsInvesting: 1232131231,
-      netCashFlow: 1211222,
-      beginningBalance: 123123,
-      purchaseOfNewEquipment: 123123,
-    },
-  ];
-
-  const balanceSheetData = [
-    {
-      cash: 143122,
-      inventory: 123123,
-      accountsReceivable: 123123,
-      accountsPayable: 123123,
-      ownersEquity: 123123,
-      retainedEarnings: 123123,
-      totalLiabilities: 123123,
-      totalAssets: 123123,
-      totalEquity: 123123,
-    },
-  ];
 
   const exportToPDF = () => {
     const exportBtn = document.getElementById('export-button');
@@ -112,7 +92,7 @@ const viewFinancialReports = ({userData}) => {
       if (index < sections.length) {
         captureSection(sections[index], isLastSection, () => processSections(index + 1));
       } else {
-        pdf.save('financial-report.pdf');
+        pdf.save(`${currentDate}-financial-report.pdf`);
         exportBtn.style.display = 'block';
       }
     };
@@ -120,6 +100,17 @@ const viewFinancialReports = ({userData}) => {
     processSections(0);
   };
   
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-[520px] w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+      </div>
+    );
+  }
+
   return (
     <>      
       <div className="max-w-screen-2xl mx-auto mt-8 mb-10">
@@ -152,18 +143,15 @@ const viewFinancialReports = ({userData}) => {
 
                 {/* NARRATIVE REPORT */}
                 <section id="narrative" className="text-sm md:text-base">
-                  <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
+                  <h2 className="text-lg md:text-xl font-semibold">Narrative Report</h2>
                   <p className="mt-2">
-                    For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(incomeStatementData[0].salesRevenue)}, with a gross profit of {formatCurrency(incomeStatementData[0].grossProfit)}.
+                    For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(reportData.salesRevenue)}, with a gross profit of {formatCurrency(reportData.grossProfit)}.
                   </p>
                   <p className="mt-2">
-                    The cost of goods sold (COGS) was {formatCurrency(parseFloat(incomeStatementData[0].rawMaterials) + parseFloat(incomeStatementData[0].laborCosts))}, constituting approximately {(parseFloat(incomeStatementData[0].grossProfit) / parseFloat(incomeStatementData[0].salesRevenue) * 100).toFixed(2)}% of total revenue.
+                    The cost of goods sold (COGS) was {formatCurrency(reportData.totalCogs)}, constituting approximately {(parseFloat(reportData.grossProfit) / parseFloat(reportData.salesRevenue) * 100).toFixed(2)}% of total revenue. Operating expenses totaled {formatCurrency(reportData.totalOperatingExpenses)}, which affected the overall profitability.
                   </p>
                   <p className="mt-2">
-                    Operating expenses totaled {formatCurrency(parseFloat(incomeStatementData[0].salariesAndWages) + parseFloat(incomeStatementData[0].utilities))}, which affected the overall profitability. The net profit for the period stands at {formatCurrency(incomeStatementData[0].operatingExpenses)}.
-                  </p>
-                  <p className="mt-2">
-                    The outlook remains positive, with a healthy cash flow of {formatCurrency(cashFlowData[0].netCashFlow)} and strong asset management, positioning the company for future growth.
+                    The outlook remains positive, with a healthy cash flow of {formatCurrency(reportData.netCashFlow)} and strong asset management, positioning the company for future growth.
                   </p>
                 </section>
 
@@ -182,28 +170,28 @@ const viewFinancialReports = ({userData}) => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td className="border px-4 py-2">Cash – {formatCurrency(balanceSheetData[0].cash)}</td>
-                        <td className="border px-4 py-2">Accounts Payable – {formatCurrency(balanceSheetData[0].accountsPayable)}</td>
-                        <td className="border px-4 py-2">Owner’s Equity – {formatCurrency(balanceSheetData[0].ownersEquity)}</td>
+                        <td className="border px-4 py-2">Cash – {formatCurrency(reportData.cash)}</td>
+                        <td className="border px-4 py-2">Accounts Payable – {formatCurrency(reportData.accountsPayable)}</td>
+                        <td className="border px-4 py-2">Owner’s Equity – {formatCurrency(reportData.ownersEquity)}</td>
                       </tr>
                       <tr>
-                        <td className="border px-4 py-2">Inventory (unsold Product) – {formatCurrency(balanceSheetData[0].inventory)}</td>
-                        <td className="border px-4 py-2">Total Liabilities – {formatCurrency(balanceSheetData[0].totalLiabilities)}</td>
+                        <td className="border px-4 py-2">Inventory (unsold Product) – {formatCurrency(reportData.inventory)}</td>
+                        <td className="border px-4 py-2">Total Liabilities – {formatCurrency(reportData.totalLiabilities)}</td>
                         <td className="border px-4 py-2"></td>
                       </tr>
                       <tr>
-                        <td className="border px-4 py-2">Accounts Receivable – {formatCurrency(balanceSheetData[0].accountsReceivable)}</td>
+                        <td className="border px-4 py-2">Accounts Receivable – {formatCurrency(reportData.accountsReceivable)}</td>
                         <td className="border px-4 py-2"></td>
                         <td className="border px-4 py-2"></td>
                       </tr>
                       <tr>
-                        <td className="border px-4 py-2 font-bold">Total Assets – {formatCurrency(balanceSheetData[0].totalAssets)}</td>
-                        <td className="border px-4 py-2 font-bold">Total Liabilities – {formatCurrency(balanceSheetData[0].totalLiabilities)}</td>
-                        <td className="border px-4 py-2 font-bold">Total Equity – {formatCurrency(balanceSheetData[0].totalEquity)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Assets – {formatCurrency(reportData.totalAssets)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Liabilities – {formatCurrency(reportData.totalLiabilities)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Equity – {formatCurrency(reportData.totalEquity)}</td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-bold"></td>
-                        <td className="border px-4 py-2 font-bold" colSpan="2">Total Liabilities and Equity – {formatCurrency(rowData.liabilitiesAndEquity)}</td>
+                        <td className="border px-4 py-2 font-bold" colSpan="2">Total Liabilities and Equity – {formatCurrency(rowData.totalLiabilitiesAndEquity)}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -229,27 +217,27 @@ const viewFinancialReports = ({userData}) => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td className="border px-4 py-2">Sales Revenue – {formatCurrency(incomeStatementData[0].salesRevenue)}</td>
-                        <td className="border px-4 py-2">Raw Materials – {formatCurrency(incomeStatementData[0].rawMaterials)}</td>
-                        <td className="border px-4 py-2">Salaries and Wages – {formatCurrency(incomeStatementData[0].salariesAndWages)}</td>
-                        <td className="border px-4 py-2">Gross Profit – {formatCurrency(incomeStatementData[0].grossProfit)}</td>
+                        <td className="border px-4 py-2">Sales Revenue – {formatCurrency(reportData.salesRevenue)}</td>
+                        <td className="border px-4 py-2">Raw Materials – {formatCurrency(reportData.rawMaterials)}</td>
+                        <td className="border px-4 py-2">Salaries and Wages – {formatCurrency(reportData.salariesAndWages)}</td>
+                        <td className="border px-4 py-2">Gross Profit – {formatCurrency(reportData.grossProfit)}</td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2"></td>
-                        <td className="border px-4 py-2">Labor Costs – {formatCurrency(incomeStatementData[0].laborCosts)}</td>
-                        <td className="border px-4 py-2">Utilities – {formatCurrency(incomeStatementData[0].utilities)}</td>
-                        <td className="border px-4 py-2">Operating Expenses – {formatCurrency(incomeStatementData[0].operatingExpenses)}</td>
+                        <td className="border px-4 py-2">Labor Costs – {formatCurrency(reportData.laborCosts)}</td>
+                        <td className="border px-4 py-2">Utilities – {formatCurrency(reportData.utilities)}</td>
+                        <td className="border px-4 py-2">Operating Expenses – {formatCurrency(reportData.totalOperatingExpenses)}</td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2"></td>
                         <td className="border px-4 py-2"></td>
-                        <td className="border px-4 py-2">Employee Expenses – {formatCurrency(incomeStatementData[0].employeeExpenses)}</td>
+                        <td className="border px-4 py-2">Employee Expenses – {formatCurrency(reportData.employeeExpenses)}</td>
                         <td className="border px-4 py-2"></td>
                       </tr>
                       <tr>
-                        <td className="border px-4 py-2 font-bold">Total Revenue – {formatCurrency(incomeStatementData[0].totalRevenue)}</td>
-                        <td className="border px-4 py-2 font-bold">Total COGS – {formatCurrency(incomeStatementData[0].totalCOGS)}</td>
-                        <td className="border px-4 py-2 font-bold">Total Operating Expenses – {formatCurrency(incomeStatementData[0].totalOperatingExpenses)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Revenue – {formatCurrency(reportData.totalRevenue)}</td>
+                        <td className="border px-4 py-2 font-bold">Total COGS – {formatCurrency(reportData.totalCogs)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Operating Expenses – {formatCurrency(reportData.totalOperatingExpenses)}</td>
                         <td className="border px-4 py-2 font-bold">Net Income – {formatCurrency(rowData.netIncome)}</td>
                       </tr>
                     </tbody>
@@ -273,22 +261,22 @@ const viewFinancialReports = ({userData}) => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td className="border px-4 py-2">Customer Payments – {formatCurrency(cashFlowData[0].customerPayments)}</td>
-                        <td className="border px-4 py-2">Payments to Supplier – {formatCurrency(cashFlowData[0].paymentsToSupplier)}</td>
-                        <td className="border px-4 py-2">Purchase of New Equipment – {formatCurrency(cashFlowData[0].purchaseOfNewEquipment)}</td>
-                        <td className="border px-4 py-2">Net Cash Flow – {formatCurrency(cashFlowData[0].netCashFlow)}</td>
+                        <td className="border px-4 py-2">Customer Payments – {formatCurrency(reportData.customerPayments)}</td>
+                        <td className="border px-4 py-2">Payments to Supplier – {formatCurrency(reportData.paymentToSupplier)}</td>
+                        <td className="border px-4 py-2">Purchase of New Equipment – {formatCurrency(reportData.purchaseOfNewEquipments)}</td>
+                        <td className="border px-4 py-2">Net Cash Flow – {formatCurrency(reportData.netCashFlow)}</td>
                       </tr>
                       <tr>
-                        <td className="border px-4 py-2">Sale of Old Equipment – {formatCurrency(cashFlowData[0].saleOfOldEquipment)}</td>
-                        <td className="border px-4 py-2">Salaries and Wages – {formatCurrency(cashFlowData[0].salariesAndWages)}</td>
-                        <td className="border px-4 py-2">Utilities – {formatCurrency(cashFlowData[0].utilities)}</td>
-                        <td className="border px-4 py-2">Beginning Balance – {formatCurrency(cashFlowData[0].beginningBalance)}</td>
+                        <td className="border px-4 py-2">Sale of Old Equipment – {formatCurrency(reportData.saleOfOldEquipment)}</td>
+                        <td className="border px-4 py-2">Salaries and Wages – {formatCurrency(reportData.salariesAndWages)}</td>
+                        <td className="border px-4 py-2">Utilities – {formatCurrency(reportData.utilities)}</td>
+                        <td className="border px-4 py-2">Beginning Balance – {formatCurrency(reportData.beginningBalance)}</td>
                       </tr>
                       <tr>
-                        <td className="border px-4 py-2 font-bold">Total Inflows – {formatCurrency(cashFlowData[0].totalInflows)}</td>
-                        <td className="border px-4 py-2 font-bold">Total Outflows – {formatCurrency(cashFlowData[0].totalOutflowsOperating)}</td>
-                        <td className="border px-4 py-2 font-bold">Total Outflows – {formatCurrency(cashFlowData[0].totalOutflowsInvesting)}</td>
-                        <td className="border px-4 py-2 font-bold">Ending Balance – {formatCurrency(rowData.endingBalance)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Inflows – {formatCurrency(reportData.totalInflows)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Outflows – {formatCurrency(reportData.totalOutflowsO)}</td>
+                        <td className="border px-4 py-2 font-bold">Total Outflows – {formatCurrency(reportData.totalOutflowsI)}</td>
+                        <td className="border px-4 py-2 font-bold">Ending Balance – {formatCurrency(reportData.endingBalance)}</td>
                       </tr>
                     </tbody>
                   </table>
