@@ -151,14 +151,13 @@ const viewFinancialReports = ({userData}) => {
                   </div>
                   <h2 className="text-xl md:text-2xl">Financial Report ID {rowData._id}</h2>
                   <h3 className="text-lg md:text-xl">For the Period Ended {currentDate}</h3>
-                  <p className="mt-2">Prepared by: {preparedBy}</p>
-                  <p>Position: {position}</p>
+                  <p className="mt-2">Prepared by: Financial Management</p>
                   <p>Date: {rowData.date}</p>
                 </header>
 
                 {/* Narrative Report */}
                 <section id="narrative" className="text-sm md:text-base">
-                  <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
+                  <h2 className="text-lg md:text-xl font-semibold">Narrative Report</h2>
                   <p className="mt-2">
                     For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(incomeStatementData[0].salesRevenue)}, with a gross profit of {formatCurrency(incomeStatementData[0].grossProfit)}.
                   </p>
@@ -195,7 +194,7 @@ const viewFinancialReports = ({userData}) => {
                       <tr>
                         <td className="border px-4 py-2">Inventory (unsold Product) – {formatCurrency(balanceSheetData[0].inventory)}</td>
                         <td className="border px-4 py-2">Total Liabilities – {formatCurrency(balanceSheetData[0].totalLiabilities)}</td>
-                        <td className="border px-4 py-2">Retained Earnings – {formatCurrency(balanceSheetData[0].retainedEarnings)}</td>
+                        <td className="border px-4 py-2"></td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2">Accounts Receivable – {formatCurrency(balanceSheetData[0].accountsReceivable)}</td>
