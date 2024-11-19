@@ -99,7 +99,7 @@ function PaidInvoice() {
         </div>
       </div>
 
-      {/* Modal for displaying row data */}
+      {/* MODAL FOR ROW DATA*/}
       {selectedRowData && (
         <dialog id="row_modal" className="modal">
           <div className="modal-box w-full max-w-[1200px] rounded-xl shadow-2xl bg-white p-10">

@@ -55,12 +55,10 @@ function viewReviewPaymentTransactions({ userData }) {
       document.getElementById('audit_modal').close()
     }
   
-    // Register socket event listeners
     socket.on('receive_audit_authUser', handleAuditAuthUser)
     socket.on('receive_audit_authUser_invalid', handleAuditAuthUserInvalid)
     socket.on('receive_audit_matched', handlesAuditMatched)
-  
-    // Cleanup function to remove the event listeners on component unmount
+
     return () => {
       socket.off('receive_audit_authUser', handleAuditAuthUser)
       socket.off('receive_audit_authUser_invalid', handleAuditAuthUserInvalid)
@@ -90,7 +88,6 @@ function viewReviewPaymentTransactions({ userData }) {
     return <p>No data available.</p>;
   }
 
-  // Calculate the total amount for each item (price * quantity)
   const calculateTotalAmount = (price, quantity) => {
     return price * quantity;
   };
@@ -98,7 +95,6 @@ function viewReviewPaymentTransactions({ userData }) {
   return (
     <>
     <div className="max-w-screen-2xl mx-auto mt-8 mb-10">
-      {/* Breadcrumbs */}
       <div className="breadcrumbs text-xl mt-4">
         <ul>
           <li>
@@ -110,11 +106,9 @@ function viewReviewPaymentTransactions({ userData }) {
         </ul>
       </div>
   
-      {/* Payment Review */}
       <div className="rounded-xl shadow-2xl bg-white p-10">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Payment Review</h1>
-        
-        {/* Invoice Details */}
+        {/* DETAILS */}
         <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">
           Details for Invoice ID: {rowData._id}
         </h2>
@@ -141,7 +135,7 @@ function viewReviewPaymentTransactions({ userData }) {
           </div>
         </div>
   
-        {/* Invoice Preview */}
+        {/* INVOICE PREVIEW */}
         <div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md rounded-xl" id="payable-preview">
           <div className="flex justify-between items-center mb-4">
             <div>
@@ -159,7 +153,7 @@ function viewReviewPaymentTransactions({ userData }) {
             <p><strong>Due Date:</strong> {rowData.dueDate}</p>
           </div>
   
-          {/* Items Table */}
+          {/* ITEMS TABLE */}
           <h3 className="text-xl font-bold mt-6 mb-4">Items</h3>
           <table className="table-auto w-full border-collapse border border-gray-300">
             <thead>
@@ -184,13 +178,13 @@ function viewReviewPaymentTransactions({ userData }) {
             </tbody>
           </table>
   
-          {/* Total Amount */}
+          {/* TOTAL AMOUNT */}
           <div className="text-right font-bold mt-4">
             <p className="text-xl">TOTAL AMOUNT: ₱{rowData.totalAmount}</p>
           </div>
         </div>
   
-        {/* Audit Button */}
+        {/* AUDIT BUTTON */}
         <div className="flex items-center justify-center mt-4 gap-10">
           {!isSubmitted && (
             <button
@@ -204,7 +198,7 @@ function viewReviewPaymentTransactions({ userData }) {
       </div>
     </div>
   
-    {/* Audit Modal */}
+    {/* AUDIT MODAL */}
     <dialog id="audit_modal" className="modal">
       <div className="modal-box">
         <form className="space-y-4" onSubmit={handleSubmit}>

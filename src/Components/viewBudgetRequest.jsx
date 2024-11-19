@@ -11,8 +11,8 @@ function viewBudgetRequest({userData}) {
     const [authFailed, setAuthFailed] = useState("")
     const [password, setPassword] = useState("")
     const [comment, setComment] = useState("")
-    const location = useLocation(); // Get the location object
-    const { rowData } = location.state || {}; // Extract rowData from location.state
+    const location = useLocation(); 
+    const { rowData } = location.state || {}; 
           if (!rowData) {
             return <p>No data available.</p>;
           }
@@ -177,7 +177,7 @@ function viewBudgetRequest({userData}) {
           </div>
         </div>
 
-      {/* Invoice-style Preview below */}
+      {/* PREVIEW */}
       <div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md" id="payable-preview">
         <div className="flex justify-between items-center mb-4">
           <div>
@@ -258,7 +258,7 @@ function viewBudgetRequest({userData}) {
           </form>
     </dialog> 
 
-    {/* Decline Password */}
+    {/* DECLINE PASSWORD */}
     <dialog id="confirm_decline_modal" className="modal">
         <div className="modal-box">
         <form className="space-y-4" onSubmit={handlesDecline}>
@@ -286,7 +286,7 @@ function viewBudgetRequest({userData}) {
           </form>
     </dialog> 
 
-    {/* Decline Modal */}
+    {/* DECLINE MODAL */}
     <dialog id="decline_modal" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-xl mb-4">Decline Budget</h3>

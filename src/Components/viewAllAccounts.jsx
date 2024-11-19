@@ -3,24 +3,20 @@ import DataTable from 'react-data-table-component';
 import { useSocket } from '../context/SocketContext';
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
-const API_URL = import.meta.env.VITE_SERVER_URL; //Server url
+const API_URL = import.meta.env.VITE_SERVER_URL;
 
 function ViewAllAccounts({ userData }) {
   const [searchText, setSearchText] = useState('');
-  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
-  const [isEditing, setIsEditing] = useState(false); // State for edit mode
-  const [editData, setEditData] = useState(null); // State to hold editable data
+  const [selectedRowData, setSelectedRowData] = useState(null); 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [tableData, setTableData] = useState([]); // State to hold table data
+  const [tableData, setTableData] = useState([]);
   const [invalidChange, setInvalidChange] = useState(false)
   const [password, setPassword] = useState('')
   const [isSubmitLoading, setIsSubmitLoading] = useState(false)
   const [error, setError] = useState("")
-  
-
-
   const socket = useSocket();
-
   const columns = [
     { name: 'User Image', selector: row => <img src={row.image.secure_url} alt="Profile" style={{ width: '80px', height: '80px', borderRadius: '25%', padding: '5%' }} />, width: '130px'  },
     { name: 'User ID', selector: row => row._id },
@@ -36,21 +32,17 @@ function ViewAllAccounts({ userData }) {
   useEffect(() => {
     if (!socket) return;
   
-    // Define the event handler
     const handleReceiveAccounts = (response) => {
       setTableData(response);
       setIsLoading(false);
     };
   
-    // Emit the event to get accounts
     socket.emit('getAccounts', { msg: 'get accounts' });
   
-    // Register the event listener
     socket.on('receive_accounts', handleReceiveAccounts);
-  
-    // Cleanup function to remove the listener when the component unmounts or socket changes
+
     return () => {
-      socket.off('receive_accounts', handleReceiveAccounts); // Pass the same callback to remove the listener
+      socket.off('receive_accounts', handleReceiveAccounts); 
     };
   }, [socket]);
   
@@ -201,7 +193,7 @@ function ViewAllAccounts({ userData }) {
                 defaultSortField="name"
                 highlightOnHover
                 pointerOnHover
-                onRowClicked={handleRowClick} // Add onRowClicked handler
+                onRowClicked={handleRowClick}
                 subHeader
                 subHeaderComponent={
                   <input
@@ -218,7 +210,7 @@ function ViewAllAccounts({ userData }) {
         </div>
       </div>
 
-     {/* Modal for displaying and editing row data */}
+     {/* MODAL FOR DISPLAYING DATA */}
         {selectedRowData && (
           <dialog id="row_modal" className="modal">
             <div className="modal-box p-6 bg-white rounded-lg shadow-lg w-full max-w-xl">
@@ -229,7 +221,7 @@ function ViewAllAccounts({ userData }) {
               <div className="py-4 space-y-3">
                 {isEditing ? (
                   <>
-                    {/* Edit Mode */}
+                    {/* EDIT MODE */}
                     <div>
                       <label className="block text-gray-600 font-medium mb-1">Full Name:</label>
                       <input
@@ -288,7 +280,7 @@ function ViewAllAccounts({ userData }) {
                   </>
                 ) : (
                   <>
-                    {/* View Mode */}
+                    {/* VIEW MODE */}
                     <div>
                       <label className="block text-gray-600 font-medium mb-1"><strong>Profile:</strong></label>
                       <img
@@ -305,7 +297,7 @@ function ViewAllAccounts({ userData }) {
                 )}
               </div>
 
-              {/* Buttons */}
+              {/* BUTTONS */}
               <div className="flex justify-end gap-4 mt-6">
                 <button
                   className={`px-4 py-2 font-medium text-white rounded ${isEditing ? 'bg-gray-600 hover:bg-gray-700' : 'bg-blue-600 hover:bg-blue-700'}`}
@@ -333,7 +325,7 @@ function ViewAllAccounts({ userData }) {
                 )}
               </div>
 
-              {/* Login Modal */}
+              {/* LOGIN MODAL */}
               <dialog id="login_modal" className="modal">
                 <div className="modal-box flex flex-col mr-6">
                   <h3 className="font-bold text-lg text-center">Enter Password to Confirm Deletion</h3>

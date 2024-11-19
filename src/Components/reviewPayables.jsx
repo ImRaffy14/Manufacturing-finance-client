@@ -200,7 +200,7 @@ function reviewPayables() {
     <>
       <div className="max-w-screen-2xl mx-auto mt-4">
         <div className="flex space-x-4 mb-[20px]">
-          {/* Pending Invoice */}
+          {/* PENDING INVOICE */}
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-md">Pending Payables</p>
@@ -211,7 +211,7 @@ function reviewPayables() {
             </div>
           </div>
 
-          {/* Accumulated Amount */}
+          {/* ACCUMULATED AMOUNT */}
           <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Accumulated Amount</p>
@@ -222,7 +222,7 @@ function reviewPayables() {
             </div>
           </div>
 
-          {/* Add Payable */}
+          {/* ADD PAYABLE */}
           <div className="bg-white shadow-lg w-[320px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Add Payable</p>
@@ -235,7 +235,7 @@ function reviewPayables() {
           </div>
         </div>
 
-        {/* Pending Payables Table */}
+        {/* PENDING PAYABLE TABLE */}
         <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
           <div className="mx-4">
             <div className="overflow-x-auto w-full">
@@ -263,7 +263,7 @@ function reviewPayables() {
           </div>
         </div>
 
-        {/* On Process Payables Table */}
+        {/* ON PROCESS PAYABLE TABLE */}
         <div className="items-center justify-center bg-white rounded-lg shadow-xl mt-7 mb-7 border border-gray-300">
           <div className="mx-4">
             <div className="overflow-x-auto w-full">
@@ -292,8 +292,8 @@ function reviewPayables() {
         </div>
       </div>
 
-      {/* Modals */}
-      {/* On Process Modal */}
+      {/* MODALS */}
+      {/* ON PROCESS MODAL */}
       {selectedRowOnProcessData && (
         <dialog id="onprocess_modal" className="modal">
           <div className="modal-box w-full h-full max-w-[1600px]">
@@ -339,7 +339,7 @@ function reviewPayables() {
         </dialog>
       )}
 
-      {/* Add Payable Modal */}
+      {/* ADD PAYABLE MODAL */}
       <dialog id="payable_modal" className="modal">
         <div className="modal-box shadow-xl">
           <form onSubmit={submit}>

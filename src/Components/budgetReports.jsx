@@ -8,8 +8,6 @@ function budgetReports() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const socket = useSocket();
-
-  // Format currency
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
@@ -47,7 +45,6 @@ function budgetReports() {
     setSearchText(event.target.value);
   };
 
-  // Filter data based on search text
   const filteredData = data.filter(row =>
     Object.values(row).some(value =>
       value.toString().toLowerCase().includes(searchText.toLowerCase())
@@ -101,7 +98,6 @@ function budgetReports() {
         </div>
       </div>
 
-      {/* Modal for displaying row data */}
       {selectedRowData && (
         <dialog id="budgetReports_modal" className="modal">
           <div className="modal-box w-full max-w-[1200px] rounded-xl shadow-2xl bg-white p-10">

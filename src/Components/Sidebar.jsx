@@ -44,16 +44,14 @@ const Sidebar = ({ userData }) => {
   });
 
 const initialData = [
-  { orderNumber: 1, customerId: 1, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 2, customerId: 2, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem: 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 3, customerId: 3, customerName: 'Burarrat', customerAddress: 'Edinburgh', orderItem  : 'Suka, tubig, patis', contactInformation: '0909090909', createInvoice: '' },
-  // Add more data as needed
+  { orderNumber: 1, customerId: 1, customerName: 'Daniel Mathew', customerAddress: '11 Barangay City', orderItem: 'JJM Dishwashing Soap', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 2, customerId: 2, customerName: 'Ramccom Macor', customerAddress: '12 Barangay City', orderItem: 'JJM Dishwashing Soa', contactInformation: '0909090909', createInvoice: '' },
+  { orderNumber: 3, customerId: 3, customerName: 'Tribue alab', customerAddress: '13 Barangay City', orderItem  : 'JJM Dishwashing Soa', contactInformation: '0909090909', createInvoice: '' },
 ];
 
 const initialAccountRequestData = [
   { requestId: 1, accountName: 'John Doe', requestType: 'Account Creation' },
   { requestId: 2, accountName: 'Jane Smith', requestType: 'Password Reset' },
-  // Add more data as needed
 ];
 
 
@@ -72,19 +70,15 @@ const fetchNotificationData = () => {
 };
 
 useEffect(() => {
-  // Fetch notification data and emit socket events
   fetchNotificationData();
 
   socket.emit('get_payable_length', { msg: "get payable length" });
   socket.emit('get_paid_records', { msg: "get paid records length" });
   socket.emit('get_budget_request_length', { msg: "get budget request records length" });
-
-}, [socket]);  // Ensure socket is in the dependency array to prevent potential issues if socket changes
+}, [socket]); 
 
 useEffect(() => {
   if (!socket) return;
-
-  // Define event handlers
   const handlePayableLength = (response) => {
     setPayableLength(response);
   };
@@ -97,12 +91,10 @@ useEffect(() => {
     setBudgetLength(response);
   };
 
-  // Register event listeners
   socket.on("receive_payable_length", handlePayableLength);
   socket.on("receive_paid_records", handlePaidRecords);
   socket.on("receive_budget_request_length", handleBudgetRequestLength);
 
-  // Cleanup function to remove listeners when component unmounts or socket changes
   return () => {
     socket.off("receive_payable_length", handlePayableLength);
     socket.off("receive_paid_records", handlePaidRecords);
@@ -142,7 +134,7 @@ const toggleSidebar = () => {
    <>
     <div className={`flex flex-col overflow-auto bg-white text-black border-r-2 sticky top-0 max-md:hidden transition-all duration-300 
       ${isCollapsed ? "w-20 px-4 py-4" : "w-72 lg:w-80 px-2 py-4"}`} aria-label="Sidebar">
-          {/* Toggle Button */}
+          {/* TOGGLE */}
       <div className="flex justify-e">
         <button
           onClick={toggleSidebar}
@@ -153,7 +145,7 @@ const toggleSidebar = () => {
           {isCollapsed ? "▶" : "◀"}
         </button>
       </div>
-      {/* Logo */}
+      {/* LOGO */}
       <div
         className="flex items-center gap-2 cursor-pointer mb-4 justify-center"
         aria-label="Dashboard Logo"
@@ -162,7 +154,7 @@ const toggleSidebar = () => {
         {!isCollapsed && <Link to="" ></Link>}
       </div>
 
-      {/* Dashboard */}
+      {/* DASHBOARD */}
       <ul className="menu rounded-box w-56">
         {isCollapsed && <MdOutlineScreenshotMonitor className="w-5 h-5" />}
         {!isCollapsed && (
@@ -181,10 +173,9 @@ const toggleSidebar = () => {
         )}
       </ul>
 
-      {/* Apps */}
       <div className="mb-2">
         <p className={`text-gray-500 mb-2 font-semibold text-sm ${isCollapsed ? "hidden" : ""}`}>Modules</p>
-          {/* View Collection */}        
+          {/* VIEW COLLECTION */}        
           {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <TbBrandCashapp className="w-5 h-5" />}
@@ -214,7 +205,7 @@ const toggleSidebar = () => {
             </ul>
           )}
 
-          {/* Budget Management */}
+          {/* BUDGET MANAGEMENT */}
           {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <TbPigMoney className="w-5 h-5" />}
@@ -262,7 +253,7 @@ const toggleSidebar = () => {
             </ul>
           )}
 
-                    {/* Accounts Receivable */}
+                    {/* ACCOUNTS RECEIVABLE */}
           {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}
@@ -317,7 +308,7 @@ const toggleSidebar = () => {
             </ul>
           )}
 
-          {/* Accounts Payable */}
+          {/* ACCOUNTS PAYABLE */}
           {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <TbCreditCardPay className="w-5 h-5" />}
@@ -365,7 +356,7 @@ const toggleSidebar = () => {
             </ul>
           )}
 
-          {/* General Ledger */}
+          {/* GENERAL LEDGER */}
           {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <FaList className="w-5 h-5" />}
@@ -431,7 +422,7 @@ const toggleSidebar = () => {
               )}
             </ul>
           )}
-          {/* Accounts Management */}
+          {/* ACCOUNTS MANAGEMENT */}
           {(userData.role === 'ADMIN' || userData.role === 'CHIEF FINANCIAL OFFICER') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <MdAccountCircle className="w-5 h-5" />}
@@ -479,7 +470,7 @@ const toggleSidebar = () => {
             </ul>
           )}
 
-          {/* Audit Section */}
+          {/* AUDIT TRAILS */}
           {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <SiAdobeaudition className="w-5 h-5" />}
@@ -500,7 +491,7 @@ const toggleSidebar = () => {
             </ul>
           )}
 
-          {/* Anomaly Detection */}
+          {/* ANOMALY DETECTION */}
           {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <VscBracketError className="w-5 h-5" />}

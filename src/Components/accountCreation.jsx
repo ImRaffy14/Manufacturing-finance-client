@@ -4,8 +4,6 @@ import axios from "axios"
 const API_URL = import.meta.env.VITE_SERVER_URL;
 import { toast } from "react-toastify"
 import { useSocket } from '../context/SocketContext';
-import { CiSquareQuestion } from "react-icons/ci";
-
 
 function accountCreation({ userData }) {
     const [username, setUsername] = useState('');
@@ -17,7 +15,6 @@ function accountCreation({ userData }) {
     const [response, setResponse] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const [searchText, setSearchText] = useState('');
-    
 
     const socket = useSocket()
 
@@ -35,21 +32,18 @@ function accountCreation({ userData }) {
         {fullName: 'Daniel Matthews', email: 'danielmatthiews@gmail.com', createInvoice: '' },
         {fullName: 'Nathaniel Marshlow', email: 'nathanielmarshlow@gmail.com', createInvoice: '' },
         {fullName: 'Joshua Lycan', email: 'joshualycan@gmail.com', createInvoice: '' },
-        // Add more data as needed
       ];
 
       const handleSearch = (event) => {
         setSearchText(event.target.value);
       };
-  // Filter data based on search text
+
   const filteredData = data.filter(row =>
     Object.values(row).some(value =>
       value.toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
 
-
-    // Form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -141,8 +135,6 @@ function accountCreation({ userData }) {
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col justify-center items-center gap-4">
                         <h1 className="font-bold mb-4 text-lg">CREATE ACCOUNT</h1>
-
-                        {/* Username and Password */}
                         <div className="flex gap-4 w-full">
                             <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
@@ -173,8 +165,6 @@ function accountCreation({ userData }) {
                                 />
                             </div>
                         </div>
-
-                        {/* Email and Full Name */}
                         <div className="flex gap-4 w-full">
                             <div className="w-full">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
@@ -205,8 +195,6 @@ function accountCreation({ userData }) {
                                 />
                             </div>
                         </div>
-
-                        {/* Role Selection */}
                         <div className="mt-2 w-full flex">
                             <select
                                 className="select select-bordered w-[230px]"
@@ -220,8 +208,6 @@ function accountCreation({ userData }) {
                                 <option>ACCOUNTANT</option>
                             </select>
                         </div>
-
-                        {/* File Input */}
                         <div className="w-full">
                             <input
                                 type="file"
@@ -230,11 +216,7 @@ function accountCreation({ userData }) {
                                 required
                             />
                         </div>
-
-                        {/* Response Message */}
                         {response && <h1 className="text-red-500 font-bold">{response}</h1>}
-
-                        {/* Submit Button */}
                         <div className="w-full">
                             {!isLoading ? (
                                 <button className="btn btn-primary w-full font-bold">Submit</button>

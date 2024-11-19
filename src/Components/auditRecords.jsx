@@ -6,7 +6,7 @@ function auditRecords() {
   const [searchText, setSearchText] = useState('');
   const [trailsData, setTrailsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const socket = useSocket();
 
@@ -32,7 +32,7 @@ function auditRecords() {
     });
 
     return () => {
-      socket.off('receive_audit_trails'); // Cleanup listener on component unmount
+      socket.off('receive_audit_trails'); 
     };
   }, [socket]);
 
@@ -40,14 +40,12 @@ function auditRecords() {
     setSearchText(event.target.value);
   };
 
-  // Filter data based on search text
   const filteredData = data.filter((row) =>
     Object.values(row).some((value) =>
       value.toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
 
-  // Handle row click to show modal
   const handleRowClick = (row) => {
     setSelectedRowData(row);
     document.getElementById('row_modal').showModal();
@@ -78,7 +76,7 @@ function auditRecords() {
                 defaultSortField="name"
                 highlightOnHover
                 pointerOnHover
-                onRowClicked={handleRowClick} // Add onRowClicked handler
+                onRowClicked={handleRowClick}
                 subHeader
                 subHeaderComponent={
                   <input
@@ -95,7 +93,7 @@ function auditRecords() {
         </div>
       </div>
 
-      {/* Modal for displaying row data */}
+      {/* MODAL */}
       {selectedRowData && (
         <dialog id="row_modal" className="modal">
           <div className="modal-box">

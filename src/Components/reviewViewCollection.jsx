@@ -15,8 +15,8 @@ import { useSocket } from "../context/SocketContext"
 
 
 function reviewViewCollection() {
-    const location = useLocation(); // Get the location object
-    const { rowData } = location.state || {}; // Extract rowData from location.state
+    const location = useLocation(); 
+    const { rowData } = location.state || {}; 
     if (!rowData) {
       return <p>No data available.</p>;
     }
@@ -34,7 +34,7 @@ function reviewViewCollection() {
     const [searchText, setSearchText] = useState('');
     const [inflowSearchText, setInflowSearchText] = useState('');
     const [outflowSearchText, setOutflowSearchText] = useState('');
-    const [selectedRowData, setSelectedRowData] = useState(null); // For modal data
+    const [selectedRowData, setSelectedRowData] = useState(null); 
     const formatCurrency = (value) => {
         return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
       };
@@ -67,7 +67,6 @@ function reviewViewCollection() {
         setOutflowSearchText(event.target.value);
       };
     
-    // Filter data based on search text
     const filteredInflowData = inflowData.filter(row =>
       Object.values(row).some(value =>
         value.toString().toLowerCase().includes(inflowSearchText.toLowerCase())
@@ -81,12 +80,12 @@ function reviewViewCollection() {
     );
     const handleInflowRowClick = (row) => {
       setSelectedRowData(row);  
-      document.getElementById('inflow_modal').showModal(); // Show modal on row click
+      document.getElementById('inflow_modal').showModal(); 
     };
 
     const handleOutflowRowClick = (row) => {
       setSelectedRowData(row);  
-      document.getElementById('outflow_modal').showModal(); // Show modal on row click
+      document.getElementById('outflow_modal').showModal(); 
     };
     
 
@@ -115,7 +114,7 @@ function reviewViewCollection() {
 
     //INFLOWS ANALYTICS
     const currentDate = new Date();
-    const currentWeek = Math.ceil((currentDate.getDate() + 6 - currentDate.getDay()) / 7); // Current week number of the month
+    const currentWeek = Math.ceil((currentDate.getDate() + 6 - currentDate.getDay()) / 7); 
 
     const inflowsData = response.inflows && response.inflows.length > 0 
       ? response.inflows.map((inflow) => ({
@@ -148,7 +147,6 @@ function reviewViewCollection() {
       }
     });
 
-    // Sort inflowsData by the numeric week value
     finalInflowsData.sort((a, b) => {
       const weekA = parseInt(a._id.replace('week ', ''), 10);
       const weekB = parseInt(b._id.replace('week ', ''), 10);
@@ -189,8 +187,7 @@ function reviewViewCollection() {
         return { _id: week, Amount: 0 };
       }
     });
-    
-    // Sort outflowsData by the numeric week value
+
     finalOutflowsData.sort((a, b) => {
       const weekA = parseInt(a._id.replace('week ', ''), 10);
       const weekB = parseInt(b._id.replace('week ', ''), 10);
@@ -239,7 +236,7 @@ function reviewViewCollection() {
     </ul>
   </div>
 
-  {/* Financial chart */}
+  {/* FINANCIAL CHART */}
   <div className="bg-white/75 shadow-xl rounded-lg p-6">
     <div className="flex mb-[80px]">
       <h1 className="text-2xl font-semibold">Details for ID: <strong>{rowData._id}</strong></h1>
@@ -247,7 +244,7 @@ function reviewViewCollection() {
     <h2 className="text-xl font-bold mb-4">Month of {formatDateString(response.date)}</h2>
 
     <div className="flex gap-4">
-      {/* Net Income Card */}
+      {/* NET INCOME CARD */}
       <div className="bg-white/75 shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
         <div className="flex items-center justify-between">
           <p className="text-gray-600 font-semibold text-sm">Net Income</p>
@@ -258,7 +255,7 @@ function reviewViewCollection() {
         </div>
       </div>
 
-      {/* Revenue Card */}
+      {/* REVENUE CARD */}
       <div className="bg-white/75 shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
         <div className="flex items-center justify-between">
           <p className="text-gray-600 font-semibold text-sm">Total Sales</p>
@@ -278,7 +275,7 @@ function reviewViewCollection() {
         </div>
       </div>
 
-      {/* Spending Card */}
+      {/* SPENDING CARD */}
       <div className="bg-white shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
         <div className="flex items-center justify-between">
           <p className="text-gray-600 font-semibold text-sm">Total Spent</p>
@@ -299,17 +296,17 @@ function reviewViewCollection() {
       </div>
     </div>
 
-    {/* Bar Charts Section */}
+    {/* BAR CHARTS */}
     <div className="mt-[60px] mb-10">
       <h3 className="text-xl font-bold mb-6">Cash Flow</h3>
       <div className="grid grid-cols-2 gap-4">
-        {/* Inflows Chart */}
+        {/* INFLOWS */}
         <div className="bg-white p-5 rounded-lg shadow-xl">
           <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Inflow</h4>
           <AreaChart data={finalInflowsData} dataKey1="Amount" color1="rgb(74 222 128)" />
         </div>
 
-        {/* Outflows Chart */}
+        {/* OUTFLOWS */}
         <div className="bg-white p-5 rounded-lg shadow-xl">
           <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Outflow</h4>
           <AreaChart data={finalOutflowsData} dataKey1="Amount" color1="rgb(248 113 113)" />
@@ -317,7 +314,7 @@ function reviewViewCollection() {
       </div>
     </div>
 
-    {/* Cash Inflow Records Table */}
+    {/* CASH INFLOW TABLE */}
     <div className="items-center justify-center bg-white rounded-lg shadow-xl mt-7 mb-7 border border-gray-300">
       <div className="mx-4">
         <div className="overflow-x-auto w-full">
@@ -345,7 +342,7 @@ function reviewViewCollection() {
       </div>
     </div>
 
-    {/* Cash Outflow Records Table */}
+    {/* CASH OUTFLOW TABLE */}
     <div className="items-center justify-center bg-white rounded-lg shadow-xl mt-7 mb-7 border border-gray-300">
       <div className="mx-4">
         <div className="overflow-x-auto w-full">

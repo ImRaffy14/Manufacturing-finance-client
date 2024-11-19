@@ -95,7 +95,7 @@ function transactionRecords() {
             <DataTable
               title="Outflow Transaction Records"
               columns={outflowColumns}
-              data={outflowData}
+              data={filteredOutflowData}
               pagination
               highlightOnHover
               pointerOnHover

@@ -53,20 +53,14 @@ function Login() {
     };
 
     return (
-        <div
-            className="relative hero min-h-screen flex justify-center items-center bg-cover bg-center"
-            style={{ backgroundImage: `url(${BackgroundImage})` }}
-        >
-            {/* Overlay */}
+        <div className="relative hero min-h-screen flex justify-center items-center bg-cover bg-center"
+             style={{ backgroundImage: `url(${BackgroundImage})` }}>
             <div className="absolute inset-0 bg-black opacity-60"></div>
-
             <div className="hero-content flex w-full relative z-10">
-                {/* Login Form */}
+                {/* LOGIN FORM */}
                 <div className="card bg-white w-[600px] shadow-2xl rounded-lg p-3">
                     <form onSubmit={handleSubmit} className="card-body">
                         <h1 className="text-2xl text-center font-extrabold text-gray-900">LOGIN</h1>
-
-                        {/* Username Input */}
                         <div className="form-control">
                             <label className="label mb-2">
                                 <span className="label-text font-semibold text-lg text-gray-700">Username</span>
@@ -79,9 +73,8 @@ function Login() {
                                 value={userName}
                                 onChange={(e) => setUserName(e.target.value)}
                             />
-                        </div>
+                        </div> 
 
-                        {/* Password Input */}
                         <div className="form-control mb-6">
                             <label className="label mb-2">
                                 <span className="label-text font-semibold text-lg text-gray-700">Password</span>
@@ -96,10 +89,8 @@ function Login() {
                             />
                         </div>
 
-                        {/* Error Message */}
                         {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage}</h1>}
-
-                        {/* Submit Button */}
+                        
                         <div className="form-control">
                             {!isLoading ? (
                                 <button
@@ -120,7 +111,6 @@ function Login() {
                     </form>
                 </div>
 
-                {/* Description Section */}
                 <div className="text-center lg:text-left w-full relative z-10 mb-8">
                     <h1 className="text-6xl font-bold text-white leading-none">Financial Management</h1>
                     <p className="py-6 text-lg text-gray-300">

@@ -48,7 +48,7 @@ function viewCollection({ userData }) {
 
   // INFLOWS ANALYTICS
   const currentDate = new Date();
-  const currentWeek = Math.ceil((currentDate.getDate() + 6 - currentDate.getDay()) / 7); // Current week number of the month
+  const currentWeek = Math.ceil((currentDate.getDate() + 6 - currentDate.getDay()) / 7); 
   
 
   let inflowsData = inflowsChart && inflowsChart.length > 0 
@@ -64,8 +64,6 @@ function viewCollection({ userData }) {
   
   const startWeek = latestWeek - 3; 
   const completeWeeks = Array.from({ length: 4 }, (_, i) => startWeek + i).map(week => `week ${week}`);
-  
-  // Create the final output by checking against completeWeeks
   const finalInflowsData = completeWeeks.map(week => {
     const weekData = inflowsData.find(inflow => inflow._id === week);
     
@@ -98,8 +96,6 @@ function viewCollection({ userData }) {
 
   const startWeekOutflows = latestWeekOutflows - 3; 
   const completeWeeksOutflows = Array.from({ length: 4 }, (_, i) => startWeekOutflows + i).map(week => `week ${week}`);
-
-  // Create the final output by checking against completeWeeks
   const finalOutflowsData = completeWeeksOutflows.map(week => {
     const weekData = outflowsData.find(outflow => outflow._id === week);
     
@@ -259,7 +255,6 @@ function viewCollection({ userData }) {
     setSearchText(event.target.value);
   };
 
-// Filter data based on search text
 const filteredData = data.filter(row =>
   Object.values(row).some(value =>
     value.toString().toLowerCase().includes(searchText.toLowerCase())
@@ -272,14 +267,14 @@ const handleRowClick = (row) => {
 
 const getMonthNames = () => {
   const currentDate = new Date();
-  const currentMonthIndex = currentDate.getMonth(); // getMonth() returns month index (0 - January, 11 - December)
+  const currentMonthIndex = currentDate.getMonth();
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June', 
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
   const currentMonth = months[currentMonthIndex];
-  const nextMonth = months[(currentMonthIndex + 1) % 12]; // Get the next month, using modulo for December -> January
+  const nextMonth = months[(currentMonthIndex + 1) % 12];
 
   return { currentMonth, nextMonth };
 };
@@ -336,7 +331,7 @@ if (isLoading) {
 
   <div className="max-w-screen-2xl mx-auto flex flex-col ">
     <div className="flex gap-4">
-      {/* Company Cash Card */}
+      {/* COMPANY CASH CCARD */}
       <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105 hover:shadow-xl">
         <div className="flex items-center justify-between">
           <p className="text-gray-600 font-semibold text-sm">Total Cash of the Company</p>
@@ -374,11 +369,11 @@ if (isLoading) {
           )}
      </div>
 
-      {/* Financial chart */}
+      {/* FINANCIAL CHART */}
     <div className="bg-white/75 shadow-xl rounded-lg p-6 mt-7">
       <h1 className="text-xl font-bold">Month of {currentMonth}</h1>
         <div className="flex gap-4">
-          {/* Revenue Card */}
+          {/* REVENUE CARD */}
           <div className="bg-white/75 shadow-xl w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Sales</p>
@@ -397,7 +392,7 @@ if (isLoading) {
             </div>
           </div>
 
-          {/* Spending Card */}
+          {/* SPENDING CARD */}
           <div className="bg-white shadow-xl w-[370px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
               <p className="text-gray-600 font-semibold text-sm">Total Spent</p>
@@ -417,12 +412,12 @@ if (isLoading) {
           </div>
         </div>
 
-        {/* Bar Charts Section */}
+        {/* BAR CHARTS SECTION */}
         <div className="mt-10 mb-10">
           <h3 className="text-xl font-semibold text-gray-700 mb-4 text-center">Cash Flow</h3>
           <h4 className="text-md text-gray-500 mb-10 text-center">Shows the movement of cash in and out of the business during the selected period, offering insight into liquidity and operational efficiency.</h4>
           <div className="grid grid-cols-2 gap-4">
-            {/* Inflows Chart */}
+            {/* INFLOWS CHART */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Inflow</h4>
               <AreaChart
@@ -432,7 +427,7 @@ if (isLoading) {
               />
             </div>
 
-            {/* Outflows Chart */}
+            {/* OUTFLOWS CHART */}
             <div className="bg-white p-5 rounded-lg shadow-xl">
               <h4 className="text-lg font-semibold text-gray-700 mb-5 text-center">Cash Outflow</h4>
               <AreaChart
@@ -502,10 +497,8 @@ if (isLoading) {
         onClick={() => {
           const amountInput = document.getElementById('withdrawal');
           if (amountInput.checkValidity()) {
-            // Open the confirm modal if the input is valid
             document.getElementById('confirm_withdraw_modal').showModal();
           } else {
-            // Show validation error if input is invalid
             amountInput.reportValidity();
           }
         }}
@@ -585,10 +578,8 @@ if (isLoading) {
         onClick={() => {
           const amountInput = document.getElementById('deposit');
           if (amountInput.checkValidity()) {
-            // Open the confirm modal if the input is valid
             document.getElementById('confirm_deposit_modal').showModal();
           } else {
-            // Show validation error if input is invalid
             amountInput.reportValidity();
           }
         }}

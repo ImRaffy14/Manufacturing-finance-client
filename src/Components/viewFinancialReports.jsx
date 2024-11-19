@@ -29,7 +29,6 @@ const viewFinancialReports = ({userData}) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
-  // Sample data for demonstration
   const incomeStatementData = [
     {
       salesRevenue: 123123,
@@ -82,8 +81,8 @@ const viewFinancialReports = ({userData}) => {
   
     const pdf = new jsPDF('p', 'mm', 'a4');
     const sections = [
-      document.getElementById('report-header-and-narrative-balance-sheet'), // Page 1
-      document.getElementById('income-statement-and-cash-flow'),            // Page 2
+      document.getElementById('report-header-and-narrative-balance-sheet'), // PAGE 1
+      document.getElementById('income-statement-and-cash-flow'),            // PAGE 2
     ];
   
     const captureSection = (section, isLastSection, callback) => {
@@ -95,12 +94,10 @@ const viewFinancialReports = ({userData}) => {
   
       html2canvas(section, { scale: 3, useCORS: true }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 210; // A4 width in mm
+        const imgWidth = 210; 
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
   
         pdf.addImage(imgData, 'PNG', 0, 10, imgWidth, imgHeight);
-  
-        // Add a new page only if it's not the last section
         if (!isLastSection) pdf.addPage();
   
         callback();
@@ -126,7 +123,6 @@ const viewFinancialReports = ({userData}) => {
   return (
   <>      
     <div className="max-w-screen-2xl mx-auto mt-8 mb-10">
-      {/* Breadcrumbs */}
       <div className="breadcrumbs text-xl mt-4">
         <ul>
           <li><Link to="/Dashboard/financialReports">Return</Link></li>
@@ -134,10 +130,9 @@ const viewFinancialReports = ({userData}) => {
         </ul>
       </div>
 
-      {/* Content Container */}
       <div className="p-4 md:p-10">
         <div className="bg-white rounded-lg p-4 md:p-10">
-          {/* Financial Report */}
+          {/* FINANCIAL REPORT */}
           <div
             id="financial-report"
             style={{
@@ -147,7 +142,7 @@ const viewFinancialReports = ({userData}) => {
               backgroundColor: '#ffffff',
             }}
           >
-            {/* Report Header */}
+            {/* HEADER */}
             <section id="report-header-and-narrative-balance-sheet" className="max-w-screen-md mx-auto p-4 md:p-10 bg-white rounded-lg">
               <header className="text-center mb-8">
                 <div className="flex items-center justify-center w-full mb-4">
@@ -160,7 +155,7 @@ const viewFinancialReports = ({userData}) => {
                 <p>Date: {rowData.date}</p>
               </header>
 
-              {/* Narrative Report */}
+              {/* NARRATIVE REPORT */}
               <section id="narrative" className="text-sm md:text-base">
                 <h2 className="text-lg md:text-xl font-semibold">1. Narrative Report</h2>
                 <p className="mt-2">
@@ -177,7 +172,7 @@ const viewFinancialReports = ({userData}) => {
                 </p>
               </section>
 
-              {/* Balance Sheet */}
+              {/* BALANCE SHEET */}
               <section id="balance-sheet" className="mt-10">
                 <h2 className="text-lg md:text-xl font-semibold text-center">BALANCE SHEET</h2>
                 <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
@@ -221,9 +216,9 @@ const viewFinancialReports = ({userData}) => {
               </section>
             </section>
 
-            {/* Income Statement and Cash Flow */}
+            {/* INCOME STATEMENT AND CASH FLOW */}
             <section id="income-statement-and-cash-flow" className="max-w-screen-md mx-auto p-4 md:p-10 bg-white rounded-lg">
-              {/* Income Statement */}
+              {/* INCOME STATEMENT */}
               <section id="income-statement">
                 <h2 className="text-lg md:text-xl font-semibold text-center">INCOME STATEMENT</h2>
                 <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
@@ -267,7 +262,7 @@ const viewFinancialReports = ({userData}) => {
                 </div>
               </section>
 
-              {/* Cash Flow */}
+              {/* CASH FLOW */}
               <section id="cash-flow" className="mt-10">
                 <h2 className="text-lg md:text-xl font-semibold text-center">CASH FLOW</h2>
                 <h3 className="text-md md:text-lg font-semibold text-center">SEPTEMBER</h3>
@@ -306,7 +301,7 @@ const viewFinancialReports = ({userData}) => {
               </section>
             </section>
 
-            {/* Export to PDF Button */}
+            {/* EXPORT BUTTON */}
             <div id="export-button" className="text-center mt-20">
               <button
                 onClick={exportToPDF}

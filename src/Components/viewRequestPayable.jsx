@@ -152,7 +152,6 @@ function ViewRequestPayable({ userData }) {
   return (
     <>
     <div className="max-w-screen-2xl mx-auto mt-8 mb-10">
-      {/* Breadcrumbs */}
       <div className="breadcrumbs text-xl mt-4">
         <ul>
           <li>
@@ -163,12 +162,10 @@ function ViewRequestPayable({ userData }) {
           </li>
         </ul>
       </div>
-  
-      {/* Main Content */}
+
       <div className="rounded-xl shadow-2xl bg-white p-10">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Request Payable Preview</h1>
-  
-        {/* Details Section */}
+        {/* DETAILS */}
         <h2 className="text-2xl font-semibold mb-4 mt-10 border-b pb-2 border-gray-300">
           Details for Request ID: <strong>{rowData.requestId}</strong>
         </h2>
@@ -213,7 +210,7 @@ function ViewRequestPayable({ userData }) {
           </div>
         </div>
   
-        {/* Payable Preview Section */}
+        {/* PREVIEW PAYABLE */}
         <div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md" id="payable-preview">
           <div className="flex justify-between items-center mb-4">
             <div>
@@ -246,7 +243,7 @@ function ViewRequestPayable({ userData }) {
           </div>
         </div>
   
-        {/* Action Buttons */}
+        {/* BUTTONS */}
         <div className="flex items-center justify-center mt-4 gap-10">
           {!isSubmitted && (
             <button
@@ -273,7 +270,7 @@ function ViewRequestPayable({ userData }) {
       </div>
     </div>
   
-    {/* Approve Modal */}
+    {/* APPROVE MODAL */}
     <dialog id="approve_modal" className="modal">
       <div className="modal-box">
         <h3 className="font-bold text-xl mb-4">Process Request</h3>
@@ -308,7 +305,7 @@ function ViewRequestPayable({ userData }) {
       </form>
     </dialog>
   
-    {/* Decline Modal */}
+    {/* DECLINE MODAL */}
     <dialog id="decline_modal" className="modal">
       <div className="modal-box">
         <h3 className="font-bold text-xl mb-4">Decline Budget Request</h3>

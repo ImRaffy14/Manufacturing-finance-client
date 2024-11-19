@@ -7,18 +7,13 @@ import { useSocket } from '../context/SocketContext';
 const Search = ({ userData }) => {
   const navigate = useNavigate();
   const socket = useSocket();
-
-  // Simulated notifications data with a 'read' property
   const [notifications, setNotifications] = useState([
     { id: 1, message: "New message from HR", read: false },
     { id: 2, message: "System maintenance scheduled", read: false },
     { id: 3, message: "New user registered", read: false },
   ]);
-
-  const [showNotifications, setShowNotifications] = useState(false); // Toggle notifications
-  const [hasNewNotifications, setHasNewNotifications] = useState(true); // Badge visibility control
-
-  // Handle click on a notification to mark it as read
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [hasNewNotifications, setHasNewNotifications] = useState(true); 
   const handleNotificationClick = (notificationId) => {
     setNotifications((prevNotifications) =>
       prevNotifications.map((notification) =>
@@ -28,14 +23,11 @@ const Search = ({ userData }) => {
       )
     );
   };
-
-  // Handle notification icon click
   const handleNotificationIconClick = () => {
     setShowNotifications(!showNotifications);
-    setHasNewNotifications(false); // Hide the badge when notifications are viewed
+    setHasNewNotifications(false); 
   };
 
-  // Get current date and time
   function getCurrentDateTime() {
     const now = new Date();
     const date = now.toLocaleDateString();
@@ -64,9 +56,8 @@ const Search = ({ userData }) => {
             <h1 className="text-2xl font-bold">FINANCIAL MANAGEMENT</h1>
           </div>
 
-          {/* Right-side icons and user profile */}
           <div className="flex gap-3 items-center relative">
-            {/* Notification Icon with Badge */}
+            {/* NOTIF ICON */}
             <div className="relative">
               <IoMdNotificationsOutline
                 className="text-3xl cursor-pointer"
@@ -79,7 +70,7 @@ const Search = ({ userData }) => {
               )}
             </div>
 
-            {/* Notification Dropdown */}
+            {/* NOTIF DROPDOWN */}
             {showNotifications && (
               <div className="absolute right-0 top-12 w-72 h-[400px] overflow-x-auto bg-white shadow-md rounded-lg z-10">
                 <div className="p-2 text-right">
@@ -105,7 +96,7 @@ const Search = ({ userData }) => {
               </div>
             )}
 
-            {/* User Profile Dropdown */}
+            {/* USER DROPDOWN */}
             <div className="dropdown dropdown-end">
               <img
                 src={userData.image.secure_url}
@@ -130,7 +121,7 @@ const Search = ({ userData }) => {
         </div>
       </div>
 
-      {/* Logout Modal */}
+      {/* LOGOUT MODAL */}
       <dialog id="logout_modal" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Are you sure you want to logout?</h3>
@@ -151,7 +142,7 @@ const Search = ({ userData }) => {
         </form>
       </dialog>
 
-      {/* Profile Modal */}
+      {/* PROFILE MODAL */}
       <dialog id="profile_modal" className="modal">
         <div className="modal-box">
           <div className="py-4">

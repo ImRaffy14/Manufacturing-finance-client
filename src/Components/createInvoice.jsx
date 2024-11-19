@@ -8,8 +8,8 @@ import { useSocket } from '../context/SocketContext';
 import { ToastContainer, toast } from 'react-toastify';
 
 function createInvoice({ userData }) {
-  const [isPreview, setIsPreview] = useState(false); // State to manage the preview modal
-  const [isSubmitted, setIsSubmitted] = useState(false); // Track form submission
+  const [isPreview, setIsPreview] = useState(false); 
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [items, setItems] = useState([{ itemName: '', quantity: 1, price: 0 }]);
   const [responseData, setResponseData] = useState(null);
@@ -69,21 +69,18 @@ function createInvoice({ userData }) {
       contactInformation: '0909090909',
       createInvoice: '',
     },
-    // Add more data as needed
   ];
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
 
-  // Filter data based on search text
   const filteredData = data.filter(row =>
     Object.values(row).some(value =>
       value.toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
 
-  // Modal data
   const defaultTerms = `These are the terms and conditions:
   - All purchases are final.
   - No refunds after 30 days.
@@ -119,13 +116,13 @@ function createInvoice({ userData }) {
   ];
 
   useEffect(() => {
-    calculateTotal(); // Recalculate total whenever items, taxes, or discounts change
+    calculateTotal();
   }, [formData.items, formData.taxes, formData.discounts]);
 
   const calculateTotalAmount = (items) => {
     return items.reduce((total, item) => {
-      const itemTotal = item.price * item.quantity; // Ensure proper multiplication
-      return total + itemTotal; // Add to total
+      const itemTotal = item.price * item.quantity; 
+      return total + itemTotal;
     }, 0);
   };
 
@@ -142,12 +139,12 @@ function createInvoice({ userData }) {
     const updatedItems = [...formData.items];
     const selectedItem = itemOptions.find(option => option.label === value);
 
-    console.log("Selected Item:", selectedItem); // Check the selected item
+    console.log("Selected Item:", selectedItem);
 
     updatedItems[index] = {
       ...updatedItems[index],
       [name]: value,
-      price: selectedItem ? selectedItem.price : 0, // Ensure price is unit price
+      price: selectedItem ? selectedItem.price : 0,
     };
     const totalAmount = calculateTotalAmount(updatedItems);
     setFormData({ ...formData, items: updatedItems, totalAmount });
@@ -158,7 +155,7 @@ function createInvoice({ userData }) {
     const updatedItems = [...formData.items];
     updatedItems[index].quantity = Number(value);
     
-    console.log("Updated Quantity:", updatedItems[index].quantity); // Check if quantity is updated correctly
+    console.log("Updated Quantity:", updatedItems[index].quantity);
   
     const totalAmount = calculateTotalAmount(updatedItems);
     setFormData({ ...formData, items: updatedItems, totalAmount });
@@ -179,7 +176,6 @@ function createInvoice({ userData }) {
     }));
   };
 
-  // Item Validation
   const validateItems = () => {
     return formData.items.every(item =>
       itemOptions.some(option => option.label === item.itemName)
@@ -200,7 +196,6 @@ function createInvoice({ userData }) {
       dueDate,
     } = formData;
   
-    // Check basic fields
     if (
       !customerName ||
       !customerAddress ||
@@ -215,12 +210,10 @@ function createInvoice({ userData }) {
       return false;
     }
   
-    // Check if all items are valid
     if (!validateItems()) {
       return false;
     }
   
-    // Check if at least one item is added
     if (
       items.length === 0 ||
       items.some(item => !item.itemName || item.quantity <= 0 || item.price <= 0)
@@ -243,7 +236,7 @@ function createInvoice({ userData }) {
 
   const calculateTotal = () => {
     const subtotal = formData.items.reduce(
-      (total, item) => total + (item.price * item.quantity || 0), // Multiply price by quantity
+      (total, item) => total + (item.price * item.quantity || 0), 
       0
     );
     const taxes = parseFloat(formData.taxes || 0);
@@ -277,8 +270,8 @@ function createInvoice({ userData }) {
   useEffect(() => {
     socket.on("response_create_invoice", (response) => {
       setResponseData(response);
-      setIsSubmitted(true); // Only set this to true once the response is received
-      setIsPreview(false); // Close the modal after submission
+      setIsSubmitted(true); 
+      setIsPreview(false);
       setIsLoading(false);
 
       socket.on("trails_error", (response) => {
@@ -302,7 +295,6 @@ function createInvoice({ userData }) {
     };
   }, [socket, userData]);
 
-  // Callback function from invoice download
   const callBackFunction = (newValue) => {
     setIsSubmitted(newValue);
   };
@@ -341,7 +333,6 @@ function createInvoice({ userData }) {
         </div>
       </div>
 
-      {/* Open the modal */}
       <dialog id="invoice_modal" className="modal">
         <ToastContainer />
         <div className="modal-box w-full max-w-7xl">

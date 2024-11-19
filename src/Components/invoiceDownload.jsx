@@ -13,8 +13,8 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
       const canvas = await html2canvas(inputData);
       const imgData = canvas.toDataURL("image/png");
 
-      const customWidth = 500;  // Adjust this value to set your custom width
-      const customHeight =500; // Adjust this value to set your custom height
+      const customWidth = 500;  
+      const customHeight =500; 
 
       const pdf = new jsPDF({
         orientation: "portrait",
@@ -33,22 +33,21 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
     }
   };
 
-  // Function to format the price with Philippine Peso and commas
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
   return (
     <div className="container mx-auto p-4">
-      {/* Invoice layout */}
+      {/* INVOICE REFERENCE */}
       <div ref={invoiceRef} style={{ backgroundColor: 'white', padding: '20px', margin: '0 auto', width: '800px', border: '1px solid gray' }}>
         {/* Logo and Invoice Title */}
         <div className="flex justify-between items-center mb-4">
-          <img src={logo} alt="Company Logo" className="w-32 h-auto" /> {/* Adjust size as necessary */}
+          <img src={logo} alt="Company Logo" className="w-32 h-auto" />
           <h1 className="text-4xl font-bold tracking-wide text-right">INVOICE</h1>
         </div>
 
-        {/* Customer Information */}
+        {/* CUSTOMER INFO */}
         <div className="flex justify-between mt-10">
           <div className="text-left">
             <p><strong>ISSUED TO:</strong></p>
@@ -64,14 +63,14 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
           </div>
         </div>
 
-        {/* Shipping and Payment Information */}
+        {/* SHIPPING AND PAYMENT INFORMATION */}
         <div className="mt-8">
           <p><strong>PAY TO:</strong></p>
           <p>Shipping Method: {invoiceData.shippingMethod || 'Standard Shipping'}</p>
           <p>Delivery Date: {invoiceData.deliveryDate || '11.04.2030'}</p>
         </div>
 
-        {/* Order Details Table */}
+        {/* ORDER DETAILS */}
         <div className="mt-10">
           <table className="w-full text-left table-auto border-collapse">
             <thead>
@@ -97,7 +96,7 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
           </table>
         </div>
 
-        {/* Subtotal, Discounts, and Total */}
+        {/* TOTALS */}
         <div className="mt-8">
           <div className="grid grid-cols-2 gap-2">
             <div className="text-right">
@@ -122,7 +121,7 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
           </div>
         </div>
 
-        {/* Terms and Notes */}
+        {/* TERMS ANND NOTES */}
         <div className="mt-10">
           <p><strong>TERMS AND CONDITIONS:</strong></p>
           <p>{invoiceData.terms || 'Default terms and conditions.'}</p>
@@ -134,7 +133,7 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
         </div>
       </div>
 
-      {/* Button to download the invoice as an image */}
+      {/* DOWNLOAD BUTTON */}
       <div className="text-center mt-6">
         <button
           onClick={handleGeneratePdf}

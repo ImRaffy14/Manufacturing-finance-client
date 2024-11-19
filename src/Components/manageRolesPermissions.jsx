@@ -4,15 +4,15 @@ import { useSocket } from '../context/SocketContext';
 
 function manageRolesPermissions() {
   const [searchText, setSearchText] = useState('');
-  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
-  const [isEditing, setIsEditing] = useState(false); // State for edit mode
-  const [editData, setEditData] = useState(null); // State to hold editable data
+  const [selectedRowData, setSelectedRowData] = useState(null); 
+  const [isEditing, setIsEditing] = useState(false); 
+  const [editData, setEditData] = useState(null); 
   const [tableData, setTableData] = useState([
 
     { _id: 1, image: 'https://randomuser.me/api/portraits/men/1.jpg', userName: 'burachi', password: 'malaking burat', email: 'buratatat@gmail.com', fullName: 'Akhmed Marumbul', role: 'Doctor' },
     { _id: 2, image: 'https://randomuser.me/api/portraits/men/1.jpg', userName: 'burachi', password: 'malaking burat', email: 'buratatat@gmail.com', fullName: 'Akhmed Marumbul', role: 'Doctor' },
     { _id: 3, image: 'https://randomuser.me/api/portraits/men/1.jpg', userName: 'burachi', password: 'malaking burat', email: 'buratatat@gmail.com', fullName: 'Akhmed Marumbul', role: 'Doctor' },
-  ]); // State to hold table data
+  ]); 
 
   const socket = useSocket();
 

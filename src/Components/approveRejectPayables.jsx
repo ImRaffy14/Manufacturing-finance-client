@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
-import { IoCreateOutline } from "react-icons/io5";
 import { useSocket } from '../context/SocketContext';
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
@@ -12,7 +11,7 @@ function approveRejectPayables() {
   const [isLoading, setIsLoading] = useState(true)
   const formatCurrency = (value) => {
     if (value === undefined || value === null) {
-      return `₱0.00`; // or return an appropriate placeholder
+      return `₱0.00`; 
     }
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
@@ -46,9 +45,9 @@ function approveRejectPayables() {
 
   //DECRYPTION
   const decryptData = (encryptedData, secretKey) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey); // Decrypt the data
-    const decrypted = bytes.toString(CryptoJS.enc.Utf8); // Convert decrypted bytes to string
-    return JSON.parse(decrypted); // Parse the decrypted string into JSON
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey); 
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8); 
+    return JSON.parse(decrypted); 
   };
 
   //FETCHING DATA
@@ -74,20 +73,16 @@ function approveRejectPayables() {
 
   }, [socket])
 
-
-  //Handles search from datatables
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
 
-  // Filter data based on search text
   const filteredData = data.filter(row =>
     Object.values(row).some(value =>
       value.toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
 
-  // Handle row click to show modal
   const handleRowClick = (row) => {
     setSelectedRowData(row);
     document.getElementById('row_modal').showModal();
@@ -106,9 +101,7 @@ function approveRejectPayables() {
   }
 
   return (
-
     <>
-
       <div className="max-w-screen-2xl mx-auto mt-4">
             <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
                 <div className="mx-4">
@@ -121,7 +114,7 @@ function approveRejectPayables() {
                             defaultSortField="name"
                             highlightOnHover
                             pointerOnHover
-                            onRowClicked={handleRowClick} // Add onRowClicked handler
+                            onRowClicked={handleRowClick} 
                             subHeader
                             subHeaderComponent={
                             <input
@@ -138,49 +131,48 @@ function approveRejectPayables() {
             </div>
         </div> 
 
-       {/* Modal for displaying row data */}
-{selectedRowData && (
-  <dialog id="row_modal" className="modal">
-    <div className="modal-box w-full max-w-[1400px] rounded-xl shadow-2xl bg-white p-10">
-      <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Payables Preview</h1>
-      <h2 className="text-2xl font-semibold mb-4 mt-10 border-b pb-2 border-gray-300">Details for Payable ID: <strong>{selectedRowData._id}</strong></h2>
-        <div className="space-y-4">
-          <div className="flex justify-between">
-            <p className="font-medium"><strong>Category:</strong></p>
-            <p className="text-gray-700">{selectedRowData.category}</p>
+      {/* MODAL */}
+      {selectedRowData && (
+        <dialog id="row_modal" className="modal">
+          <div className="modal-box w-full max-w-[1400px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Payables Preview</h1>
+            <h2 className="text-2xl font-semibold mb-4 mt-10 border-b pb-2 border-gray-300">Details for Payable ID: <strong>{selectedRowData._id}</strong></h2>
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <p className="font-medium"><strong>Category:</strong></p>
+                  <p className="text-gray-700">{selectedRowData.category}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="font-medium"><strong>Type of Request:</strong></p>
+                  <p className="text-gray-700">{selectedRowData.typeOfRequest}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="font-medium"><strong>Department:</strong></p>
+                  <p className="text-gray-700">{selectedRowData.department}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="font-medium"><strong>Status:</strong></p>
+                  <p className={`text-gray-700 ${selectedRowData.status === 'Approved' ? 'text-green-500 font-bold' : 'text-red-600 font-bold'}`}>
+                    {selectedRowData.status}
+                  </p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="font-medium"><strong>Documents:</strong></p>
+                  <p className="text-blue-700"><a href={selectedRowData.documents}>{selectedRowData.documents}</a></p>
+                </div>
+                <iframe 
+                    src={selectedRowData.documents}
+                    width="100%" 
+                    height="600px" 
+                    title="PDF Viewer"
+                  />
+              </div>
           </div>
-          <div className="flex justify-between">
-            <p className="font-medium"><strong>Type of Request:</strong></p>
-            <p className="text-gray-700">{selectedRowData.typeOfRequest}</p>
-          </div>
-          <div className="flex justify-between">
-            <p className="font-medium"><strong>Department:</strong></p>
-            <p className="text-gray-700">{selectedRowData.department}</p>
-          </div>
-          <div className="flex justify-between">
-            <p className="font-medium"><strong>Status:</strong></p>
-            <p className={`text-gray-700 ${selectedRowData.status === 'Approved' ? 'text-green-500 font-bold' : 'text-red-600 font-bold'}`}>
-              {selectedRowData.status}
-            </p>
-          </div>
-          <div className="flex justify-between">
-            <p className="font-medium"><strong>Documents:</strong></p>
-            <p className="text-blue-700"><a href={selectedRowData.documents}>{selectedRowData.documents}</a></p>
-          </div>
-          <iframe 
-              src={selectedRowData.documents}
-              width="100%" 
-              height="600px" 
-              title="PDF Viewer"
-            />
-        </div>
-    </div>
-    <form method="dialog" className="modal-backdrop">
-      <button type="button" onClick={() => document.getElementById('row_modal').close()}></button>
-    </form>
-  </dialog>
-)}
-
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('row_modal').close()}></button>
+          </form>
+        </dialog>
+      )}
    </>
   );
 

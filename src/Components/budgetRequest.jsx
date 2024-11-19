@@ -155,12 +155,10 @@ function budgetRequest({ userData }) {
     }
   }, [socket])
 
-  //Handles Search from datatables
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
 
-// Filter data based on search text
   const filteredData = data.filter(row =>
     Object.values(row).some(value =>
       value.toString().toLowerCase().includes(searchText.toLowerCase())
@@ -256,34 +254,33 @@ function budgetRequest({ userData }) {
             </div>
         </div>
             
-            <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 mb-10">
-                  <div className="mx-4">
-                      <div className="overflow-x-auto w-full">
-                          <DataTable
-                              title="Budget Requests"
-                              columns={columns}
-                              data={filteredData}
-                              pagination
-                              defaultSortField="name"
-                              highlightOnHover
-                              pointerOnHover
-                              onRowClicked={handleRowClick}
-                              subHeader
-                              subHeaderComponent={
-                              <input
-                                  type="text"
-                                  placeholder="Search..."
-                                  value={searchText}
-                                  onChange={handleSearch}
-                                  className="mb-2 p-2 border border-gray-400 rounded-lg"
-                              />
-                              }
-                          />
-                      </div>
-                  </div>
+        <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 mb-10">
+          <div className="mx-4">
+            <div className="overflow-x-auto w-full">
+              <DataTable
+                title="Budget Requests"
+                columns={columns}
+                data={filteredData}
+                pagination
+                defaultSortField="name"
+                highlightOnHover
+                pointerOnHover
+                onRowClicked={handleRowClick}
+                subHeader
+                subHeaderComponent={
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchText}
+                  onChange={handleSearch}
+                  className="mb-2 p-2 border border-gray-400 rounded-lg"
+                />
+                }
+              />
             </div>
+          </div>
+        </div>
       </div>
-
 
         <dialog id="budget_modal" className="modal">
             <div className="modal-box shadow-xl">
@@ -345,42 +342,42 @@ function budgetRequest({ userData }) {
                 <form method="dialog" className="modal-backdrop">
                     <button>Close</button>
                 </form>
-            </dialog>
+        </dialog>
             
             <dialog id="budget_reserve" className="modal">
-        <div className="modal-box">
-          <form className="space-y-4" onSubmit={handlesSubmit}>
-              <div>
-                <h3 className="font-bold text-lg text-center">Enter Password to Submit Budget</h3>
-                  <label className="block text-gray-600 font-medium mb-1">Password</label>
-                  <input
-                    type="password"
-                    placeholder="Enter your password"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                    value={password}
-                    required
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+              <div className="modal-box">
+                <form className="space-y-4" onSubmit={handlesSubmit}>
+                    <div>
+                      <h3 className="font-bold text-lg text-center">Enter Password to Submit Budget</h3>
+                        <label className="block text-gray-600 font-medium mb-1">Password</label>
+                        <input
+                          type="password"
+                          placeholder="Enter your password"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                          value={password}
+                          required
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+
+                    {authError && <h1 className="text-red-500">{authError}</h1> }
+
+                      {!isSubmit && <button
+                      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
+                      >
+                      Submit 
+                      </button>}
+                </form>
+                    {isSubmit && <button
+                    className="px-4 py-2 mt-3 w-[80px] bg-green-600 text-white rounded hover:bg-green-800"
+                    >
+                    <span className="loading loading-spinner loading-md"></span>
+                    </button>}
               </div>
-
-              {authError && <h1 className="text-red-500">{authError}</h1> }
-
-                {!isSubmit && <button
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
-                >
-                Submit 
-                </button>}
-          </form>
-              {isSubmit && <button
-              className="px-4 py-2 mt-3 w-[80px] bg-green-600 text-white rounded hover:bg-green-800"
-              >
-              <span className="loading loading-spinner loading-md"></span>
-              </button>}
-        </div>
-          <form method="dialog" className="modal-backdrop">
-            <button>close</button>
-          </form>
-    </dialog>                  
+              <form method="dialog" className="modal-backdrop">
+                <button>close</button>
+              </form>
+            </dialog>                  
     </>
   )
 }

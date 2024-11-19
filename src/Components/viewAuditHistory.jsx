@@ -6,7 +6,7 @@ function viewAuditHistory() {
   const [searchText, setSearchText] = useState('');
   const [trailsData, setTrailsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold the selected row data
+  const [selectedRowData, setSelectedRowData] = useState(null); 
 
   const socket = useSocket();
 
@@ -45,14 +45,12 @@ function viewAuditHistory() {
     setSearchText(event.target.value);
   };
 
-  // Filter data based on search text
   const filteredData = data.filter((row) =>
     Object.values(row).some((value) =>
       value.toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
 
-  // Handle row click to show modal
   const handleRowClick = (row) => {
     setSelectedRowData(row);
     document.getElementById('row_modal').showModal();
@@ -83,7 +81,7 @@ function viewAuditHistory() {
                 defaultSortField="name"
                 highlightOnHover
                 pointerOnHover
-                onRowClicked={handleRowClick} // Add onRowClicked handler
+                onRowClicked={handleRowClick} 
                 subHeader
                 subHeaderComponent={
                   <input
@@ -100,7 +98,7 @@ function viewAuditHistory() {
         </div>
       </div>
 
-      {/* Modal for displaying row data */}
+  {/* MODAL FOR ROW DATA DISPLAY */}
   {selectedRowData && (
         <dialog id="row_modal" className="modal">
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
