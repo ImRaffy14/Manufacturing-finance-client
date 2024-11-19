@@ -16,8 +16,8 @@ function pendingInvoice() {
       const canvas = await html2canvas(inputData);
       const imgData = canvas.toDataURL("image/png");
 
-      const customWidth = 700;
-      const customHeight = 700;
+      const customWidth = 500;
+      const customHeight = 520;
 
       const pdf = new jsPDF({
         orientation: "portrait",
@@ -209,7 +209,7 @@ function pendingInvoice() {
 
                 <h3 className="text-lg font-bold mt-5"><strong>Payment Terms</strong></h3>
                 <p><strong>Payment Terms:</strong> {selectedRowData.terms || '01234'}</p>
-                <p><strong>Note:</strong> {selectedRowData.note || 'Dilaan mo ang burat kong makatas'}</p>
+                <p><strong>Note:</strong> {selectedRowData.note || 'Drop infront of my door'}</p>
               </div>
 
               <div className="mt-10">

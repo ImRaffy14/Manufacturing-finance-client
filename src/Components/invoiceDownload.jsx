@@ -14,7 +14,7 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
       const imgData = canvas.toDataURL("image/png");
 
       const customWidth = 500;  
-      const customHeight =500; 
+      const customHeight =520; 
 
       const pdf = new jsPDF({
         orientation: "portrait",
