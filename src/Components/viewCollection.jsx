@@ -382,7 +382,7 @@ if (isLoading) {
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(salesAmount)}</p>
               <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                {inflowPercentageArrow == "↑" ?  <IoIosArrowUp className="text-green-700" /> : <IoIosArrowDown className="text-red-700" /> } {inflowPercentage}
+                {inflowPercentageArrow == "↑" ?  <IoIosArrowUp className="text-green-700" /> : <IoIosArrowDown className="text-red-700" /> } {inflowPercentage}%
               </p>
             </div>
             <div className="my-3">
@@ -401,7 +401,7 @@ if (isLoading) {
             <div className="flex gap-3 my-3">
               <p className="text-3xl font-bold">{formatCurrency(spentAmount)}</p>
               <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
-                {outflowPercentageArrow == "↑" ?  <IoIosArrowUp className="text-red-700" /> : <IoIosArrowDown className="text-red-700" /> } {outflowPercentage}
+                {outflowPercentageArrow == "↑" ?  <IoIosArrowUp className="text-red-700" /> : <IoIosArrowDown className="text-red-700" /> } {outflowPercentage}%
               </p>
             </div>
             <div className="my-3">

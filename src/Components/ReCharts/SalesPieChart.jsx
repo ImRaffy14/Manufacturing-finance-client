@@ -1,13 +1,10 @@
-// SalesPieChart.jsx
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
-// Register required components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const SalesPieChart = () => {
-    // Sample sales data
     const salesData = {
         labels: ['JJM Calamansi Dishwashing Liquid', 'JJM Lemon Dishwashing Liquid', 'JJM Antibac Fabric Conditioner', 'JJM Calamansi Dishwashing Paste'],
         datasets: [
@@ -35,11 +32,11 @@ const SalesPieChart = () => {
         responsive: true,
         plugins: {
             legend: {
-                position: 'right', // Move labels to the right
-                align: 'center',  // Align the labels vertically centered
+                position: 'right', 
+                align: 'center', 
                 labels: {
-                    boxWidth: 20,    // Adjust the size of the legend box
-                    padding: 20,     // Add space between legend items and chart
+                    boxWidth: 20, 
+                    padding: 20, 
                 },
             },
             title: {
@@ -56,10 +53,10 @@ const SalesPieChart = () => {
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            height: '350px', // Adjust height based on your layout
+            height: '350px',
           }}
         >
-          <div style={{ width: '600px', height: '600px' }}> {/* Set custom size here */}
+          <div style={{ width: '600px', height: '600px' }}> 
             <Pie data={salesData} options={options} />
           </div>
         </div>

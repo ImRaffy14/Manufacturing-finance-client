@@ -207,7 +207,7 @@ function Dashboard() {
           <div className="bg-white/75 shadow-xl rounded-lg p-6">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">Analytics</h3>
             <h2 className="text-xl font-bold mt-10">Month of {currentMonth}</h2>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">  
               <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
                 <div className="flex items-center justify-between">
                   <p className="text-gray-600 font-semibold text-sm">Sales Volume</p>
@@ -216,7 +216,7 @@ function Dashboard() {
                 <div className="flex gap-3 my-3">
                   <p className="text-3xl font-bold">{collectionAnalytics.salesVolume}</p>
                   <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                    {collectionAnalytics.salesVolumePercentageChangeArrow === "↑" ? <IoIosArrowUp className="text-green-700" /> : <IoIosArrowDown className="text-red-700" />} {collectionAnalytics.salesVolumePercentageChange}
+                    {collectionAnalytics.salesVolumePercentageChangeArrow === "↑" ? <IoIosArrowUp className="text-green-700" /> : <IoIosArrowDown className="text-red-700" />} {collectionAnalytics.salesVolumePercentageChange}%
                   </p>
                 </div>
                 <div className="my-3">
@@ -234,7 +234,7 @@ function Dashboard() {
                 <div className="flex gap-3 my-3">
                   <p className="text-3xl font-bold">{formatCurrency(collectionAnalytics.totalInflows)}</p>
                   <p className="flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-semibold">
-                    {collectionAnalytics.inflowPercentageChangeArrow === "↑" ? <IoIosArrowUp className="text-green-700" /> : <IoIosArrowDown className="text-red-700" />} {collectionAnalytics.inflowPercentageChange}
+                    {collectionAnalytics.inflowPercentageChangeArrow === "↑" ? <IoIosArrowUp className="text-green-700" /> : <IoIosArrowDown className="text-red-700" />} {collectionAnalytics.inflowPercentageChange}%
                   </p>
                 </div>
                 <div className="my-3">
@@ -252,7 +252,7 @@ function Dashboard() {
                 <div className="flex gap-3 my-3">
                   <p className="text-3xl font-bold">{formatCurrency(collectionAnalytics.totalOutflows)}</p>
                   <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
-                    {collectionAnalytics.outflowPercentageChangeArrow === "↑" ? <IoIosArrowUp className="text-red-700" /> : <IoIosArrowDown className="text-red-700" />} {collectionAnalytics.outflowPercentageChange}
+                    {collectionAnalytics.outflowPercentageChangeArrow === "↑" ? <IoIosArrowUp className="text-red-700" /> : <IoIosArrowDown className="text-red-700" />} {collectionAnalytics.outflowPercentageChange}%
                   </p>
                 </div>
                 <div className="my-3">

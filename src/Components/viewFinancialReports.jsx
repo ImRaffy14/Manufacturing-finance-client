@@ -38,7 +38,7 @@ const viewFinancialReports = ({userData}) => {
       utilities: 123131,
       grossProfit: 121321,
       operatingIncome: 1232113,
-      marketingExpenses: 123131,
+      employeeExpenses: 123131,
       totalRevenue: 2222222,
       totalCOGS: 22222213,
       totalOperatingExpenses: 1231231,
@@ -130,11 +130,10 @@ const viewFinancialReports = ({userData}) => {
           </ul>
         </div>
         <div className="p-4 md:p-10">
-          <div className="bg-white rounded-lg p-4 md:p-10">
+          <div className="bg-white  rounded-lg p-4 md:p-10">
             <div
               id="financial-report"
               style={{
-                width: '800px',
                 padding: '20px',
                 margin: '0 auto',
                 backgroundColor: '#ffffff',
@@ -246,7 +245,7 @@ const viewFinancialReports = ({userData}) => {
                       <tr>
                         <td className="border px-4 py-2"></td>
                         <td className="border px-4 py-2"></td>
-                        <td className="border px-4 py-2">Marketing Expenses – {formatCurrency(incomeStatementData[0].marketingExpenses)}</td>
+                        <td className="border px-4 py-2">Employee Expenses – {formatCurrency(incomeStatementData[0].employeeExpenses)}</td>
                         <td className="border px-4 py-2"></td>
                       </tr>
                       <tr>
