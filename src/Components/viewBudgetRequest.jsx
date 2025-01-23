@@ -13,6 +13,7 @@ function viewBudgetRequest({userData}) {
     const [comment, setComment] = useState("")
     const location = useLocation(); 
     const { rowData } = location.state || {}; 
+    
           if (!rowData) {
             return <p>No data available.</p>;
           }
@@ -274,12 +275,25 @@ function viewBudgetRequest({userData}) {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+              {authFailed &&
+                <h1 className="text-red-500">{authFailed}</h1> 
+              }
+
+              {!isLoading &&               
               <button
               className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800"
               >
               Decline Budget  
               </button>
+              }
             </form>
+              {isLoading && 
+                <button
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800 mt-4 w-[145px]"
+                >
+                <span className="loading loading-spinner loading-md"></span>   
+                </button>
+              }
         </div>
           <form method="dialog" className="modal-backdrop">
             <button>close</button>
