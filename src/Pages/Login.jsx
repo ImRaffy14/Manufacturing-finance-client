@@ -3,7 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../authentication/auth';
 import { toast } from 'react-toastify';
 import BackgroundImage from '../assets/BG.jpg';
+import Recaptcha from '../assets/recaptcha.png'
 import axios from 'axios'
+import ReCAPTCHA from 'react-google-recaptcha';
 
 
 function Login() {
@@ -17,6 +19,12 @@ function Login() {
     const [otpError, setOtpError] = useState('')
     const [otpResend, setOtpResend] = useState('')
     const [isOtpLoading, setIsOtpLoading] = useState(false)
+
+    //RECAPTCHA STATES
+    const [verified, setVerified] = useState(false)
+    const [rcToken, setRcToken] = useState('')
+
+
     const location = useLocation();
     const expired = location.state?.expired;
     const navigate = useNavigate();
@@ -38,10 +46,50 @@ function Login() {
         }
     }, [navigate]);
 
+
+    // HANDLES RECAPTCHA VERIFICATION
+    const handleVerify = async () => {
+        try {
+          const siteKey = import.meta.env.VITE_RC_SITE_KEY;
+          const recaptchaToken = await window.grecaptcha.execute(siteKey, { action: 'submit' });
+          setRcToken(recaptchaToken);
+          setVerified(true);
+        } catch (error) {
+          console.error('Error during reCAPTCHA verification:', error);
+        }
+      };
+
+
+    // HANDLES SUBMIT LOGIN FORM    
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!verified) {
+            toast.error("Please complete the reCAPTCHA verification", {
+                position: 'top-right',
+            })
+            return;
+          }
+
         try {
             setIsLoading(true);
+
+            // RECAPTCHA VERIFICATION
+            const rcResponse = await axios.post(`${import.meta.env.VITE_SERVER_URL}/API/VERIFY-RECAPTCHA`, { rcToken })
+            if(rcResponse){
+                toast.success("reCAPTCHA verified!", {
+                    position: 'top-right',
+                })
+            }
+            else{
+                toast.error("reCAPTCHA verification failed", {
+                    position: 'top-right',
+                })
+                setRcToken(false)
+                setVerified('')
+                return
+            }
+
             const firstLogin = localStorage.getItem('f-login')
             const userData = { userName, password, firstLogin };
             const response = await login(userData);
@@ -64,14 +112,22 @@ function Login() {
                 setEmail(err.response.data.email)
                 setUserName('');
                 setPassword('');
+                setRcToken(false)
+                setVerified('')
             } else if (err.request) {
                 setErrorMessage('No response from server');
+                setRcToken(false)
+                setVerified('')
             } else {
                 setErrorMessage('Error during login');
+                setRcToken(false)
+                setVerified('')
             }
         }
     };
 
+
+    // HANDLES VERIFY OTP SUBMIT
     const handlesOtp = async (e) => {
         try{
             e.preventDefault()
@@ -80,6 +136,8 @@ function Login() {
             
             if(response){
             setOtp('')
+            setRcToken(false)
+            setVerified('')
             localStorage.setItem('f-login', response.data.token)
             document.getElementById('mfa_modal').close()
             toast.success(`${response.data.msg} Please Login Again`, {
@@ -93,9 +151,13 @@ function Login() {
             if(error.response){
                 setOtpError(error.response.data.msg)
                 setOtp('')
+                setRcToken(false)
+                setVerified('')
             }
             else{
                 setOtp('')
+                setRcToken(false)
+                setVerified('')
                 console.log(error.message)
                 toast.error('Something went error', {
                     position: 'top-right',
@@ -169,12 +231,22 @@ function Login() {
                             </div>
 
                             {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage}</h1>}
+
+                            <div className="flex justify-between items-center">
+                                <div className='flex items-center'>
+                                    <span className="text-md font-medium mr-3">Verify reCAPTCHA</span>
+                                    <input type="checkbox" checked={verified} className="checkbox checkbox-info" onClick={handleVerify} />
+                                </div>
+                                
+                                <img src={Recaptcha} className='w-[60px]'></img>
+                            </div>
                             
                             <div className="form-control">
                                 {!isLoading ? (
                                     <button
                                         type="submit"
                                         className="btn btn-primary w-full py-3 text-lg font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                                        disabled={!verified}
                                     >
                                         Login
                                     </button>
@@ -199,7 +271,7 @@ function Login() {
                 </div>
             </div>
 
-            // MFA MODAL
+            {/* MFA MODAL */}
             <dialog id="mfa_modal" className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box flex flex-col">
                     <h3 className="font-bold text-lg">OTP VERIFICATION</h3>
@@ -221,7 +293,6 @@ function Login() {
                     {!completeOtp && 
                     <button className="btn btn-success w-20 mt-2" disabled="disabled">Submit</button>
                     }
-
                 </div>
             </dialog>
         </>
