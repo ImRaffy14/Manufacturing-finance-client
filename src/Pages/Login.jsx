@@ -178,6 +178,7 @@ function Login() {
         }
         catch(error){
             setOtpError("Can't send the OTP server error.")
+            setIsOtpLoading(false)
             console.log(error.message)
         }
     }
