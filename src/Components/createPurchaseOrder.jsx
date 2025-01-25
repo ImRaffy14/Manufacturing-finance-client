@@ -7,7 +7,7 @@ import InvoiceDownload from './invoiceDownload';
 import { useSocket } from '../context/SocketContext';
 import { ToastContainer, toast } from 'react-toastify';
 
-function createInvoice({ userData }) {
+function createPurchaseOrder({ userData }) {
   const [isPreview, setIsPreview] = useState(false); 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -29,7 +29,7 @@ function createInvoice({ userData }) {
     { name: 'Orders', selector: row => row.orderItem },
     { name: 'Contact Information', selector: row => row.contactInformation },
     {
-      name: 'Create Invoice',
+      name: 'Create Purchase Order',
       selector: row => (
         <a className="text-4xl">
           <IoCreateOutline
@@ -492,7 +492,7 @@ function createInvoice({ userData }) {
           <div className="mx-4">
             <div className="overflow-x-auto w-full">
               <DataTable
-                title="Invoice Creation"
+                title="Purchase Order Creation"
                 columns={columns}
                 data={filteredData}
                 pagination
@@ -518,7 +518,7 @@ function createInvoice({ userData }) {
         <ToastContainer />
         <div className="modal-box w-full max-w-7xl">
           <div ref={invoiceRef} className="invoice-container bg-white p-8 rounded-lg shadow-md">
-            <h2 className="text-center text-2xl font-bold mb-6">Create Invoice</h2>
+            <h2 className="text-center text-2xl font-bold mb-6">Generate Purchase Order</h2>
 
             <form onSubmit={handleSubmit}>
               {/* Customer Information */}
@@ -689,10 +689,10 @@ function createInvoice({ userData }) {
               </div>
 
               {/* Invoice Details */}
-              <h3 className="text-lg font-semibold mb-4">Invoice Details</h3>
+              <h3 className="text-lg font-semibold mb-4">Order Details</h3>
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div>
-                  <label className="block mb-2 font-semibold">Invoice Date</label>
+                  <label className="block mb-2 font-semibold">Order Date</label>
                   <input
                     type="date"
                     name="invoiceDate"
@@ -791,7 +791,7 @@ function createInvoice({ userData }) {
       <dialog id="preview_modal" className="modal">
         <div className="modal-box w-full h-full max-w-[1000px]">
           <div className="invoice-container bg-white p-8 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Confirm Your Invoice</h2>
+            <h2 className="text-xl font-semibold mb-4">Confirm Your Order</h2>
             <div className="mb-4">
               <h3 className="text-lg font-semibold">Customer Information</h3>
               <p><strong>Name:</strong> {formData.customerName}</p>
@@ -866,7 +866,7 @@ function createInvoice({ userData }) {
                   className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
                   onClick={confirmSubmission}
                 >
-                  Submit Invoice
+                  Submit Purchase Order
                 </button>
               )}
               {isLoading && (
@@ -888,4 +888,4 @@ function createInvoice({ userData }) {
   );
 }
 
-export default createInvoice;
+export default createPurchaseOrder;

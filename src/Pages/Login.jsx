@@ -6,7 +6,7 @@ import BackgroundImage from '../assets/BG.jpg';
 import Recaptcha from '../assets/recaptcha.png'
 import axios from 'axios'
 import ReCAPTCHA from 'react-google-recaptcha';
-
+import OTP from '../assets/OTP.png'
 
 function Login() {
     const [userName, setUserName] = useState('');
@@ -15,12 +15,41 @@ function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const [otp, setOtp] = useState('')
     const [email, setEmail] = useState('')
+    const [otpArray, setOtpArray] = useState(["", "", "", "", "", ""]);
     const [completeOtp, setCompleteOtp] = useState(false)
     const [otpError, setOtpError] = useState('')
     const [otpResend, setOtpResend] = useState('')
     const [isOtpLoading, setIsOtpLoading] = useState(false)
     const [isNoLongerBL, setIsNoLongerBL] = useState('')
+    const [timer, setTimer] = useState(300); // 5 minutes in seconds
+    useEffect(() => {
+        let interval;
 
+        if (timer > 0) {
+            interval = setInterval(() => {
+                setTimer((prevTimer) => prevTimer - 1);
+            }, 1000); // Decrease timer every second
+        } else {
+            clearInterval(interval); // Clear the interval when timer reaches 0
+        }
+
+        // Cleanup the interval when the component unmounts
+        return () => clearInterval(interval);
+    }, [timer]); // Re-run when `timer` changes
+
+    
+
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+    };
+
+    // Reset timer logic (for example, on "Resend OTP")
+    const handleResetTimer = () => {
+        setTimer(300); // Reset to 5 minutes
+    };
+    
     //RECAPTCHA STATES
     const [verified, setVerified] = useState(false)
     const [rcToken, setRcToken] = useState('')
@@ -143,63 +172,89 @@ function Login() {
         }
     };
 
+    const handleOtpInput = (e, index) => {
+        const value = e.target.value;
+        if (/^[0-9]?$/.test(value)) { // Allow only single digit or empty
+            const updatedOtpArray = [...otpArray];
+            updatedOtpArray[index] = value; // Update the specific index
+            setOtpArray(updatedOtpArray);
+    
+            // Automatically move focus to the next input
+            if (value && index < otpArray.length - 1) {
+                document.getElementById(`otp-input-${index + 1}`).focus();
+            }
+    
+            // Check if all inputs are filled
+            setCompleteOtp(updatedOtpArray.every((digit) => digit !== ""));
+        }
+    };
 
     // HANDLES VERIFY OTP SUBMIT
     const handlesOtp = async (e) => {
-        try{
-            e.preventDefault()
-
-            const response = await axios.post(`${API_URL}/verify-otp`, {email, otp})
-            
-            if(response){
-            setOtp('')
-            setRcToken(false)
-            setVerified('')
-            localStorage.setItem('f-login', response.data.token)
-            document.getElementById('mfa_modal').close()
-            toast.success(`${response.data.msg} Please Login Again`, {
-                position: 'top-center',
-            });
-
-            setErrorMessage('')
+        try {
+            e.preventDefault();
+    
+            // Combine the OTP array into a single string
+            const otp = otpArray.join(""); 
+    
+            const response = await axios.post(`${API_URL}/verify-otp`, { email, otp });
+    
+            if (response) {
+                // Clear OTP inputs
+                setOtpArray(["", "", "", "", "", ""]);
+                setRcToken(false);
+                setVerified(false);
+                localStorage.setItem("f-login", response.data.token);
+    
+                // Close the modal
+                document.getElementById("mfa_modal").close();
+    
+                // Show success message
+                toast.success(`${response.data.msg} Please Login Again`, {
+                    position: "top-center",
+                });
+    
+                // Clear any previous error messages
+                setErrorMessage("");
             }
-        }
-        catch(error){
-            if(error.response){
-                setOtpError(error.response.data.msg)
-                setOtp('')
-                setRcToken(false)
-                setVerified('')
-            }
-            else{
-                setOtp('')
-                setRcToken(false)
-                setVerified('')
-                console.log(error.message)
-                toast.error('Something went error', {
-                    position: 'top-right',
+        } catch (error) {
+            if (error.response) {
+                // Display server-provided error message
+                setOtpError(error.response.data.msg);
+    
+                // Clear OTP inputs and reset state
+                setOtpArray(["", "", "", "", "", ""]);
+                setRcToken(false);
+                setVerified(false);
+            } else {
+                // Handle network or other errors
+                setOtpArray(["", "", "", "", "", ""]);
+                setRcToken(false);
+                setVerified(false);
+                console.error(error.message);
+                toast.error("Something went wrong", {
+                    position: "top-right",
                 });
             }
         }
-    }
+    };
+    
 
     // HANDLES RESEND OTP
     const handlesResendOtp = async () => {
-        try{
-            setIsOtpLoading(true)
-            const response = await axios.post(`${API_URL}/resend-otp`, {email})
-            if(response){
-                setOtpResend(response.data.msg)
-                setIsOtpLoading(false)
+        try {
+            setIsOtpLoading(true);
+            const response = await axios.post(`${API_URL}/resend-otp`, { email });
+            if (response) {
+                setOtpResend(response.data.msg);
+                setTimer(300); // Reset the timer to 5 minutes
+                setIsOtpLoading(false);
             }
+        } catch (error) {
+            setOtpError("Can't send the OTP server error.");
+            setIsOtpLoading(false);
         }
-        catch(error){
-            setOtpError("Can't send the OTP server error.")
-            setIsOtpLoading(false)
-            console.log(error.message)
-        }
-    }
-
+    };
     // CHECK IF OTP IS VALID LENGTH
     useEffect(() => {
         if(otp.length == 6){
@@ -292,28 +347,63 @@ function Login() {
 
             {/* MFA MODAL */}
             <dialog id="mfa_modal" className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box flex flex-col">
-                    <h3 className="font-bold text-lg">OTP VERIFICATION</h3>
-                    <p className="py-4">Your device is not verified <br/> code has been send to your registered email</p>
-                    <p className="mb-1">Didn't receive the OTP? <span className='text-blue-600 font-semibold cursor-pointer underline' onClick={handlesResendOtp}>{isOtpLoading ? <span className="loading loading-spinner loading-sm text-black"></span> : 'Resend' }</span> </p>
-                    <form onSubmit={handlesOtp}>
+    <div className="modal-box flex flex-col items-center">
+        <div className="flex flex-col items-center">
+            <h3 className="font-bold text-lg text-center">OTP Verification</h3>
+            <p className="text-gray-600 mb-4 text-center">
+                Your device is not verified.<br />
+                Code has been sent to your registered email.
+            </p>
+            <p className="text-gray-600 mb-4 text-center">
+                Time remaining: <span className="font-bold text-red-600">{formatTime(timer)}</span>
+            </p>
+        </div>
+
+        <form onSubmit={handlesOtp} className="flex flex-col items-center w-full max-w-md">
+            <div className="flex space-x-2 mb-4">
+                {otpArray.map((digit, index) => (
                     <input
-                    type="text"
-                    placeholder="Enter the OTP"
-                    value={otp}
-                    className="input input-bordered input-success w-full max-w-xs" 
-                    onChange={(e) => setOtp(e.target.value) }/>
-                    <p className="text-red-700 mt-2">{otpError}</p>
-                    <p className="text-green-600 mt-2">{otpResend}</p>                
-                    {completeOtp && 
-                    <button className='btn btn-success w-20 mt-2' type="submit">Submit</button>
-                    }
-                    </form>
-                    {!completeOtp && 
-                    <button className="btn btn-success w-20 mt-2" disabled="disabled">Submit</button>
-                    }
-                </div>
-            </dialog>
+                        key={index}
+                        id={`otp-input-${index}`}
+                        type="text"
+                        maxLength="1"
+                        value={digit}
+                        className="input input-bordered input-success w-12 h-12 text-center text-lg"
+                        onChange={(e) => handleOtpInput(e, index)}
+                    />
+                ))}
+            </div>
+
+            <p className="text-red-700 mt-2">{otpError}</p>
+            <p className="text-green-600 mt-2">{otpResend}</p>
+
+            <button 
+                className="btn btn-primary w-full mt-4" 
+                type="submit" 
+                disabled={!completeOtp || timer === 0}
+            >
+                Next
+            </button>
+        </form>
+
+        <p className="text-sm text-gray-500 mt-4">
+            Didn't get the code? 
+            <span 
+                className="text-blue-600 font-semibold cursor-pointer underline" 
+                onClick={handlesResendOtp}
+            >
+                {isOtpLoading ? (
+                    <span className="loading loading-spinner loading-sm text-black"></span>
+                ) : (
+                    'Resend'
+                )}
+            </span>
+        </p>
+    </div>
+</dialog>
+
+
+
         </>
     );
 }

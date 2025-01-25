@@ -11,10 +11,10 @@ import AuditTrails from '../Components/auditTrails';
 import BudgetReports from '../Components/budgetReports';
 import BudgetRequest from '../Components/budgetRequest';
 import FinancialReports from '../Components/financialReports';
-import CreateInvoice from '../Components/createInvoice';
+import CreatePurchaseOrder from '../Components/createPurchaseOrder';
 import ManageRolesPermissions from '../Components/manageRolesPermissions';
-import PaidInvoice from '../Components/paidInvoice';
-import PendingInvoice from '../Components/pendingInvoice';
+import PaidOrder from '../Components/paidOrder';
+import PendingPurchaseOrder from '../Components/pendingPurchaseOrder';
 import ReviewPaymentTransactions from '../Components/reviewPaymentTransactions';
 import ReviewPayables from '../Components/reviewPayables';
 import TransactionRecords from '../Components/transactionRecords';
@@ -91,13 +91,13 @@ function AdminPage() {
 
                         {/* ACCOUNTS RECEIVABLE */}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
-                        <Route path="createInvoice" element={<CreateInvoice userData={user} />} />
+                        <Route path="createPurchaseOrder" element={<CreatePurchaseOrder userData={user} />} />
                     )}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
-                        <Route path="pendingInvoice" element={<PendingInvoice />} />
+                        <Route path="pendingPurchaseOrder" element={<PendingPurchaseOrder />} />
                     )}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
-                        <Route path="paidInvoice" element={<PaidInvoice />} />
+                        <Route path="paidOrder" element={<PaidOrder />} />
                     )}
                     
                         {/* ACCCOUNTS PAYABLE */}

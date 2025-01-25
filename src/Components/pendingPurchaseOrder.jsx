@@ -7,7 +7,7 @@ import { GrMoney } from "react-icons/gr";
 import { useSocket } from '../context/SocketContext';
 import { FaFileInvoiceDollar } from "react-icons/fa";
 
-function pendingInvoice() {
+function pendingPurchaseOrder() {
   const invoiceRef = useRef(null);
 
   const handleGeneratePdf = async () => {
@@ -50,11 +50,11 @@ function pendingInvoice() {
   const socket = useSocket();
 
   const columns = [
-    { name: 'Invoice ID', selector: row => row._id },
+    { name: 'P. Order ID', selector: row => row._id },
     { name: 'Customer ID', selector: row => row.customerId },
     { name: 'Customer Name', selector: row => row.customerName },
     { name: 'Contact Details', selector: row => row.customerContact },
-    { name: 'Invoice Date', selector: row => row.invoiceDate },
+    { name: 'P. Order Date', selector: row => row.invoiceDate },
     { name: 'DueDate', selector: row => row.dueDate },
     {
       name: 'Items',
@@ -122,7 +122,7 @@ function pendingInvoice() {
 
           <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-gray-600 font-semibold text-md">Pending Invoices</p>
+              <p className="text-gray-600 font-semibold text-md">Pending Purchase Orders</p>
             </div>
             <div className="flex gap-3 my-3">
               <FaFileInvoiceDollar className="text-blue-600 text-2xl my-2" />
@@ -146,7 +146,7 @@ function pendingInvoice() {
             <div className="overflow-x-auto w-full">
               <div className="flex p-2"></div>
               <DataTable
-                title="Pending Invoices"
+                title="Pending Purchase Orders"
                 columns={columns}
                 data={filteredData}
                 pagination
@@ -196,8 +196,8 @@ function pendingInvoice() {
                   </div>
 
                   <div className="text-right">
-                    <h3 className="text-lg font-semibold"><strong>Invoice Information</strong></h3>
-                    <p><strong>INVOICE ID:</strong> {selectedRowData._id || '01234'}</p>
+                    <h3 className="text-lg font-semibold"><strong>P. Order Information</strong></h3>
+                    <p><strong>P. Order ID:</strong> {selectedRowData._id || '01234'}</p>
                     <p><strong>DATE:</strong> {selectedRowData.invoiceDate || '11.02.2030'}</p>
                     <p><strong>DUE DATE:</strong> {selectedRowData.dueDate || '11.03.2030'}</p>
                   </div>
@@ -269,7 +269,7 @@ function pendingInvoice() {
                 <div ref={invoiceRef} style={{ position: 'absolute', top: '-9999px', left: '-9999px', visibility: 'visible' }} className="p-10">
                   <div className="flex justify-between items-center mb-4">
                     <img src={logo} alt="Company Logo" className="w-32 h-auto" />
-                    <h1 className="text-4xl font-bold tracking-wide text-right">INVOICE</h1>
+                    <h1 className="text-4xl font-bold tracking-wide text-right">PURCHASE ORDER</h1>
                   </div>
 
                   <div className="flex justify-between mt-10">
@@ -281,7 +281,7 @@ function pendingInvoice() {
                     </div>
 
                     <div className="text-right">
-                      <p><strong>INVOICE ID:</strong> {selectedRowData._id || '01234'}</p>
+                      <p><strong>PURCHASE ORDER ID:</strong> {selectedRowData._id || '01234'}</p>
                       <p><strong>DATE:</strong> {selectedRowData.invoiceDate || '11.02.2030'}</p>
                       <p><strong>DUE DATE:</strong> {selectedRowData.dueDate || '11.03.2030'}</p>
                     </div>
@@ -372,4 +372,4 @@ function pendingInvoice() {
   );
 }
 
-export default pendingInvoice;
+export default pendingPurchaseOrder;

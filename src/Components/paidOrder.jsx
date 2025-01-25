@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import { IoCreateOutline } from "react-icons/io5";
 import { useSocket } from '../context/SocketContext';
 
-function PaidInvoice() {
+function PaidOrder() {
   const [searchText, setSearchText] = useState('');
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [nonPendingInvoice, setNonPendingInvoice] = useState([]);
@@ -13,11 +13,11 @@ function PaidInvoice() {
   const formatCurrency = (value) => `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
 
   const columns = [
-    { name: 'Invoice ID', selector: row => row._id },
+    { name: 'P. Order ID', selector: row => row._id },
     { name: 'Customer ID', selector: row => row.customerId },
     { name: 'Customer Name', selector: row => row.customerName },
     { name: 'Contact Details', selector: row => row.customerContact },
-    { name: 'Invoice Date', selector: row => row.invoiceDate },
+    { name: 'P. Order Date', selector: row => row.invoiceDate },
     { name: 'Due Date', selector: row => row.dueDate },
     {
       name: 'Items', 
@@ -75,7 +75,7 @@ function PaidInvoice() {
           <div className="mx-4">
             <div className="overflow-x-auto w-full">
               <DataTable
-                title="Paid/Closed Invoices"
+                title="Paid/Closed Purchase Orders"
                 columns={columns}
                 data={filteredData}
                 pagination
@@ -103,17 +103,17 @@ function PaidInvoice() {
       {selectedRowData && (
         <dialog id="row_modal" className="modal">
           <div className="modal-box w-full max-w-[1200px] rounded-xl shadow-2xl bg-white p-10">
-            <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Paid/Closed Invoice Preview</h1>
+            <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Paid/Closed Purchase Order Preview</h1>
             <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">
               Details for Customer: <strong>{selectedRowData.customerName}</strong>
             </h2>
             <div className="space-y-4">
               <div className="flex justify-between">
-                <p className="font-medium"><strong>Invoice Number:</strong></p>
+                <p className="font-medium"><strong>P. Order Number:</strong></p>
                 <p className="text-gray-700">{selectedRowData._id}</p>
               </div>
               <div className="flex justify-between">
-                <p className="font-medium"><strong>Invoice Date:</strong></p>
+                <p className="font-medium"><strong>P. Order Date:</strong></p>
                 <p className="text-gray-700">{selectedRowData.invoiceDate}</p>
               </div>
               <div className="flex justify-between">
@@ -159,4 +159,4 @@ function PaidInvoice() {
   );
 }
 
-export default PaidInvoice;
+export default PaidOrder;

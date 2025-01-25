@@ -272,15 +272,15 @@ const toggleSidebar = () => {
                         <details open>
                           <summary>
                             <FaFileInvoiceDollar />
-                            Invoice Generation
+                            Purchase Order
                             {notifications.createInvoice > 0 && (
                               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
                             )}
                           </summary>
                           <ul>
                             <li className="hover:text-blue-500">
-                              <NavLink to="createInvoice" activeClassName="text-blue-500">
-                                ● Invoice Request
+                              <NavLink to="createPurchaseOrder" activeClassName="text-blue-500">
+                                ● Create Purchase Orders
                                 {notifications.createInvoice > 0 && (
                                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
                                     {notifications.createInvoice}
@@ -289,13 +289,13 @@ const toggleSidebar = () => {
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
-                              <NavLink to="pendingInvoice" activeClassName="text-blue-500">
-                                ● View Pending Invoice
+                              <NavLink to="pendingPurchaseOrder" activeClassName="text-blue-500">
+                                ● View Pending P.O
                               </NavLink>
                             </li>
                             <li className="hover:text-blue-500">
-                              <NavLink to="paidInvoice" activeClassName="text-blue-500">
-                                ● Paid/Closed Invoice
+                              <NavLink to="paidOrder" activeClassName="text-blue-500">
+                                ● Paid/Closed P.O
                               </NavLink>
                             </li>
                           </ul>
