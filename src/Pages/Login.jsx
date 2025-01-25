@@ -19,6 +19,7 @@ function Login() {
     const [otpError, setOtpError] = useState('')
     const [otpResend, setOtpResend] = useState('')
     const [isOtpLoading, setIsOtpLoading] = useState(false)
+    const [isNoLongerBL, setIsNoLongerBL] = useState('')
 
     //RECAPTCHA STATES
     const [verified, setVerified] = useState(false)
@@ -64,6 +65,9 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setIsNoLongerBL('')
+        setErrorMessage('')
+
         if (!verified) {
             toast.error("Please complete the reCAPTCHA verification", {
                 position: 'top-right',
@@ -94,6 +98,17 @@ function Login() {
             const userData = { userName, password, firstLogin };
             const response = await login(userData);
 
+            if(response.success){
+                setIsNoLongerBL(response.msg)
+                setRcToken(false)
+                setVerified('')
+                setErrorMessage('')
+                setUserName('');
+                setPassword('');
+                setIsLoading(false)
+                return
+            }
+
             if (response.token) {
                 navigate('/Dashboard');
             }
@@ -104,10 +119,12 @@ function Login() {
                     document.getElementById('mfa_modal').showModal()
                 }
 
-                if(err.response.status === 403){
+                if(err.response.status === 412){
                     localStorage.removeItem('f-login')
                 }
 
+                console.log(err.response.data.banTime)
+                console.log(err.response.data.banDuration)
                 setErrorMessage(err.response.data.msg);
                 setEmail(err.response.data.email)
                 setUserName('');
@@ -232,6 +249,7 @@ function Login() {
                             </div>
 
                             {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage}</h1>}
+                            {isNoLongerBL && <h1 className="text-green-500 mb-4">{isNoLongerBL}</h1> }
 
                             <div className="flex justify-between items-center">
                                 <div className='flex items-center'>
