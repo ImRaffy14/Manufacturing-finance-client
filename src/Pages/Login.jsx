@@ -21,7 +21,10 @@ function Login() {
     const [otpResend, setOtpResend] = useState('')
     const [isOtpLoading, setIsOtpLoading] = useState(false)
     const [isNoLongerBL, setIsNoLongerBL] = useState('')
-    const [timer, setTimer] = useState(300); // 5 minutes in seconds
+    const [timer, setTimer] = useState(300);
+    const [timeLeft, setTimeLeft] = useState(0)
+
+    // TIMER
     useEffect(() => {
         let interval;
 
@@ -38,12 +41,32 @@ function Login() {
     }, [timer]); // Re-run when `timer` changes
 
     
-
+    // OTP TIME FORMAT
     const formatTime = (time) => {
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
         return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
     };
+
+
+    // BLACKLISTED TIMER 
+    useEffect(() => {
+        if (timeLeft <= 0) return;
+    
+        const timer = setInterval(() => {
+          setTimeLeft((prevTime) => prevTime - 1000); 
+        }, 1000);
+    
+        return () => clearInterval(timer);
+      }, [timeLeft]);
+
+    // BLACKLISTED TIME FORMAT
+    const formatTimeBL = (time) => {
+        const minutes = Math.floor(time / 60000);
+        const seconds = Math.floor((time % 60000) / 1000);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      };
+
 
     // Reset timer logic (for example, on "Resend OTP")
     const handleResetTimer = () => {
@@ -152,8 +175,12 @@ function Login() {
                     localStorage.removeItem('f-login')
                 }
 
-                console.log(err.response.data.banTime)
-                console.log(err.response.data.banDuration)
+                if(err.response.data.banTime && err.response.data.banDuration){
+                   const time = err.response.data.banTime + err.response.data.banDuration - Date.now();
+                   setTimeLeft(time)
+                   console.log(time)
+                }
+
                 setErrorMessage(err.response.data.msg);
                 setEmail(err.response.data.email)
                 setUserName('');
@@ -303,7 +330,7 @@ function Login() {
                                 />
                             </div>
 
-                            {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage}</h1>}
+                            {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage} <span>{timeLeft !== 0 ? formatTimeBL(timeLeft) !== 0 ? formatTimeBL(timeLeft) : ' ': ''}</span></h1>}
                             {isNoLongerBL && <h1 className="text-green-500 mb-4">{isNoLongerBL}</h1> }
 
                             <div className="flex justify-between items-center">
