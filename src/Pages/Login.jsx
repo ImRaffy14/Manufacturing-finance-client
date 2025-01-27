@@ -333,13 +333,13 @@ function Login() {
                             {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage} <span>{timeLeft !== 0 ? formatTimeBL(timeLeft) !== 0 ? formatTimeBL(timeLeft) : ' ': ''}</span></h1>}
                             {isNoLongerBL && <h1 className="text-green-500 mb-4">{isNoLongerBL}</h1> }
 
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center border px-2">
                                 <div className='flex items-center'>
-                                    <span className="text-md font-medium mr-3">Verify reCAPTCHA</span>
-                                    <input type="checkbox" checked={verified} className="checkbox checkbox-info" onClick={handleVerify} />
+                                    <input type="checkbox" checked={verified} className="checkbox mr-3" onClick={handleVerify} />
+                                    <span className="text-md font-medium">I'm not a robot</span>
                                 </div>
                                 
-                                <img src={Recaptcha} className='w-[60px]'></img>
+                                <img src={Recaptcha} className='w-[70px]'></img>
                             </div>
                             
                             <div className="form-control">
