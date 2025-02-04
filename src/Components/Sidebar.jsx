@@ -23,6 +23,7 @@ import { TbCreditCardPay } from "react-icons/tb";
 import { MdOutlinePayments } from "react-icons/md";
 import { TbPigMoney } from "react-icons/tb";
 import { TbZoomMoney } from "react-icons/tb";
+import { MdBlock } from "react-icons/md";
 import { useSocket } from '../context/SocketContext';
 
 
@@ -470,13 +471,22 @@ const toggleSidebar = () => {
             </ul>
           )}
 
-          {/* AUDIT TRAILS */}
+          {/* System Config */}
           {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
-              {isCollapsed && <SiAdobeaudition className="w-5 h-5" />}
+              {isCollapsed && <MdAccountCircle className="w-5 h-5" />}
               {!isCollapsed && (
                 <li>
-                  <NavLink
+                  <details open>
+                    <summary>
+                      <MdAccountCircle className="w-5 h-5" /> System Configuration
+                      {notifications.accountRequest > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                      )}
+                    </summary>
+                    <ul>
+                      <li>
+                      <NavLink
                     to="auditTrails"
                     className="relative flex items-center hover:text-blue-500"
                     activeClassName="bg-gray-200"
@@ -486,18 +496,8 @@ const toggleSidebar = () => {
                       Audit Trails
                     </summary>
                   </NavLink>
-                </li>
-              )}
-            </ul>
-          )}
 
-          {/* ANOMALY DETECTION */}
-          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (
-            <ul className="menu rounded-box w-56">
-              {isCollapsed && <VscBracketError className="w-5 h-5" />}
-              {!isCollapsed && (
-                <li>
-                  <NavLink
+                          <NavLink
                     to="anomalyDetection"
                     className="relative flex items-center hover:text-blue-500"
                     activeClassName="bg-gray-200"
@@ -507,10 +507,26 @@ const toggleSidebar = () => {
                       Anomaly Detection
                     </summary>
                   </NavLink>
+                         
+                  <NavLink
+                    to="blacklistedIP"
+                    className="relative flex items-center hover:text-blue-500"
+                    activeClassName="bg-gray-200"
+                  >
+                    <summary className="flex items-center">
+                      <MdBlock className="w-5 h-5 mr-2" />
+                      Blacklisted IP
+                    </summary>
+                  </NavLink>
+                      </li>
+                    </ul>
+                  </details>
                 </li>
               )}
             </ul>
-          )}        
+          )}
+
+         
       </div>
     </div>
     </>

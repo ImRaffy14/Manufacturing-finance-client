@@ -10,6 +10,7 @@ import AuditRecords from '../Components/auditRecords';
 import AuditTrails from '../Components/auditTrails';
 import BudgetReports from '../Components/budgetReports';
 import BudgetRequest from '../Components/budgetRequest';
+import BlackListedIP from '../Components/blacklistedIP';
 import FinancialReports from '../Components/financialReports';
 import CreatePurchaseOrder from '../Components/createPurchaseOrder';
 import ManageRolesPermissions from '../Components/manageRolesPermissions';
@@ -138,6 +139,11 @@ function AdminPage() {
                         {/* ANOMALY DETECTION */}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ADMIN') && (  
                         <Route path="anomalyDetection" element={<AnomalyDetection />} />
+                    )}
+
+                    {/* BLACKLISTED IP */}
+                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ADMIN') && (  
+                        <Route path="blacklistedIP" element={<BlackListedIP />} />
                     )}
 
                     <Route path="viewFinancialReports" element={<ViewFinancialReports userData={user}/>}/>

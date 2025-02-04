@@ -11,6 +11,8 @@ import { PiHandWithdraw } from "react-icons/pi";
 import { PiHandDeposit } from "react-icons/pi";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { FaRegMinusSquare } from "react-icons/fa";
+import { TbCreditCardPay } from "react-icons/tb";
+import { RiUserReceived2Fill } from "react-icons/ri";
 import AreaChart from '../Components/ReCharts/AreaChart';
 import { useSocket } from '../context/SocketContext'
 import { toast } from 'react-toastify'
@@ -429,24 +431,11 @@ if (isLoading) {
   <div className="bg-white shadow-xl w-full sm:w-[350px] md:w-[370px] lg:w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
     <div className="flex items-center justify-between">
       <p className="text-gray-600 font-semibold text-sm">Accounts Receivable</p>
-      <RiPassPendingLine className="text-red-600 text-xl" />
+      <RiUserReceived2Fill className="text-blue-600 text-xl" />
     </div>
     <div className="flex gap-3 my-3">
       <p className="text-3xl font-bold">{formatCurrency(accountsReceivable)}</p>
-      <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
-        {outflowPercentageArrow == "↑" ? (
-          <IoIosArrowUp className="text-red-700" />
-        ) : (
-          <IoIosArrowDown className="text-red-700" />
-        )}{" "}
-        {outflowPercentage}%
-      </p>
-    </div>
-    <div className="my-3">
-      <p className="text-red-700 font-semibold">
-        {outflowDifferenceArrow == "↑" ? "+" : "-"} {formatCurrency(outflowDiff)}
-        <span className="text-gray-500"> than past month</span>
-      </p>
+
     </div>
   </div>
 
@@ -454,24 +443,10 @@ if (isLoading) {
   <div className="bg-white shadow-xl w-full sm:w-[350px] md:w-[370px] lg:w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
     <div className="flex items-center justify-between">
       <p className="text-gray-600 font-semibold text-sm">Accounts Payable</p>
-      <RiPassPendingLine className="text-red-600 text-xl" />
+      <TbCreditCardPay className="text-blue-600 text-xl" />
     </div>
     <div className="flex gap-3 my-3">
       <p className="text-3xl font-bold">{formatCurrency(accountsPayable)}</p>
-      <p className="flex items-center gap-1 bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-semibold">
-        {outflowPercentageArrow == "↑" ? (
-          <IoIosArrowUp className="text-red-700" />
-        ) : (
-          <IoIosArrowDown className="text-red-700" />
-        )}{" "}
-        {outflowPercentage}%
-      </p>
-    </div>
-    <div className="my-3">
-      <p className="text-red-700 font-semibold">
-        {outflowDifferenceArrow == "↑" ? "+" : "-"} {formatCurrency(outflowDiff)}
-        <span className="text-gray-500"> than past month</span>
-      </p>
     </div>
   </div>
 </div>

@@ -86,15 +86,15 @@ function ViewRequestPayable({ userData }) {
     }
   }
 
-  //HANDLES DECLINE BUDGETS
-  const handleDecline = async () =>{
-
-    try{
-      if(comment === ""){
-        setRequired(true)
-        return
+  const handleDecline = async () => {
+    try {
+      if (comment === "") {
+        setRequired(true);
+        return;
       }
-
+  
+      setIsLoading(true); 
+  
       const submitData = {
         _id: rowData._id,
         requestId: rowData.requestId,
@@ -106,49 +106,43 @@ function ViewRequestPayable({ userData }) {
         documents: rowData.documents,
         status: "Declined",
         comment: comment,
-      }
-
+      };
+  
       const response = await axios.post(`${API_URL}/API/BudgetRequests/UpdateRequest`, submitData);
-      if(response){
+      
+      if (response) {
         toast.success(`Budget Request from ${submitData.department} is Declined`, {
           position: "top-right"
         });
-
-        setIsLoading(false)
-        setIsSubmitted(!isSubmitted)
-        setStatus("Declined")
-        document.getElementById("decline_modal").close()
-
+  
+        setIsLoading(false); 
+        setIsSubmitted(!isSubmitted);
+        setStatus("Declined");
+        document.getElementById("decline_modal").close();
         const invoiceTrails = {
           userId: userData._id,
           userName: userData.userName,
           role: userData.role,
           action: "DECLINED BUDGET REQUEST",
-          description: `${userData.userName} declined the budget request for ${submitData.department} with the reason of ${submitData.comment} Request ID: ${submitData.requestId} Payable ID: ${submitData._id}`,
+          description: `${userData.userName} declined the budget request for ${submitData.department} with the reason of ${submitData.comment}. Request ID: ${submitData.requestId}, Payable ID: ${submitData._id}`,
         };
-    
+  
         socket.emit("addAuditTrails", invoiceTrails);
-
       }
-    }
-    catch(err){
-      if(err.response){
+    } catch (err) {
+      if (err.response) {
         toast.error(err.response.data.msg, {
-          position: "top-right"
+          position: "top-right",
         });
-
-        setIsLoading(false)
-        document.getElementById("decline_modal").close()
-      }
-      else{
+      } else {
         toast.error("Server Error", {
-          position: "top-right"
+          position: "top-right",
         });
-        setIsLoading(false)
       }
+    } finally {
+      setIsLoading(false)
     }
-  }
-
+  };  
   return (
     <>
     <div className="max-w-screen-2xl mx-auto mt-8 mb-10">
@@ -305,50 +299,56 @@ function ViewRequestPayable({ userData }) {
       </form>
     </dialog>
   
-    {/* DECLINE MODAL */}
-    <dialog id="decline_modal" className="modal">
-      <div className="modal-box">
-        <h3 className="font-bold text-xl mb-4">Decline Budget Request</h3>
-        <p className="mb-4 text-gray-600">
-          Are you sure you want to decline this request?
-        </p>
-        <div className="flex flex-col gap-4">
-          <p className="font-bold">Reason:</p>
-          <textarea
-            className="textarea textarea-error border-gray-300 rounded-lg p-3"
-            placeholder="Add a comment"
-            rows="4"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            required
-          />
-          {required && <h1 className="text-red-600">Reason is required</h1>}
-          <div className="flex justify-end gap-4">
-            {!isLoading ? (
-              <button
-                className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200"
-                onClick={handleDecline}
-              >
-                Yes
-              </button>
-            ) : (
-              <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200">
-                <span className="loading loading-spinner loading-md"></span>
-              </button>
-            )}
-            <button
-              className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
-              onClick={() => document.getElementById("decline_modal").close()}
-            >
-              No
-            </button>
-          </div>
-        </div>
+{/* DECLINE MODAL */}
+<dialog id="decline_modal" className="modal">
+  <div className="modal-box">
+    <h3 className="font-bold text-xl mb-4">Decline Budget Request</h3>
+    <p className="mb-4 text-gray-600">
+      Are you sure you want to decline this request?
+    </p>
+    <div className="flex flex-col gap-4">
+      <p className="font-bold">Reason:</p>
+      <textarea
+        className="textarea textarea-error border-gray-300 rounded-lg p-3"
+        placeholder="Add a comment"
+        rows="4"
+        value={comment}
+        onChange={(e) => {
+          setComment(e.target.value);
+          setRequired(false); // Remove validation warning on input
+        }}
+        required
+      />
+      {required && <h1 className="text-red-600">Reason is required</h1>}
+
+      <div className="flex justify-end gap-4">
+        {!isLoading ? (
+          <button
+            className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200"
+            onClick={handleDecline}
+          >
+            Yes
+          </button>
+        ) : (
+          <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" disabled>
+            <span className="loading loading-spinner loading-md"></span>
+          </button>
+        )}
+
+        <button
+          className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
+          onClick={() => document.getElementById("decline_modal").close()}
+          disabled={isLoading} // Prevent closing while loading
+        >
+          No
+        </button>
       </div>
-      <form method="dialog" className="modal-backdrop">
-        <button>close</button>
-      </form>
-    </dialog>
+    </div>
+  </div>
+  <form method="dialog" className="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
   </>
   );
 }
