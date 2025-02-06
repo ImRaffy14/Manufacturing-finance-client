@@ -16,6 +16,8 @@ import { RiUserReceived2Fill } from "react-icons/ri";
 import AreaChart from '../Components/ReCharts/AreaChart';
 import { useSocket } from '../context/SocketContext'
 import { toast } from 'react-toastify'
+import axios from 'axios'
+import CryptoJS from "crypto-js";
 
 
 function viewCollection({ userData }) {
@@ -24,7 +26,6 @@ function viewCollection({ userData }) {
   const [salesAmount, setSalesAmount] = useState(0);
   const [spentAmount, setSpentAmount] = useState(0);
   const [accountsReceivable, setAccountsReceivable] = useState(0);
-  const [accountsPayable, setAccountsPayable] = useState(0);
   const [inflowsChart, setInflowsChart] = useState([])
   const [outflowsChart, setOutflowsChart] = useState([])
   const [inflowDiff, setInflowDiff] = useState(0)
@@ -44,11 +45,14 @@ function viewCollection({ userData }) {
   const [searchText, setSearchText] = useState('');
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmit, setIsSubmit] = useState(false)
+  const [receivable, setReceivable] = useState(0)
+  const [payable, setPayable] = useState(0)
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
   const socket = useSocket()
+  const API_URL = import.meta.env.VITE_SERVER_URL;
 
   // INFLOWS ANALYTICS
   const currentDate = new Date();
@@ -126,12 +130,50 @@ function viewCollection({ userData }) {
   ];
 
 
-  //FETCHING DATA
+  //FETCHING DATA 
+  //DECRYPTION
+  const decryptData = (encryptedData, secretKey) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+    return JSON.parse(decrypted);
+  };
+
+  useEffect(() => {
+
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handlesBudgetReqPending = (response) => {
+      setPayable(response.pendingBudgetRequestsCount.totalAmount);
+    };
+
+    socket.on("receive_budget_request_pending", handlesBudgetReqPending);
+
+    return () => {
+      socket.off('receive_budget_request_pending');
+    };
+  }, [socket]);
+
+
   useEffect(() => {
     socket.emit("get_total_cash", {msg: "get total cash"})
     socket.emit("get_collection_analytics", {msg: "get collection analytics"})
     socket.emit("get_monthly_collection_records", {msg: "get monthly collection records"})
     socket.emit("get_monthly_records", {msg: "get monthly records"})
+    socket.emit("get_pending_invoice", { msg: "get pending invoice" });
+
+    const fetchData = async () => {
+      const response = await axios.get(`${API_URL}/API/BudgetRequests`);
+      if (response) {
+        const decryptedData = decryptData(response.data.result, import.meta.env.VITE_ENCRYPT_KEY);
+        setPayable(decryptedData.pendingBudgetRequestsCount.totalAmount);
+      }
+    };
+    
+    fetchData();
+
   }, [])
   
   useEffect(() => {
@@ -241,6 +283,9 @@ function viewCollection({ userData }) {
     socket.on("receive_withdraw_authUser_invalid", handlesWithdrawAuthError)
     socket.on("receive_deposit", handlesReceiveDeposit)
     socket.on("receive_withdraw", handlesReceiveWithdraw)
+    socket.on("receive_pending_invoice", (response) => {
+      setReceivable(response.pendingSalesCount.totalAmount);
+    });
 
     return () => {
       socket.off("receive_total_cash")
@@ -251,6 +296,7 @@ function viewCollection({ userData }) {
       socket.off("receive_withdraw_authUser_invalid")
       socket.off("receive_deposit")
       socket.off("receive_withdraw")
+      socket.off("receive_pending_invoice")
     }
 
   }, [socket])
@@ -434,7 +480,7 @@ if (isLoading) {
       <RiUserReceived2Fill className="text-blue-600 text-xl" />
     </div>
     <div className="flex gap-3 my-3">
-      <p className="text-3xl font-bold">{formatCurrency(accountsReceivable)}</p>
+      <p className="text-3xl font-bold">{formatCurrency(receivable)}</p>
 
     </div>
   </div>
@@ -446,7 +492,7 @@ if (isLoading) {
       <TbCreditCardPay className="text-blue-600 text-xl" />
     </div>
     <div className="flex gap-3 my-3">
-      <p className="text-3xl font-bold">{formatCurrency(accountsPayable)}</p>
+      <p className="text-3xl font-bold">{formatCurrency(payable)}</p>
     </div>
   </div>
 </div>
