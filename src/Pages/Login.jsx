@@ -330,7 +330,7 @@ function Login() {
                                 />
                             </div>
 
-                            {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage} <span>{timeLeft !== 0 ? formatTimeBL(timeLeft) !== 0 ? formatTimeBL(timeLeft) : ' ': ''}</span></h1>}
+                            {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage} <span>{timeLeft !== 1 ? formatTimeBL(timeLeft) !== 1 ? formatTimeBL(timeLeft) : ' ': ''}</span></h1>}
                             {isNoLongerBL && <h1 className="text-green-500 mb-4">{isNoLongerBL}</h1> }
 
                             <div className="flex justify-between items-center border px-2">

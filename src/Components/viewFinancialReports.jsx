@@ -145,13 +145,7 @@ const viewFinancialReports = ({userData}) => {
                 <section id="narrative" className="text-sm md:text-base">
                   <h2 className="text-lg md:text-xl font-semibold">Narrative Report</h2>
                   <p className="mt-2">
-                    For the period ended {currentDate}, the financial performance reflects a stable revenue stream. Total sales revenue reached {formatCurrency(reportData.salesRevenue)}, with a gross profit of {formatCurrency(reportData.grossProfit)}.
-                  </p>
-                  <p className="mt-2">
-                    The cost of goods sold (COGS) was {formatCurrency(reportData.totalCogs)}, constituting approximately {(parseFloat(reportData.grossProfit) / parseFloat(reportData.salesRevenue) * 100).toFixed(2)}% of total revenue. Operating expenses totaled {formatCurrency(reportData.totalOperatingExpenses)}, which affected the overall profitability.
-                  </p>
-                  <p className="mt-2">
-                    The outlook remains positive, with a healthy cash flow of {formatCurrency(reportData.netCashFlow)} and strong asset management, positioning the company for future growth.
+                    {reportData.narrativeReport}
                   </p>
                 </section>
 
