@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FaExclamationTriangle, FaCheckCircle, FaSearch } from "react-icons/fa";
+import { FaFlag } from "react-icons/fa";
+import { FaRedo } from "react-icons/fa";
 import DataTable from 'react-data-table-component';
 
 function AnomalyDetection() {
@@ -17,14 +19,38 @@ function AnomalyDetection() {
         return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
     };
 
-    const columns = [
-        { name: 'Transaction ID', selector: row => row.transactionId },
-        { name: 'Transaction Date', selector: row => row.transactionDate },
-        { name: 'Amount', selector: row => formatCurrency(row.amount) },
-        { name: 'Transaction Type', selector: row => row.transactionType },
-        { name: 'Anomaly Score', selector: row => row.anomalyScore.toFixed(2) },
-    ];
+    const handleFlagTransaction = (transactionId) => {
+      console.log(`Flagged transaction: ${transactionId}`);
+  };
 
+  const handleReload = () => {
+    setInflowSearchText(""); 
+    console.log("Data reloaded"); 
+};
+
+
+
+    const columns = [
+      { name: 'Transaction ID', selector: row => row.transactionId },
+      { name: 'Transaction Date', selector: row => row.transactionDate },
+      { name: 'Amount', selector: row => formatCurrency(row.amount) },
+      { name: 'Transaction Type', selector: row => row.transactionType },
+      { name: 'Anomaly Score', selector: row => row.anomalyScore.toFixed(2) },
+      {
+          name: 'Flag', 
+          cell: (row) => (
+              <button 
+                  onClick={() => handleFlagTransaction(row.transactionId)}
+                  className="bg-white  text-red-500 p-2 rounded-md"
+              >
+                  <FaFlag />
+              </button>
+          ),
+          ignoreRowClick: true,
+          allowOverflow: true,
+          button: true,
+      }
+  ];
 
     const unusualActivityData = [
       {
@@ -162,6 +188,30 @@ const handleFailedLoginAttemptsSearch = (event) => {
             value.toString().toLowerCase().includes(failedLoginAttemptsSearchText.toLowerCase())
         )
     );
+    const customStyles = {
+      headRow: {
+        style: {
+          backgroundColor: 'rgba(0, 85, 170, 0.85)', 
+          color: 'white',
+        },
+      },
+      title: {
+        style: {
+          color: 'white',
+          fontSize: '18px',
+          padding: '10px',
+          textAlign: 'center',
+        },
+      },
+      rows: {
+        style: {
+          backgroundColor: 'rgba(200, 50, 50, 0.90)', 
+          color: 'white', 
+        },
+      },
+    };
+    
+
     return (
         <div className="max-w-screen-2xl mx-auto mt-4">
             <div className="bg-white/75 shadow-xl rounded-lg p-6">
@@ -192,46 +242,74 @@ const handleFailedLoginAttemptsSearch = (event) => {
             </div>
 
             <div className="mt-5">
-                <div className="bg-white/75 shadow-xl rounded-lg p-6">
-                <DataTable
-              title="Possible Anomaly Inflow Transactions"
-              columns={columns}
-              data={filteredInflowTransactionData}
-              pagination
-              highlightOnHover
-              pointerOnHover
-              subHeader
-              subHeaderComponent={
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={inflowSearchText}
-                  onChange={handleInflowSearch}
-                  className="mb-2 p-2 border border-gray-400 rounded-lg"
-                />
-              }
+  <div className="bg-white/75 shadow-xl rounded-lg p-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Left Column - Inflow Transactions */}
+      <div>
+      <DataTable
+    title="Possible Anomaly Inflow Transactions"
+    columns={columns}
+    data={filteredInflowTransactionData}
+    pagination
+    pointerOnHover
+    subHeader
+    subHeaderComponent={
+        <div className="flex items-center gap-2">
+            <input
+                type="text"
+                placeholder="Search..."
+                value={inflowSearchText}
+                onChange={handleInflowSearch}
+                className="p-2 border border-gray-400 rounded-lg"
             />
-            <div className="mt-10"></div>
-             <DataTable
-              title="Possible Anomaly Outflow Transactions"
-              columns={columns}
-              data={filteredOutflowTransactionData}
-              pagination
-              highlightOnHover
-              pointerOnHover
-              subHeader
-              subHeaderComponent={
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={outflowSearchText}
-                  onChange={handleOutflowSearch}
-                  className="mb-2 p-2 border border-gray-400 rounded-lg"
-                />
-              }
+            <button 
+                onClick={handleReload} 
+                className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+                title="Reload"
+            >
+                <FaRedo className="text-gray-700" />
+            </button>
+        </div>
+    }
+    customStyles={customStyles}
+/>
+      </div>
+      
+      {/* Right Column - Outflow Transactions */}
+      <div>
+        <DataTable 
+          title="Possible Anomaly Outflow Transactions"
+          columns={columns}
+          data={filteredOutflowTransactionData}
+          pagination
+          pointerOnHover
+          subHeader
+          subHeaderComponent={
+            <div className="flex items-center gap-2">
+            <input
+                type="text"
+                placeholder="Search..."
+                value={outflowSearchText}
+                onChange={handleOutflowSearch}
+                className="p-2 border border-gray-400 rounded-lg"
             />
-                </div>
-            </div>
+            <button 
+                onClick={handleReload} 
+                className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+                title="Reload"
+            >
+                <FaRedo className="text-gray-700" />
+            </button>
+        </div>
+          }
+          customStyles={customStyles}
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
             <div className="mt-5">
                 <div className="bg-white/75 shadow-xl rounded-lg p-6">
