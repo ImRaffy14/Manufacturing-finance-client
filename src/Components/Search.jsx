@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { logout } from "../authentication/auth";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +7,18 @@ import { useSocket } from '../context/SocketContext';
 const Search = ({ userData }) => {
   const navigate = useNavigate();
   const socket = useSocket();
+
   const [notifications, setNotifications] = useState([
     { id: 1, message: "New message from HR", read: false },
     { id: 2, message: "System maintenance scheduled", read: false },
     { id: 3, message: "New user registered", read: false },
   ]);
+
+
   const [showNotifications, setShowNotifications] = useState(false);
   const [hasNewNotifications, setHasNewNotifications] = useState(true); 
+
+  
   const handleNotificationClick = (notificationId) => {
     setNotifications((prevNotifications) =>
       prevNotifications.map((notification) =>

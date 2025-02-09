@@ -70,12 +70,26 @@ const fetchNotificationData = () => {
   }));
 };
 
+
 useEffect(() => {
   fetchNotificationData();
-
   socket.emit('get_payable_length', { msg: "get payable length" });
   socket.emit('get_paid_records', { msg: "get paid records length" });
   socket.emit('get_budget_request_length', { msg: "get budget request records length" });
+
+  // TRACK ACTIVE CLIENT
+  socket.emit('save_active_staff', userData)
+  const handleBeforeUnload = () => {
+  socket.emit('staff_disconnect', userData._id);
+  };
+
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+    socket.emit('staff_disconnect'); 
+  };
+
 }, [socket]); 
 
 useEffect(() => {

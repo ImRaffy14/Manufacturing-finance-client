@@ -43,6 +43,7 @@ const refreshAccessToken = async () => {
 export const logout = async (userTrail, socket) => {
     try {
         socket.emit("addAuditTrails", userTrail)
+        socket.emit('staff_disconnect', userTrail.userId);
         localStorage.removeItem('token')
         await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
 
