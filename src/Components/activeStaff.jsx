@@ -1,14 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from 'react-data-table-component';
+import { useSocket } from "../context/SocketContext";
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 function ActiveStaff() {
   const [searchText, setSearchText] = useState('');
+  const [data, setData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  const socket = useSocket()
+  const API_URL = import.meta.env.VITE_API_AUTH_URL;
 
   const columns = [
     { name: 'ID', selector: row => row._id },
     { name: 'User ID', selector: row => row.userId },
     { name: 'Username', selector: row => row.username },
     { name: 'IP Address', selector: row => row.ipAddress },
+    { name: 'Socket ID', selector: row => row.socketId },
     { name: 'Role', selector: row => row.role },
     { name: 'Date', selector: row => row.date },
     {
@@ -41,35 +50,54 @@ function ActiveStaff() {
     }
   ];
   
-  const data = [
-    {
-      _id: 'TX001',
-      userId: '1',
-      username: 'hahaa',
-      ipAddress: '121.212.323',
-      role: 'Admin', 
-      date: '12/12/12'
-    },
-    {
-      _id: 'TX002',
-      userId: '2',
-      username: 'testUser',
-      ipAddress: '192.168.1.1',
-      role: 'User', 
-      date: '13/12/12'
-    },
-  ];
+
+  // FETCHING ACTIVE STAFF DATA
+  useEffect(() => {
+    if(!socket) return
+
+    socket.emit('get_active_staff')
+
+    // RECEIVE ACTIVE STAFF
+    const receiveActiveStaff = (response) => {
+      setIsLoading(false)
+      setData(response)
+    }
+
+    // FORCE DISCONNECT STAFF
+    const forceDisconnectStaff = async (response) => {
+      socket.disconnect();
+      localStorage.removeItem('token')
+      await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+      toast.error('You have been disconnected by the Admin/Supervisor.',{
+        position: 'top-center'
+      })
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 5500)
+
+    }
+    
+    socket.on('force_disconnect', forceDisconnectStaff)
+    socket.on('receive_active_staff', receiveActiveStaff)
+
+    return () => {
+      socket.off('force_disconnect')
+      socket.off('receive_active_staff')
+    }
+
+  }, [socket])
+
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
 
   const handleDisconnect = (row) => {
-    console.log("Disconnecting Staff:", row);
+    socket.emit('force_disconnect_staff', row)
   };
 
   const handleBlock = (row) => {
-    console.log("Blocking Staff:", row);
+    socket.emit('block_ip_address', row)
   };
 
   const filteredData = data.filter(row =>
@@ -78,13 +106,26 @@ function ActiveStaff() {
     )
   );
 
+  // LOADER
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-[520px] w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+      </div>
+    );
+  }
+
+
   return (
     <div className="max-w-screen-2xl mx-auto mt-4">
       <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
         <div className="mx-4">
           <div className="overflow-x-auto w-full">
             <DataTable
-              title="Blacklisted IP"
+              title="Active Staff"
               columns={columns}
               data={filteredData}
               pagination

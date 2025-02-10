@@ -1,24 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from 'react-data-table-component';
+import { useSocket } from '../context/SocketContext'
 
 function blacklistedIP() {
   const [searchText, setSearchText] = useState('');
+  const [data, setData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  const formatCurrency = (value) => {
-    if (value === undefined || value === null) {
-      return `₱0.00`; 
-    }
-    return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-  };
+  const socket = useSocket()
+
+  //CONVERT TIMESTAMP
+  function convertTimestamp(msTimestamp) {
+    const date = new Date(msTimestamp);
+
+    const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
+
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const mins = date.getUTCMinutes().toString().padStart(2, '0');
+    const formattedTime = `${hours}:${mins}`;
+
+    return `${formattedDate} ${formattedTime} UTC`;
+  }
+
+  //CONVERT MS TO MINUTES
+  function convertMsToMinutes(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${minutes} min ${seconds} sec`;
+}
 
   const columns = [
     { name: 'ID', selector: row => row._id },
     { name: 'User ID', selector: row => row.userId },
     { name: 'Username', selector: row => row.username },
     { name: 'IP Address', selector: row => row.ipAddress },
-    { name: 'Ban time', selector: row => row.banTime },
-    { name: 'Ban Duration', selector: row => row.banDuration },
-    { name: 'Banned', selector: row => row.banned },
+    { name: 'Ban time', selector: row => convertTimestamp(row.banTime) },
+    { name: 'Ban Duration', selector: row => convertMsToMinutes(row.banDuration) },
+    { name: 'Banned', selector: row => row.banned ? 'True' : 'False' },
     {
       name: 'Actions',
       cell: (row) => (
@@ -34,36 +55,27 @@ function blacklistedIP() {
       button: true
     }
   ];
+
+
+  // FETCH BLACKLISTED DATA
+  useEffect(() => {
+    if(!socket) return
+
+    socket.emit('get_blacklisted')
+
+    const handleReceiveBlacklisted = (response) => {
+      setIsLoading(false)
+      setData(response)
+    }
+
+    socket.on('receive_blacklisted', handleReceiveBlacklisted)
+
+    return () => {
+      socket.off("receive_blacklisted")
+    }
+
+  },[socket])
   
-  const data = [
-    {
-      _id: 'TX001',
-      userId: '1',
-      username: 'hahaa',
-      ipAddress: '121.212.323',
-      banTime: 0, 
-      banDuration: 0, 
-      banned: 'true', 
-    },
-    {
-      _id: 'TX002',
-      userId: '2',
-      username: 'hahaa',
-      ipAddress: '121.212.323',
-      banTime: 0, 
-      banDuration: 0, 
-      banned: 'true', 
-    },
-    {
-      _id: 'TX003',
-      userId: '3',
-      username: 'hahaa',
-      ipAddress: '121.212.323',
-      banTime: 0, 
-      banDuration: 0, 
-      banned: 'true', 
-    },
-  ];
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
@@ -78,6 +90,19 @@ function blacklistedIP() {
       value.toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
+
+  // LOADER
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-[520px] w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-20 w-full"></div>
+      </div>
+    );
+  }
+
 
   return (
     <>
