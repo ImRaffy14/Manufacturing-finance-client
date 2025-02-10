@@ -24,6 +24,7 @@ import { MdOutlinePayments } from "react-icons/md";
 import { TbPigMoney } from "react-icons/tb";
 import { TbZoomMoney } from "react-icons/tb";
 import { MdBlock } from "react-icons/md";
+import { VscVmActive } from "react-icons/vsc";
 import { useSocket } from '../context/SocketContext';
 
 
@@ -516,6 +517,17 @@ const toggleSidebar = () => {
                     <summary className="flex items-center">
                       <MdBlock className="w-5 h-5 mr-2" />
                       Blacklisted IP
+                    </summary>
+                  </NavLink>
+
+                  <NavLink
+                    to="activeStaff"
+                    className="relative flex items-center hover:text-blue-500"
+                    activeClassName="bg-gray-200"
+                  >
+                    <summary className="flex items-center">
+                      <VscVmActive className="w-5 h-5 mr-2" />
+                      Active Staffs
                     </summary>
                   </NavLink>
                       </li>

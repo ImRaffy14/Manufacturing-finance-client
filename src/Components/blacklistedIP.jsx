@@ -23,7 +23,7 @@ function blacklistedIP() {
       name: 'Actions',
       cell: (row) => (
         <button 
-          className="btn btn-primary mt-2 mb-2" // Added margin-top and margin-bottom
+          className="btn btn-outline btn-primary mt-2 mb-2" 
           onClick={() => handleResolveClick(row)}
         >
           Resolve
