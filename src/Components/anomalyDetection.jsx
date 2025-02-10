@@ -12,6 +12,9 @@ function AnomalyDetection() {
     const [unusualActivitySearchText, setUnusualActivitySearchText] = useState('');
     const [dataDuplicationSearchText, setDataDuplicationSearchText] = useState('');
     const [failedLoginAttemptsSearchText, setFailedLoginAttemptsSearchText] = useState('');
+    const [inflowTransactionData, setInflowTransactionData] = useState([])
+    const [outflowTransactionData, setOutflowTransactionData] = useState([])
+    
   
     const formatCurrency = (value) => {
         if (value === undefined || value === null) {
@@ -23,23 +26,30 @@ function AnomalyDetection() {
     //SOCKET CONNECTION
     const socket = useSocket()
 
-    // // FETCH ANOMALY DATA
-    // useEffect(() => {
-    //   if(!socket) return
+    // FETCH ANOMALY DATA
+    useEffect(() => {
+      if(!socket) return
 
-    //   socket.emit('get_possible_outflow_anomaly', {msg: 'get possible anomaly'})
+      socket.emit('get_possible_outflow_anomaly', {msg: 'get possible anomaly'})
+      socket.emit('get_possible_inflow_anomaly', {msg: 'get possible anomaly'})
       
-    //   const handlePossibleOutflowAnomaly = (response) => {
-    //     console.log(response)
-    //   }
+      const handlePossibleOutflowAnomaly = (response) => {
+        console.log(response)
+      }
 
-    //   socket.on('receive_possible_outflow_anomaly', handlePossibleOutflowAnomaly)
+      const handlePossibleInflowAnomaly = (response) => {
+        console.log(response)
+      }
 
-    //   return () => {
-    //     socket.off('receive_possible_outflow_anomaly')
-    //   }
+      socket.on('receive_possible_outflow_anomaly', handlePossibleOutflowAnomaly)
+      socket.on('receive_possible_inflow_anomaly', handlePossibleInflowAnomaly)
 
-    // },[socket])
+      return () => {
+        socket.off('receive_possible_outflow_anomaly')
+        socket.off('receive_possible_inflow_anomaly')
+      }
+
+    },[socket])
 
     const handleFlagTransaction = (transactionId) => {
       console.log(`Flagged transaction: ${transactionId}`);
@@ -178,18 +188,6 @@ function AnomalyDetection() {
   },
     ];
 
-
-    const inflowTransactionData = [
-        { transactionId: 'TX001', transactionDate: '2024-11-10', amount: 50000, transactionType: 'Purchase', anomalyScore: 0.95 },
-        { transactionId: 'TX002', transactionDate: '2024-11-11', amount: 1500, transactionType: 'Refund', anomalyScore: 0.10 },
-        { transactionId: 'TX003', transactionDate: '2024-11-12', amount: 120000, transactionType: 'Purchase', anomalyScore: 0.85 },
-    ];
-
-    const outflowTransactionData = [
-        { transactionId: '123', transactionDate: '2024-11-10', amount: 50000, transactionType: 'Purchase', anomalyScore: 0.95 },
-        { transactionId: '222', transactionDate: '2024-11-11', amount: 1500, transactionType: 'Refund', anomalyScore: 0.10 },
-        { transactionId: '333', transactionDate: '2024-11-12', amount: 120000, transactionType: 'Purchase', anomalyScore: 0.85 },
-    ];
 
     const combinedData = [...inflowTransactionData, ...outflowTransactionData];
     const totalFlaggedAnomalies = combinedData.filter(row => row.anomalyScore > 0.8).length;
