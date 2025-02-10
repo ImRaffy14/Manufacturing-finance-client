@@ -31,12 +31,13 @@ import ViewReviewPaymentTransactions from '../Components/viewReviewPaymentTransa
 import ViewBudgetRequest from '../Components/viewBudgetRequest';
 import ViewFinancialReports from '../Components/viewFinancialReports';
 import { getProfile } from '../authentication/auth';
+import { useSocket } from '../context/SocketContext';
 
 function AdminPage() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-
+    const socket = useSocket()
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -56,7 +57,8 @@ function AdminPage() {
         fetchProfile();
     }, []);
 
-   
+
+
 
     if (loading) {
         return (
@@ -66,8 +68,6 @@ function AdminPage() {
         );
     }
     
-    
-
     return (
         <div className="h-screen flex">
             <Sidebar  userData={user} />
