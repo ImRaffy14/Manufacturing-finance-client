@@ -5,6 +5,7 @@ import Sidebar from '../Components/Sidebar';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import PageNotFound from '../Pages/pageNotFound';
 import AccountCreation from '../Components/accountCreation';
+import ActiveStaff from '../Components/activeStaff';
 import ApproveRejectPayables from '../Components/approveRejectPayables';
 import AuditRecords from '../Components/auditRecords';
 import AuditTrails from '../Components/auditTrails';
@@ -154,6 +155,7 @@ function AdminPage() {
                     <Route path="viewReviewPaymentTransactions" element={<ViewReviewPaymentTransactions userData={user}/>} />
                     <Route path="viewRequestPayable" element={<ViewRequestPayable  userData={user}/>} />
                     <Route path="reviewViewCollection" element={<ReviewViewCollection/>}/>
+                    <Route path="activeStaff" element={<ActiveStaff/>}/>
                 </Routes>
             </div>
         </div>

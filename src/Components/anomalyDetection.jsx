@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaExclamationTriangle, FaCheckCircle, FaSearch } from "react-icons/fa";
 import { FaFlag } from "react-icons/fa";
 import { FaRedo } from "react-icons/fa";
+import { MdBlock } from "react-icons/md";
 import DataTable from 'react-data-table-component';
 import { useSocket } from "../context/SocketContext"
 
@@ -44,6 +45,10 @@ function AnomalyDetection() {
       console.log(`Flagged transaction: ${transactionId}`);
   };
 
+  const handleBlockUser = (userId) => {
+    console.log(`Blocked User: ${userId}`);
+};
+
   const handleReload = () => {
     setInflowSearchText(""); 
     console.log("Data reloaded"); 
@@ -56,7 +61,10 @@ function AnomalyDetection() {
       { name: 'Transaction Date', selector: row => row.transactionDate },
       { name: 'Amount', selector: row => formatCurrency(row.amount) },
       { name: 'Transaction Type', selector: row => row.transactionType },
-      { name: 'Anomaly Score', selector: row => row.anomalyScore.toFixed(2) },
+      { 
+        name: 'Anomaly Score', 
+        selector: row => (row.anomalyScore !== undefined && row.anomalyScore !== null) ? row.anomalyScore.toFixed(2) : "0.00"
+    },
       {
           name: 'Flag', 
           cell: (row) => (
@@ -72,6 +80,28 @@ function AnomalyDetection() {
           button: true,
       }
   ];
+
+  const failedAttemptsColumns = [
+    { name: 'ID', selector: row => row._id },
+    { name: 'User ID', selector: row => row.userId },
+    { name: 'IP Address', selector: row => row.ipAddress },
+    { name: 'Attempts', selector: row => row.attempts },
+    { name: 'Date', selector: row => row.attemptDate },
+    {
+        name: 'Action', 
+        cell: (row) => (
+            <button 
+                onClick={() => handleBlockUser(row.userId)}
+                className="btn btn-outline btn-error mt-2 mb-2"
+            >
+                Block
+            </button>
+        ),
+        ignoreRowClick: true,
+        allowOverflow: true,
+        button: true,
+    }
+];
 
     const unusualActivityData = [
       {
@@ -123,25 +153,28 @@ function AnomalyDetection() {
 
     const failedLoginAttemptsData = [
       {
-          transactionId: 'QWEQWE',
-          transactionDate: '2024-02-08 02:30 AM',
-          amount: 750000,
-          transactionType: 'Cash Withdrawal',
-          anomalyScore: 0.97, 
+          _id: '12313231312qwe',
+         userId: '12321313123',
+         username: 'Angelo',
+         ipAddress : '123.123.123',
+         attempts: 4,
+         attemptDate: '12/12/12',
       },
       {
-        transactionId: 'QWEQWE',
-        transactionDate: '2024-02-08 02:30 AM',
-        amount: 750000,
-        transactionType: 'Cash Withdrawal',
-        anomalyScore: 0.97, 
+        _id: '32213',
+       userId: '12321313123',
+       username: 'Angelo',
+       ipAddress : '123.123.123',
+       attempts: 4,
+       attemptDate: '12/12/12',
     },
     {
-      transactionId: 'QWEQWE',
-      transactionDate: '2024-02-08 02:30 AM',
-      amount: 750000,
-      transactionType: 'Cash Withdrawal',
-      anomalyScore: 0.97, 
+      _id: '222222',
+     userId: '12321313123',
+     username: 'Angelo',
+     ipAddress : '123.123.123',
+     attempts: 4,
+     attemptDate: '12/12/12',
   },
     ];
 
@@ -382,7 +415,7 @@ const handleFailedLoginAttemptsSearch = (event) => {
                 <div className="bg-white/75 shadow-xl rounded-lg p-6">
                 <DataTable
               title="Failed Login Attempts"
-              columns={columns}
+              columns={failedAttemptsColumns}
               data={filteredFailedLoginAttemptsData}
               pagination
               highlightOnHover
