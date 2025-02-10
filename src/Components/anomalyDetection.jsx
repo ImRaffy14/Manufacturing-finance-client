@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaExclamationTriangle, FaCheckCircle, FaSearch } from "react-icons/fa";
 import { FaFlag } from "react-icons/fa";
 import { FaRedo } from "react-icons/fa";
 import DataTable from 'react-data-table-component';
+import { useSocket } from "../context/SocketContext"
 
 function AnomalyDetection() {
     const [inflowSearchText, setInflowSearchText] = useState('');
@@ -10,14 +11,34 @@ function AnomalyDetection() {
     const [unusualActivitySearchText, setUnusualActivitySearchText] = useState('');
     const [dataDuplicationSearchText, setDataDuplicationSearchText] = useState('');
     const [failedLoginAttemptsSearchText, setFailedLoginAttemptsSearchText] = useState('');
-   
-
+  
     const formatCurrency = (value) => {
         if (value === undefined || value === null) {
             return `₱0.00`;
         }
         return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
     };
+
+    //SOCKET CONNECTION
+    const socket = useSocket()
+
+    // // FETCH ANOMALY DATA
+    // useEffect(() => {
+    //   if(!socket) return
+
+    //   socket.emit('get_possible_outflow_anomaly', {msg: 'get possible anomaly'})
+      
+    //   const handlePossibleOutflowAnomaly = (response) => {
+    //     console.log(response)
+    //   }
+
+    //   socket.on('receive_possible_outflow_anomaly', handlePossibleOutflowAnomaly)
+
+    //   return () => {
+    //     socket.off('receive_possible_outflow_anomaly')
+    //   }
+
+    // },[socket])
 
     const handleFlagTransaction = (transactionId) => {
       console.log(`Flagged transaction: ${transactionId}`);
