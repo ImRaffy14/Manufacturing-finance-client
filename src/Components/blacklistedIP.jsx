@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataTable from 'react-data-table-component';
 import { useSocket } from '../context/SocketContext'
+import { toast } from 'react-toastify'
 
 function blacklistedIP() {
   const [searchText, setSearchText] = useState('');
@@ -63,15 +64,34 @@ function blacklistedIP() {
 
     socket.emit('get_blacklisted')
 
+    // GET BLACKLISTED DATA
     const handleReceiveBlacklisted = (response) => {
       setIsLoading(false)
       setData(response)
     }
 
+    // HANDLE ERROR FETCHING
+    const handleError = (response) => {
+      toast.error('Server Internal Error', {
+        position: 'top-right'
+      })
+    }
+
+    // HANDLE SUCCESS FETCHING
+    const handleSuccess = (response) => {
+      toast.success(response.msg, {
+        position: 'top-right'
+      })
+    }
+
+    socket.on('blacklist_success', handleSuccess)
+    socket.on('blacklist_error', handleError)
     socket.on('receive_blacklisted', handleReceiveBlacklisted)
 
     return () => {
       socket.off("receive_blacklisted")
+      socket.off("blacklist_error")
+      socket.off("blacklist_success")
     }
 
   },[socket])
@@ -82,7 +102,7 @@ function blacklistedIP() {
   };
 
   const handleResolveClick = (row) => {
-    console.log("Resolved Row Data:", row);
+    socket.emit('resolve_blacklisted', row)
   };
 
   const filteredData = data.filter(row =>

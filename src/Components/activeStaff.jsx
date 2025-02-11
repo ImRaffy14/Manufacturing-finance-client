@@ -3,13 +3,13 @@ import DataTable from 'react-data-table-component';
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { MdBlock } from "react-icons/md";
 import { useSocket } from "../context/SocketContext";
+import { toast } from "react-toastify"
 
 
 function ActiveStaff() {
   const [searchText, setSearchText] = useState('');
-  const [data, setData] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const socket = useSocket()
 
   const columns = [
@@ -62,11 +62,29 @@ function ActiveStaff() {
       setIsLoading(false)
       setData(response)
     }
- 
+    
+    // HANDLE ERROR
+    const handleError = (response) => {
+      toast.error('Server Internal Error', {
+        positon: 'top-right'
+      })
+    }
+
+    // HANDLE SUCCESS FETCHING
+    const handleSuccessFetch = (response) => {
+      toast.success(response.msg, {
+        position: 'top-right'
+      })
+    }
+
+    socket.on('active_staff_success', handleSuccessFetch)
+    socket.on('active_staff_error', handleError)
     socket.on('receive_active_staff', receiveActiveStaff)
 
     return () => {
       socket.off('receive_active_staff')
+      socket.off('active_staff_error')
+      socket.off('active_staff_success')
     }
 
   }, [socket])
