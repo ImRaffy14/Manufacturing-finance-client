@@ -462,7 +462,8 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
 
             <div className="mt-5">
   <div className="bg-white/75 shadow-xl rounded-lg p-6">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <h1 className="text-xl font-bold">Possible Anomaly Transactions</h1>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
       {/* Left Column - Inflow Transactions */}
       <div>
       <DataTable
