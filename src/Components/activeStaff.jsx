@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataTable from 'react-data-table-component';
 import { useSocket } from "../context/SocketContext";
-import axios from 'axios'
-import { toast } from 'react-toastify'
+
 
 function ActiveStaff() {
   const [searchText, setSearchText] = useState('');
@@ -10,7 +9,6 @@ function ActiveStaff() {
   const [isLoading, setIsLoading] = useState(true)
 
   const socket = useSocket()
-  const API_URL = import.meta.env.VITE_API_AUTH_URL;
 
   const columns = [
     { name: 'ID', selector: row => row._id },
@@ -62,26 +60,10 @@ function ActiveStaff() {
       setIsLoading(false)
       setData(response)
     }
-
-    // FORCE DISCONNECT STAFF
-    const forceDisconnectStaff = async (response) => {
-      socket.disconnect();
-      localStorage.removeItem('token')
-      await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
-      toast.error('You have been disconnected by the Admin/Supervisor.',{
-        position: 'top-center'
-      })
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 5500)
-
-    }
-    
-    socket.on('force_disconnect', forceDisconnectStaff)
+ 
     socket.on('receive_active_staff', receiveActiveStaff)
 
     return () => {
-      socket.off('force_disconnect')
       socket.off('receive_active_staff')
     }
 

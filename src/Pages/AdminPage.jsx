@@ -32,6 +32,8 @@ import ViewBudgetRequest from '../Components/viewBudgetRequest';
 import ViewFinancialReports from '../Components/viewFinancialReports';
 import { getProfile } from '../authentication/auth';
 import { useSocket } from '../context/SocketContext';
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 function AdminPage() {
     const [user, setUser] = useState(null);
@@ -39,6 +41,7 @@ function AdminPage() {
 
     const socket = useSocket()
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_AUTH_URL;
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -58,7 +61,30 @@ function AdminPage() {
     }, []);
 
 
+    useEffect(() => {
+        if(!socket) return
 
+        // FORCE DISCONNECT STAFF
+        const forceDisconnectStaff = async (response) => {
+        socket.disconnect();
+        localStorage.removeItem('token')
+        await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+        toast.error('You have been disconnected by the Admin/Supervisor.',{
+          position: 'top-center'
+        })
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 5500)
+  
+      }
+      
+      socket.on('force_disconnect', forceDisconnectStaff)
+
+      return () => {
+        socket.off('force_disconnect')
+      }
+
+    }, [socket])
 
     if (loading) {
         return (
