@@ -14,6 +14,7 @@ import BudgetRequest from '../Components/budgetRequest';
 import BlackListedIP from '../Components/blacklistedIP';
 import FinancialReports from '../Components/financialReports';
 import CreatePurchaseOrder from '../Components/createPurchaseOrder';
+import ChartOfAccounts from '../Components/chartOfAccounts';
 import ManageRolesPermissions from '../Components/manageRolesPermissions';
 import PaidOrder from '../Components/paidOrder';
 import PendingPurchaseOrder from '../Components/pendingPurchaseOrder';
@@ -181,6 +182,7 @@ function AdminPage() {
                     <Route path="viewReviewPaymentTransactions" element={<ViewReviewPaymentTransactions userData={user}/>} />
                     <Route path="viewRequestPayable" element={<ViewRequestPayable  userData={user}/>} />
                     <Route path="reviewViewCollection" element={<ReviewViewCollection/>}/>
+                    <Route path="chartOfAccounts" element={<ChartOfAccounts/>}/>
                     <Route path="activeStaff" element={<ActiveStaff/>}/>
                 </Routes>
             </div>

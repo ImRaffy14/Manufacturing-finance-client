@@ -11,6 +11,10 @@ function AnomalyDetection() {
     const [outflowSearchText, setOutflowSearchText] = useState('');
     const [unusualActivitySearchText, setUnusualActivitySearchText] = useState('');
     const [dataDuplicationSearchText, setDataDuplicationSearchText] = useState('');
+    const [budgetDuplicationSearchText, setBudgetDuplicationSearchText] = useState('');
+    const [purchaseOrderDuplicationSearchText, setPurchaseOrderDuplicationSearchText] = useState('');
+    const [inflowDuplicationSearchText, setInflowDuplicationSearchText] = useState('');
+    const [outflowDuplicationSearchText, setOutflowDuplicationSearchText] = useState('');
     const [failedLoginAttemptsSearchText, setFailedLoginAttemptsSearchText] = useState('');
     const [inflowTransactionData, setInflowTransactionData] = useState([])
     const [outflowTransactionData, setOutflowTransactionData] = useState([])
@@ -113,6 +117,23 @@ function AnomalyDetection() {
     }
 ];
 
+const budgetDuplicationColumns = [
+  { name: 'ID', selector: row => row._id },
+  { name: 'Request ID', selector: row => row.requestId },
+  { name: 'Category', selector: row => row.category },
+  { name: 'Department', selector: row => row.department },
+  { name: 'Total Request', selector: row => row.totalRequest },
+  { name: 'Budget Request ID', selector: row => row.budgetReqId },
+];
+
+const purchaseOrderDuplicationColumns = [
+  { name: 'ID', selector: row => row._id },
+  { name: 'Order Number', selector: row => row.orderNumber },
+  { name: 'Customer Name', selector: row => row.customerName },
+  { name: 'Total Amount', selector: row => row.totalAmount },
+  { name: 'PO ID', selector: row => row.poId },
+];
+
     const unusualActivityData = [
       {
           transactionId: 'UA001',
@@ -135,6 +156,60 @@ function AnomalyDetection() {
           transactionType: 'Luxury Store Purchase',
           anomalyScore: 0.85,
       },
+    ];
+
+    const budgetDuplicationData = [
+      {
+          _id: 'UA001',
+          requestId: '2024-02-08 02:30 AM',
+          department: 750000,
+          category: 'Cash Withdrawal',
+          anomtotalRequestalyScore: 0.97, 
+          budgetReqId: 0.97, 
+          totalRequest: 0.97, 
+      },
+      {
+        _id: '32',
+        requestId: '2024-02-08 02:30 AM',
+        department: 750000,
+        category: 'Cash Withdrawal',
+        anomtotalRequestalyScore: 0.97, 
+        budgetReqId: 0.97, 
+        totalRequest: 0.97, 
+    },
+    {
+      _id: '123',
+      requestId: '2024-02-08 02:30 AM',
+      department: 750000,
+      category: 'Cash Withdrawal',
+      anomtotalRequestalyScore: 0.97, 
+      budgetReqId: 0.97, 
+      totalRequest: 0.97, 
+  },
+    ];
+
+    const purchaseOrderDuplicationData = [
+      {
+          _id: 'UA001',
+          orderNumber: '2024-02-08 02:30 AM',
+          customerName: '750000',
+          totalAmount: 'Cash Withdrawal',
+          poId: 0.97, 
+      },
+      {
+        _id: '32',
+        orderNumber: '2024-02-08 02:30 AM',
+        customerName: 750000,
+        totalAmount: 'Cash Withdrawal',
+        poId: 0.97, 
+    },
+    {
+      _id: '3213',
+      orderNumber: '2024-02-08 02:30 AM',
+      customerName: 750000,
+      totalAmount: 'Cash Withdrawal',
+      poId: 0.97, 
+  },
     ];
 
     const dataDuplicationData = [
@@ -202,6 +277,14 @@ function AnomalyDetection() {
         setOutflowSearchText(event.target.value);
     };
 
+    const handleBudgetDuplicationSearch = (event) => {
+      setBudgetDuplicationSearchText(event.target.value);
+  };
+
+  const handlePurchaseOrderDuuplicationSearch = (event) => {
+    setPurchaseOrderDuplicationSearchText(event.target.value);
+};
+
     const handleUnusualActivitySearch = (event) => {
       setUnusualActivitySearchText(event.target.value);
   };
@@ -224,6 +307,17 @@ const handleFailedLoginAttemptsSearch = (event) => {
             value.toString().toLowerCase().includes(outflowSearchText.toLowerCase())
         )
     );
+    const filteredBudgetDuplicationData = budgetDuplicationData.filter(row =>
+      Object.values(row).some(value =>
+          value.toString().toLowerCase().includes(budgetDuplicationSearchText.toLowerCase())
+      )
+  );
+
+  const filteredPurchaseOrderDuplicationData = purchaseOrderDuplicationData.filter(row =>
+    Object.values(row).some(value =>
+        value.toString().toLowerCase().includes(purchaseOrderDuplicationSearchText.toLowerCase())
+    )
+);
 
     const filteredUnusualActivityData = unusualActivityData.filter(row =>
       Object.values(row).some(value =>
@@ -343,6 +437,76 @@ const handleFailedLoginAttemptsSearch = (event) => {
                 placeholder="Search..."
                 value={outflowSearchText}
                 onChange={handleOutflowSearch}
+                className="p-2 border border-gray-400 rounded-lg"
+            />
+            <button 
+                onClick={handleReload} 
+                className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+                title="Reload"
+            >
+                <FaRedo className="text-gray-700" />
+            </button>
+        </div>
+          }
+          customStyles={customStyles}
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+{/* Buudget Duplciation */}
+<div className="mt-5">
+  <div className="bg-white/75 shadow-xl rounded-lg p-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Left Column - Budget Duplication */}
+      <div>
+      <DataTable
+    title="Budget Request Duplication"
+    columns={budgetDuplicationColumns}
+    data={filteredBudgetDuplicationData}
+    pagination
+    pointerOnHover
+    subHeader
+    subHeaderComponent={
+      <div className="flex items-center gap-2">
+      <input
+          type="text"
+          placeholder="Search..."
+          value={budgetDuplicationSearchText}
+          onChange={handleBudgetDuplicationSearch}
+          className="p-2 border border-gray-400 rounded-lg"
+      />
+      <button 
+          onClick={handleReload} 
+          className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+          title="Reload"
+      >
+          <FaRedo className="text-gray-700" />
+      </button>
+  </div>
+       
+    }
+    customStyles={customStyles}
+/>
+      </div>
+      
+      {/* Right Column - puurchase order duplication */}
+      <div>
+        <DataTable 
+          title="Purchase Order Duplication"
+          columns={purchaseOrderDuplicationColumns}
+          data={filteredPurchaseOrderDuplicationData}
+          pagination
+          pointerOnHover
+          subHeader
+          subHeaderComponent={
+            <div className="flex items-center gap-2">
+            <input
+                type="text"
+                placeholder="Search..."
+                value={purchaseOrderDuplicationSearchText}
+                onChange={handlePurchaseOrderDuuplicationSearch}
                 className="p-2 border border-gray-400 rounded-lg"
             />
             <button 

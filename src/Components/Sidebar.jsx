@@ -21,6 +21,7 @@ import { VscBracketError } from "react-icons/vsc";
 import { SiAdobeaudition } from "react-icons/si";
 import { TbCreditCardPay } from "react-icons/tb";
 import { MdOutlinePayments } from "react-icons/md";
+import { FaRegChartBar } from "react-icons/fa6";
 import { TbPigMoney } from "react-icons/tb";
 import { TbZoomMoney } from "react-icons/tb";
 import { MdBlock } from "react-icons/md";
@@ -431,6 +432,16 @@ const toggleSidebar = () => {
                             </li>
                           </ul>
                         </details>
+                        <NavLink
+                    to="chartOfAccounts"
+                    className="relative flex items-center hover:text-blue-500"
+                    activeClassName="bg-gray-200"
+                  >
+                    <summary className="flex items-center">
+                      <FaRegChartBar className="mr-2" />
+                      Chart Of Accounts
+                    </summary>
+                  </NavLink>
                       </li>
                     </ul>
                   </details>
