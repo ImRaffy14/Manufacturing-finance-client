@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataTable from 'react-data-table-component';
+import { VscDebugDisconnect } from "react-icons/vsc";
+import { MdBlock } from "react-icons/md";
 import { useSocket } from "../context/SocketContext";
 
 
@@ -21,12 +23,12 @@ function ActiveStaff() {
     {
       name: 'Disconnect',
       cell: (row) => (
-          <button 
-            className="btn btn-outline btn-error"
-            onClick={() => handleDisconnect(row)}
-          >
-            Disconnect
-          </button>
+        <button 
+          className="btn btn-outline btn-error p-2 mt-2 mb-2"
+          onClick={() => handleDisconnect(row)}
+        >
+          <VscDebugDisconnect size={20} />
+        </button>
       ),
       ignoreRowClick: true,
       allowOverflow: true,
@@ -35,17 +37,17 @@ function ActiveStaff() {
     {
       name: 'Block',
       cell: (row) => (
-          <button 
-            className="my-2 btn btn-outline btn-error"
-            onClick={() => handleBlock(row)}
-          >
-            Block
-          </button>
+        <button 
+          className="btn btn-outline btn-error p-2 mt-2 mb-2"
+          onClick={() => handleBlock(row)}
+        >
+          <MdBlock size={20} />
+        </button>
       ),
       ignoreRowClick: true,
       allowOverflow: true,
       button: true
-    }
+    },
   ];
   
 

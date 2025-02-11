@@ -134,28 +134,50 @@ const purchaseOrderDuplicationColumns = [
   { name: 'PO ID', selector: row => row.poId },
 ];
 
+const inflowDuplicationColumns = [
+  { name: 'ID', selector: row => row._id },
+  { name: 'Auditor ID', selector: row => row.auditorId },
+  { name: 'Auditor', selector: row => row.auditor },
+  { name: 'Invoice ID', selector: row => row.invoiceId },
+  { name: 'Total Amount', selector: row => row.totalAmount },
+  { name: 'Inflow ID', selector: row => row.inflowId },
+];
+
+const outflowDuplicationColumns = [
+  { name: 'ID', selector: row => row._id },
+  { name: 'Approver ID', selector: row => row.approverId },
+  { name: 'Approver', selector: row => row.approver },
+  { name: 'Payable ID', selector: row => row.payableId },
+  { name: 'Total Amount', selector: row => row.totalAmount },
+  { name: 'Outflow ID', selector: row => row.outflowId },
+];
+
+const unusualActivityColumns = [
+  { name: 'ID', selector: row => row._id },
+  { name: 'username', selector: row => row.username },
+  { name: 'Role', selector: row => row.role },
+  { name: 'IP Address', selector: row => row.ipAddress },
+];
+
     const unusualActivityData = [
       {
-          transactionId: 'UA001',
-          transactionDate: '2024-02-08 02:30 AM',
-          amount: 750000,
-          transactionType: 'Cash Withdrawal',
-          anomalyScore: 0.97, 
+          _id: 'UA001',
+          username: '2024-02-08 02:30 AM',
+          role: '1232131',
+          ipAddress: 'Cash Withdrawal',
       },
       {
-          transactionId: 'UA002',
-          transactionDate: '2024-02-08 03:45 AM',
-          amount: 250000,
-          transactionType: 'Online Purchase',
-          anomalyScore: 0.92, 
-      },
-      {
-          transactionId: 'UA003',
-          transactionDate: '2024-02-07 11:15 PM',
-          amount: 98000,
-          transactionType: 'Luxury Store Purchase',
-          anomalyScore: 0.85,
-      },
+        _id: '31232131',
+        username: '2024-02-08 02:30 AM',
+        role: '1232131',
+        ipAddress: 'Cash Withdrawal',
+    },
+    {
+      _id: '23112312',
+      username: '2024-02-08 02:30 AM',
+      role: '231131',
+      ipAddress: 'Cash Withdrawal',
+  },
     ];
 
     const budgetDuplicationData = [
@@ -212,29 +234,63 @@ const purchaseOrderDuplicationColumns = [
   },
     ];
 
-    const dataDuplicationData = [
+
+    const inflowDuplicationData = [
       {
-          transactionId: 'QWEQWE',
-          transactionDate: '2024-02-08 02:30 AM',
-          amount: 750000,
-          transactionType: 'Cash Withdrawal',
-          anomalyScore: 0.97, 
+          _id: 'UA001',
+          auditorId: '2024-02-08 02:30 AM',
+          auditor: '750000',
+          invoiceId: 'Cash Withdrawal',
+          totalAmount: 0.97, 
+          inflowId: '1231321'
       },
       {
-        transactionId: 'QWEQWE',
-        transactionDate: '2024-02-08 02:30 AM',
-        amount: 750000,
-        transactionType: 'Cash Withdrawal',
-        anomalyScore: 0.97, 
+        _id: '32',
+        auditorId: '2024-02-08 02:30 AM',
+        auditor: '750000',
+        invoiceId: 'Cash Withdrawal',
+        totalAmount: 0.97, 
+        inflowId: '1231321'
     },
     {
-      transactionId: 'QWEQWE',
-      transactionDate: '2024-02-08 02:30 AM',
-      amount: 750000,
-      transactionType: 'Cash Withdrawal',
-      anomalyScore: 0.97, 
+      _id: '12313',
+      auditorId: '2024-02-08 02:30 AM',
+      auditor: '750000',
+      invoiceId: 'Cash Withdrawal',
+      totalAmount: 0.97, 
+      inflowId: '1231321'
   },
     ];
+
+    const outflowDupulicationData = [
+      {
+          _id: 'UA001',
+          approverId: '2024-02-08 02:30 AM',
+          approver: '750000',
+          payableId: 'Cash Withdrawal',
+          totalAmount: 0.97, 
+          outflowId: '1231321'
+      },
+      {
+        _id: '321321',
+        approverId: '2024-02-08 02:30 AM',
+        approver: '750000',
+        payableId: 'Cash Withdrawal',
+        totalAmount: 0.97, 
+       outflowId: '1231321'
+    },
+    {
+      _id: '3213211',
+      approverId: '2024-02-08 02:30 AM',
+      approver: '750000',
+      payableId: 'Cash Withdrawal',
+      totalAmount: 0.97, 
+      outflowId: '1231321'
+  },
+    ];
+
+
+
 
     const failedLoginAttemptsData = [
       {
@@ -285,9 +341,19 @@ const purchaseOrderDuplicationColumns = [
     setPurchaseOrderDuplicationSearchText(event.target.value);
 };
 
+const handleInflowDuplicationSearch = (event) => {
+  setInflowDuplicationSearchText(event.target.value);
+};
+
+const handleOutflowDuplicationSearch = (event) => {
+  setOutflowDuplicationSearchText(event.target.value);
+};
+
     const handleUnusualActivitySearch = (event) => {
       setUnusualActivitySearchText(event.target.value);
   };
+
+  
 
   const handleDataDuplicationSearch = (event) => {
     setDataDuplicationSearchText(event.target.value);
@@ -319,14 +385,21 @@ const handleFailedLoginAttemptsSearch = (event) => {
     )
 );
 
+const filteredInflowDuplicationData = inflowDuplicationData.filter(row =>
+  Object.values(row).some(value =>
+      value.toString().toLowerCase().includes(purchaseOrderDuplicationSearchText.toLowerCase())
+  )
+);
+
+const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
+  Object.values(row).some(value =>
+      value.toString().toLowerCase().includes(outflowDuplicationSearchText.toLowerCase())
+  )
+);
+
     const filteredUnusualActivityData = unusualActivityData.filter(row =>
       Object.values(row).some(value =>
           value.toString().toLowerCase().includes(unusualActivitySearchText.toLowerCase())
-      )
-  );
-    const filteredDataDuplicationData = dataDuplicationData.filter(row =>
-      Object.values(row).some(value =>
-          value.toString().toLowerCase().includes(dataDuplicationSearchText.toLowerCase())
       )
   );
     const filteredFailedLoginAttemptsData = failedLoginAttemptsData.filter(row =>
@@ -458,7 +531,8 @@ const handleFailedLoginAttemptsSearch = (event) => {
 {/* Buudget Duplciation */}
 <div className="mt-5">
   <div className="bg-white/75 shadow-xl rounded-lg p-6">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <h1 className="text-xl font-bold">Data Duplication</h1>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
       {/* Left Column - Budget Duplication */}
       <div>
       <DataTable
@@ -521,6 +595,68 @@ const handleFailedLoginAttemptsSearch = (event) => {
           customStyles={customStyles}
         />
       </div>
+
+          {/*INFFLOW DUPLICATION */}
+      <div>
+        <DataTable 
+          title="Inflow Transaction Duplication"
+          columns={inflowDuplicationColumns}
+          data={filteredInflowDuplicationData}
+          pagination
+          pointerOnHover
+          subHeader
+          subHeaderComponent={
+            <div className="flex items-center gap-2">
+            <input
+                type="text"
+                placeholder="Search..."
+                value={inflowDuplicationSearchText}
+                onChange={handleInflowDuplicationSearch}
+                className="p-2 border border-gray-400 rounded-lg"
+            />
+            <button 
+                onClick={handleReload} 
+                className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+                title="Reload"
+            >
+                <FaRedo className="text-gray-700" />
+            </button>
+        </div>
+          }
+          customStyles={customStyles}
+        />
+      </div>
+
+        {/*OUTFLOW DUPLICATION */}
+        <div>
+        <DataTable 
+          title="Outflow Transaction Duplication"
+          columns={outflowDuplicationColumns}
+          data={filteredOutflowDuplicationData}
+          pagination
+          pointerOnHover
+          subHeader
+          subHeaderComponent={
+            <div className="flex items-center gap-2">
+            <input
+                type="text"
+                placeholder="Search..."
+                value={outflowDuplicationSearchText}
+                onChange={handleOutflowDuplicationSearch}
+                className="p-2 border border-gray-400 rounded-lg"
+            />
+            <button 
+                onClick={handleReload} 
+                className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+                title="Reload"
+            >
+                <FaRedo className="text-gray-700" />
+            </button>
+        </div>
+          }
+          customStyles={customStyles}
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -531,7 +667,7 @@ const handleFailedLoginAttemptsSearch = (event) => {
                 <div className="bg-white/75 shadow-xl rounded-lg p-6">
                 <DataTable
               title="Unusual Activity"
-              columns={columns}
+              columns={unusualActivityColumns}
               data={filteredUnusualActivityData}
               pagination
               highlightOnHover
@@ -550,28 +686,6 @@ const handleFailedLoginAttemptsSearch = (event) => {
             </div>
             </div>
 
-            <div className="mt-5">
-                <div className="bg-white/75 shadow-xl rounded-lg p-6">
-                <DataTable
-              title="Data Duplication"
-              columns={columns}
-              data={filteredDataDuplicationData}
-              pagination
-              highlightOnHover
-              pointerOnHover
-              subHeader
-              subHeaderComponent={
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={dataDuplicationSearchText}
-                  onChange={handleDataDuplicationSearch}
-                  className="mb-2 p-2 border border-gray-400 rounded-lg"
-                />
-              }
-            />
-            </div>
-            </div>
 
             <div className="mt-5 mb-5 ">
                 <div className="bg-white/75 shadow-xl rounded-lg p-6">
