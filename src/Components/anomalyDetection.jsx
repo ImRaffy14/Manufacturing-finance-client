@@ -16,6 +16,26 @@ function AnomalyDetection() {
     const [inflowDuplicationSearchText, setInflowDuplicationSearchText] = useState('');
     const [outflowDuplicationSearchText, setOutflowDuplicationSearchText] = useState('');
     const [failedLoginAttemptsSearchText, setFailedLoginAttemptsSearchText] = useState('');
+
+    // TABLE DATA
+    const [inflowTransactionData, setInflowTransactionData] = useState([]);
+    const [outflowTransactionData, setOutflowTransactionData] = useState([]);
+    const [budgetDuplicationData, setBudgetDuplicationData] = useState([]);
+    const [purchaseOrderDuplicationData, setPurchaseOrderDuplicationData] = useState([])
+    const [inflowDuplicationData, setInflowDuplicationData] = useState([])
+    const [outflowDupulicationData, setOutflowDuplicationData] = useState([])
+    const [unusualActivityData, setUnusualActivityData] = useState([])
+    const [failedLoginAttemptsData, setFailedLoginAttemptsData] = useState([])
+
+    // FOR LOADERS
+    const [isLoadingPOT, setIsLoadingPOT] = useState(true);
+    const [isLoadingPIT, setIsLoadingPIT] = useState(true);
+    const [isLoadingBRD, setIsLoadingBRD] = useState(true)
+    const [isLoadingPOD, setIsLoadingPOD] = useState(true)
+    const [isLoadingID, setIsLoadingID] = useState(true)
+    const [isLoadingOD, setIsLoadingOD] = useState(true)
+    const [isLoadingSL, setIsLoadingSL] = useState(true)
+    const [isLoadingFLA, setIsLoadingFLA] = useState(true)
     
 
     const formatCurrency = (value) => {
@@ -32,23 +52,119 @@ function AnomalyDetection() {
     useEffect(() => {
       if(!socket) return
 
-      socket.emit('get_possible_outflow_anomaly', {msg: 'get possible anomaly'})
-      socket.emit('get_possible_inflow_anomaly', {msg: 'get possible anomaly'})
+      socket.emit('get_possible_outflow_anomaly')
+      socket.emit('get_possible_inflow_anomaly')
+      socket.emit('get_budget_req_duplication')
+      socket.emit('get_po_duplication')
+      socket.emit('get_inflow_duplication')
+      socket.emit('get_outflow_duplication')
+      socket.emit('get_suspicious_login')
+      socket.emit('get_failed_attempt')
       
+      // GET POSSIBLE OUTFLOW ANOMALY
       const handlePossibleOutflowAnomaly = (response) => {
-        console.log(response)
+        setOutflowTransactionData(response)
+        setIsLoadingPOT(false)
       }
 
+      // GET POSSIBLE INFLOW ANOMALY
       const handlePossibleInflowAnomaly = (response) => {
-        console.log(response)
+        setInflowTransactionData(response)
+        setIsLoadingPIT(false)
       }
 
+      // GET BUDGET REQUEST DUPLICATION
+      const handleBudgetReqDuplication = async (response) => {
+        const data = response.map((item) => ({
+          requestId: item._id.requestId,
+          department: item._id.department,
+          category: item._id.category,
+          totalRequest: item._id.totalRequest,
+          count: item.count,
+          budgetReqId: item.budgetReqId
+        }))
+        setBudgetDuplicationData(data)
+        setIsLoadingBRD(false)
+      }
+      
+      // GET PURCHASE ORDER DUPLICATION
+      const handlePurchaseOrderDuplication = async (response) => {
+        const data = response.map((item) => ({
+          orderNumber: item._id.orderNumber,
+          customerName: item._id.customerName,
+          totalAmount: item._id.totalAmount,
+          count: item.count,
+          poId: item.poId
+        }))
+        setPurchaseOrderDuplicationData(data)
+        setIsLoadingPOD(false)
+      }
+
+      // GET INFLOW TRANSACTION DUPLICATION
+      const handleInflowDuplication = async (response) => {
+        const data = response.map((item) => ({
+          auditorId: item._id.auditorId,
+          auditor: item._id.auditor,
+          invoiceId: item._id.invoiceId,
+          totalAmount: item._id.totalAmount,
+          count: item.count,
+          inflowId: item.inflowId
+        }))
+        setInflowDuplicationData(data)
+        setIsLoadingID(false)
+      }
+
+      // GET OUTFLOW TRANSACTION DUPLICATION
+      const handleOutflowDuplication = async (response) => {
+        const data = response.map((item) => ({
+          approverId: item._id.approverId,
+          approver: item._id.approver,
+          payableId: item._id.payableId,
+          totalAmount: item._id.totalAmount,
+          count: item.count,
+          outflowId: item.outflowId
+        }))
+        setOutflowDuplicationData(data)
+        setIsLoadingOD(false)
+      }
+      
+      // GET SUSPICIOUS LOGIN
+      const handleSuspiciousLogin = async  (response) => {
+        const data = response.map((item) => ({
+          userId: item._id.userId,
+          username: item._id.username,
+          role: item._id.role,
+          count: item.count,
+          ipAddress: item.ipAddress
+        }))
+        setUnusualActivityData(data)
+        setIsLoadingSL(false)
+
+      }
+
+      // GET FAILED ATTEMPT LOGIN
+      const handleFailedAttemptLogin = async (response) => {
+        setFailedLoginAttemptsData(response)
+        setIsLoadingFLA(false)
+      }
+
+      socket.on('receive_failed_attempt', handleFailedAttemptLogin)
+      socket.on('receive_suspicious_login', handleSuspiciousLogin)
+      socket.on('receive_outflow_duplication', handleOutflowDuplication)
+      socket.on('receive_inflow_duplication', handleInflowDuplication)
+      socket.on('receive_po_duplicaiton', handlePurchaseOrderDuplication)
+      socket.on('receive_budget_req_duplication', handleBudgetReqDuplication)
       socket.on('receive_possible_outflow_anomaly', handlePossibleOutflowAnomaly)
       socket.on('receive_possible_inflow_anomaly', handlePossibleInflowAnomaly)
 
       return () => {
         socket.off('receive_possible_outflow_anomaly')
         socket.off('receive_possible_inflow_anomaly')
+        socket.off('receive_po_duplicaiton')
+        socket.off('receive_budget_req_duplication')
+        socket.off('receive_inflow_duplication')
+        socket.off('receive_suspicious_login')
+        socket.off('receive_failed_attempt')
       }
 
     },[socket])
@@ -61,27 +177,32 @@ function AnomalyDetection() {
     console.log(`Blocked User: ${userId}`);
 };
 
-  const handleReload = () => {
-    setInflowSearchText(""); 
-    console.log("Data reloaded"); 
-};
+  const handleReloadInflowP = () => {
+    setInflowSearchText("");
+    setIsLoadingPIT(true)
+    socket.emit('get_possible_inflow_anomaly', {msg: 'get possible anomaly'})
+  };
 
+  const handleReloadOutflowP = () => {
+    setInflowSearchText("");
+    setIsLoadingPOT(true)
+    socket.emit('get_possible_outflow_anomaly', {msg: 'get possible anomaly'})
+  };
 
 
     const inflowTransactionsColumns = [
-      { name: 'Transaction ID', selector: row => row.transactionId },
-      { name: 'Transaction Date', selector: row => row.transactionDate },
-      { name: 'Amount', selector: row => formatCurrency(row.amount) },
-      { name: 'Transaction Type', selector: row => row.transactionType },
-      { 
-        name: 'Anomaly Score', 
-        selector: row => (row.anomalyScore !== undefined && row.anomalyScore !== null) ? row.anomalyScore.toFixed(2) : "0.00"
-    },
+      { name: 'ID', selector: row => row.id },
+      { name: 'Date & Time', selector: row => row.dateTime },
+      { name: 'Auditor ID', selector: row => row.auditorId },
+      { name: 'Auditor', selector: row => row.auditor },
+      { name: 'P.O ID', selector: row => row.invoiceId },
+      { name: 'Customer Name', selector: row => row.customerName },
+      { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount) },
       {
           name: 'Flag', 
           cell: (row) => (
               <button 
-                  onClick={() => handleFlagTransaction(row.transactionId)}
+                  onClick={() => handleFlagTransaction(row.id)}
                   className="bg-white  text-red-500 p-2 rounded-md"
               >
                   <FaFlag />
@@ -94,19 +215,19 @@ function AnomalyDetection() {
   ];
 
   const outflowTransactionsColumns = [
-    { name: 'Transaction ID', selector: row => row.transactionId },
-    { name: 'Transaction Date', selector: row => row.transactionDate },
-    { name: 'Amount', selector: row => formatCurrency(row.amount) },
-    { name: 'Transaction Type', selector: row => row.transactionType },
-    { 
-      name: 'Anomaly Score', 
-      selector: row => (row.anomalyScore !== undefined && row.anomalyScore !== null) ? row.anomalyScore.toFixed(2) : "0.00"
-  },
+    { name: 'ID', selector: row => row.id },
+    { name: 'Date & Time', selector: row => row.dateTime },
+    { name: 'Approver ID', selector: row => row.approverId },
+    { name: 'Approver', selector: row => row.approver },
+    { name: 'Payable ID', selector: row => row.payableId },
+    { name: 'Category', selector: row => row.category },
+    { name: 'Department', selector: row => row.department },
+    { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount) },
     {
         name: 'Flag', 
         cell: (row) => (
             <button 
-                onClick={() => handleFlagTransaction(row.transactionId)}
+                onClick={() => handleFlagTransaction(row.id)}
                 className="bg-white  text-red-500 p-2 rounded-md"
             >
                 <FaFlag />
@@ -117,8 +238,6 @@ function AnomalyDetection() {
         button: true,
     }
 ];
-
-
 
 
   const failedAttemptsColumns = [
@@ -144,280 +263,79 @@ function AnomalyDetection() {
 ];
 
 const budgetDuplicationColumns = [
-  { name: 'ID', selector: row => row._id },
-  { name: 'Request ID', selector: row => row.requestId },
-  { name: 'Category', selector: row => row.category },
+  { name: 'Count', selector: row => row.count , width: '80px'},
+  { name: 'Request ID', selector: row => row.requestId, width: '200px' },
+  { name: 'Category', selector: row => row.category, width: '180px' },
   { name: 'Department', selector: row => row.department },
-  { name: 'Total Request', selector: row => row.totalRequest },
-  { name: 'Budget Request ID', selector: row => row.budgetReqId },
-  { name: 'Count', selector: row => row.count },
+  { name: 'Budget Request ID', selector: row => (
+    <ul>
+      {row.budgetReqId.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>
+  ), width: '200px'},
+  { name: 'Total Request', selector: row => formatCurrency(row.totalRequest) },
 ];
 
 const purchaseOrderDuplicationColumns = [
-  { name: 'ID', selector: row => row._id },
-  { name: 'Order Number', selector: row => row.orderNumber },
-  { name: 'Customer Name', selector: row => row.customerName },
-  { name: 'Total Amount', selector: row => row.totalAmount },
-  { name: 'PO ID', selector: row => row.poId },
-  { name: 'Count', selector: row => row.count },
+  { name: 'Count', selector: row => row.count, width: '80px'},
+  { name: 'Order Number', selector: row => row.orderNumber, width: '200px' },
+  { name: 'Customer Name', selector: row => row.customerName, width: '150px' },
+  { name: 'P.O ID', selector: row => ( 
+    <ul>
+      {row.poId.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>), width: '200px' 
+  },
+  { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount) },
 ];
 
 const inflowDuplicationColumns = [
-  { name: 'ID', selector: row => row._id },
-  { name: 'Auditor ID', selector: row => row.auditorId },
-  { name: 'Auditor', selector: row => row.auditor },
-  { name: 'Invoice ID', selector: row => row.invoiceId },
-  { name: 'Total Amount', selector: row => row.totalAmount },
-  { name: 'Inflow ID', selector: row => row.inflowId },
-  { name: 'Count', selector: row => row.count },
+  { name: 'Count', selector: row => row.count, width: '80px'},
+  { name: 'Auditor ID', selector: row => row.auditorId, width: '200px' },
+  { name: 'Auditor', selector: row => row.auditor, width: '100px' },
+  { name: 'Invoice ID', selector: row => row.invoiceId, width: '200px' },
+  { name: 'Inflow ID', selector: row => ( 
+    <ul>
+      {row.inflowId.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>), width: '200px' },
+  { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount )},
 ];
 
 const outflowDuplicationColumns = [
-  { name: 'ID', selector: row => row._id },
-  { name: 'Approver ID', selector: row => row.approverId },
+  { name: 'Count', selector: row => row.count, width: '80px'},
+  { name: 'Approver ID', selector: row => row.approverId, width: '200px' },
   { name: 'Approver', selector: row => row.approver },
-  { name: 'Payable ID', selector: row => row.payableId },
-  { name: 'Total Amount', selector: row => row.totalAmount },
-  { name: 'Outflow ID', selector: row => row.outflowId },
-  { name: 'Count', selector: row => row.count },
+  { name: 'Payable ID', selector: row => row.payableId, width: '200px' },
+  { name: 'Outflow ID', selector: row => ( 
+    <ul>
+      {row.outflowId.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>), width: '200px'
+  },
+  { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount) },
 ];
 
 const unusualActivityColumns = [
-  { name: 'ID', selector: row => row._id },
+  { name: 'IP Address', selector: row => ( 
+    <ul>
+      {row.ipAddress.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>) },
+  { name: 'Staff ID', selector: row => row.userId },
   { name: 'username', selector: row => row.username },
   { name: 'Role', selector: row => row.role },
-  { name: 'IP Address', selector: row => row.ipAddress },
-  { name: 'Count', selector: row => row.count },
 ];
 
 
-const inflowTransactionData = [
-  { transactionId: 1, 
-    transactionDate: '2022-01-01', 
-    amount: 121221, 
-    transactionType:'ASDA',
-    anomalyScore: 0.00, 
-  },
-  { transactionId: 2, 
-    transactionDate: '2022-01-01', 
-    amount: 121221, 
-    transactionType:'ASDA',
-    anomalyScore: 0.00, 
-  },
-  { transactionId: 3, 
-    transactionDate: '2022-01-01', 
-    amount: 121221, 
-    transactionType:'ASDA',
-    anomalyScore: 0.00, 
-  },
-]
-
-const outflowTransactionData = [
-  { transactionId: 1, 
-    transactionDate: '2022-01-01', 
-    amount: 121221, 
-    transactionType:'ASDA',
-    anomalyScore: 0.00, 
-  },
-  { transactionId: 2, 
-    transactionDate: '2022-01-01', 
-    amount: 121221, 
-    transactionType:'ASDA',
-    anomalyScore: 0.00, 
-  },
-  { transactionId: 3, 
-    transactionDate: '2022-01-01', 
-    amount: 121221, 
-    transactionType:'ASDA',
-    anomalyScore: 0.00, 
-  },
-]
-
-
-    const unusualActivityData = [
-      {
-          _id: 'UA001',
-          username: '2024-02-08 02:30 AM',
-          role: '1232131',
-          ipAddress: 'Cash Withdrawal',
-          count: 2,
-      },
-      {
-        _id: '31232131',
-        username: '2024-02-08 02:30 AM',
-        role: '1232131',
-        ipAddress: 'Cash Withdrawal',
-        count: 2,
-    },
-    {
-      _id: '23112312',
-      username: '2024-02-08 02:30 AM',
-      role: '231131',
-      ipAddress: 'Cash Withdrawal',
-      count: 2,
-  },
-    ];
-
-    const budgetDuplicationData = [
-      {
-          _id: 'UA001',
-          requestId: '2024-02-08 02:30 AM',
-          department: 750000,
-          category: 'Cash Withdrawal',
-          anomtotalRequestalyScore: 0.97, 
-          budgetReqId: 0.97, 
-          totalRequest: 0.97, 
-          count: 2,
-      },
-      {
-        _id: '32',
-        requestId: '2024-02-08 02:30 AM',
-        department: 750000,
-        category: 'Cash Withdrawal',
-        anomtotalRequestalyScore: 0.97, 
-        budgetReqId: 0.97, 
-        totalRequest: 0.97, 
-        count: 2,
-    },
-    {
-      _id: '123',
-      requestId: '2024-02-08 02:30 AM',
-      department: 750000,
-      category: 'Cash Withdrawal',
-      anomtotalRequestalyScore: 0.97, 
-      budgetReqId: 0.97, 
-      totalRequest: 0.97, 
-      count: 2,
-  },
-    ];
-
-    const purchaseOrderDuplicationData = [
-      {
-          _id: 'UA001',
-          orderNumber: '2024-02-08 02:30 AM',
-          customerName: '750000',
-          totalAmount: 'Cash Withdrawal',
-          poId: 0.97, 
-          count: 2,
-      },
-      {
-        _id: '32',
-        orderNumber: '2024-02-08 02:30 AM',
-        customerName: 750000,
-        totalAmount: 'Cash Withdrawal',
-        poId: 0.97, 
-        count: 2,
-    },
-    {
-      _id: '3213',
-      orderNumber: '2024-02-08 02:30 AM',
-      customerName: 750000,
-      totalAmount: 'Cash Withdrawal',
-      poId: 0.97, 
-      count: 2,
-  },
-    ];
-
-
-    const inflowDuplicationData = [
-      {
-          _id: 'UA001',
-          auditorId: '2024-02-08 02:30 AM',
-          auditor: '750000',
-          invoiceId: 'Cash Withdrawal',
-          totalAmount: 0.97, 
-          inflowId: '1231321',
-          count: 2,
-          
-      },
-      {
-        _id: '32',
-        auditorId: '2024-02-08 02:30 AM',
-        auditor: '750000',
-        invoiceId: 'Cash Withdrawal',
-        totalAmount: 0.97, 
-        inflowId: '1231321',
-        count: 2,
-    },
-    {
-      _id: '12313',
-      auditorId: '2024-02-08 02:30 AM',
-      auditor: '750000',
-      invoiceId: 'Cash Withdrawal',
-      totalAmount: 0.97, 
-      inflowId: '1231321',
-      count: 2,
-  },
-    ];
-
-    const outflowDupulicationData = [
-      {
-          _id: 'UA001',
-          approverId: '2024-02-08 02:30 AM',
-          approver: '750000',
-          payableId: 'Cash Withdrawal',
-          totalAmount: 0.97, 
-          outflowId: '1231321',
-          count: 2,
-      },
-      {
-        _id: '321321',
-        approverId: '2024-02-08 02:30 AM',
-        approver: '750000',
-        payableId: 'Cash Withdrawal',
-        totalAmount: 0.97, 
-       outflowId: '1231321',
-       count: 2,
-    },
-    {
-      _id: '3213211',
-      approverId: '2024-02-08 02:30 AM',
-      approver: '750000',
-      payableId: 'Cash Withdrawal',
-      totalAmount: 0.97, 
-      outflowId: '1231321',
-      count: 2,
-  },
-    ];
-
-
-
-
-    const failedLoginAttemptsData = [
-      {
-          _id: '12313231312qwe',
-         userId: '12321313123',
-         username: 'Angelo',
-         ipAddress : '123.123.123',
-         attempts: 4,
-         attemptDate: '12/12/12',
-         count: 2,
-
-      },
-      {
-        _id: '32213',
-       userId: '12321313123',
-       username: 'Angelo',
-       ipAddress : '123.123.123',
-       attempts: 4,
-       attemptDate: '12/12/12',
-       count: 2,
-    },
-    {
-      _id: '222222',
-     userId: '12321313123',
-     username: 'Angelo',
-     ipAddress : '123.123.123',
-     attempts: 4,
-     attemptDate: '12/12/12',
-     count: 2,
-  },
-    ];
-
-
-    const totalFlaggedAnomalies = 1;
-    const totalAnomaliesResolved = 1;
-    const totalOnInvestigation = totalFlaggedAnomalies - totalAnomaliesResolved;
+    const totalFlaggedAnomalies = 0;
+    const totalAnomaliesResolved = 0;
+    const totalOnInvestigation = 0;
 
     const handleInflowSearch = (event) => {
         setInflowSearchText(event.target.value);
@@ -560,38 +478,52 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
       {/* Left Column - Inflow Transactions */}
       <div>
-      <DataTable
-    title="Possible Anomaly Inflow Transactions"
-    columns={inflowTransactionsColumns}
-    data={filteredInflowTransactionData}
-    pagination
-    pointerOnHover
-    subHeader
-    subHeaderComponent={
-        <div className="flex items-center gap-2">
-            <input
-                type="text"
-                placeholder="Search..."
-                value={inflowSearchText}
-                onChange={handleInflowSearch}
-                className="p-2 border border-gray-400 rounded-lg"
-            />
-            <button 
-                onClick={handleReload} 
-                className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
-                title="Reload"
-            >
-                <FaRedo className="text-gray-700" />
-            </button>
-        </div>
-    }
-    customStyles={customStyles}
-/>
+        {isLoadingPIT ? 
+        <div className="flex justify-center items-center h-56">
+          <div className="relative w-16 h-16">
+            <div className="absolute w-full h-full border-4 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+          </div>
+        </div>       
+        :
+        <DataTable
+        title="Possible Anomaly Inflow Transactions"
+        columns={inflowTransactionsColumns}
+        data={filteredInflowTransactionData}
+        pagination
+        pointerOnHover
+        subHeader
+        subHeaderComponent={
+            <div className="flex items-center gap-2">
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={inflowSearchText}
+                    onChange={handleInflowSearch}
+                    className="p-2 border border-gray-400 rounded-lg"
+                />
+                <button 
+                    onClick={handleReloadInflowP} 
+                    className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+                    title="Reload"
+                >
+                    <FaRedo className="text-gray-700" />
+                </button>
+            </div>
+            }
+            customStyles={customStyles}
+          /> }
       </div>
       
       {/* Right Column - Outflow Transactions */}
       <div>
-        <DataTable 
+        {isLoadingPOT ?      
+          <div className="flex justify-center items-center h-56">
+            <div className="relative w-16 h-16">
+              <div className="absolute w-full h-full border-4 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+            </div>
+          </div> 
+          :
+         <DataTable 
           title="Possible Anomaly Outflow Transactions"
           columns={outflowTransactionsColumns}
           data={filteredOutflowTransactionData}
@@ -608,7 +540,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 className="p-2 border border-gray-400 rounded-lg"
             />
             <button 
-                onClick={handleReload} 
+                onClick={handleReloadOutflowP} 
                 className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
                 title="Reload"
             >
@@ -617,7 +549,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         </div>
           }
           customStyles={customStyles}
-        />
+        />}
       </div>
     </div>
   </div>
@@ -630,32 +562,47 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
       {/* Left Column - Budget Duplication */}
       <div>
-      <DataTable
-    title="Budget Request Duplication"
-    columns={budgetDuplicationColumns}
-    data={filteredBudgetDuplicationData}
-    pagination
-    pointerOnHover
-    subHeader
-    subHeaderComponent={
-      <div className="flex items-center gap-2">
-      <input
-          type="text"
-          placeholder="Search..."
-          value={budgetDuplicationSearchText}
-          onChange={handleBudgetDuplicationSearch}
-          className="p-2 border border-gray-400 rounded-lg"
-      />
-  </div>
-       
-    }
-    customStyles={customStyles}
-/>
+      {isLoadingBRD ? 
+        <div className="flex justify-center items-center h-56">
+          <div className="relative w-16 h-16">
+            <div className="absolute w-full h-full border-4 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+          </div>
+        </div> 
+        :
+        <DataTable
+        title="Budget Request Duplication"
+        columns={budgetDuplicationColumns}
+        data={filteredBudgetDuplicationData}
+        pagination
+        pointerOnHover
+        subHeader
+        subHeaderComponent={
+        <div className="flex items-center gap-2">
+        <input
+            type="text"
+            placeholder="Search..."
+            value={budgetDuplicationSearchText}
+            onChange={handleBudgetDuplicationSearch}
+            className="p-2 border border-gray-400 rounded-lg"
+        />
+          </div>
+              
+            }
+            customStyles={customStyles}
+        />
+      }
       </div>
       
       {/* Right Column - puurchase order duplication */}
       <div>
-        <DataTable 
+        {isLoadingPOD ? 
+          <div className="flex justify-center items-center h-56">
+            <div className="relative w-16 h-16">
+              <div className="absolute w-full h-full border-4 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+            </div>
+          </div> 
+          :
+          <DataTable 
           title="Purchase Order Duplication"
           columns={purchaseOrderDuplicationColumns}
           data={filteredPurchaseOrderDuplicationData}
@@ -675,10 +622,18 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           }
           customStyles={customStyles}
         />
+        }
       </div>
 
           {/*INFFLOW DUPLICATION */}
       <div>
+        {isLoadingID ? 
+        <div className="flex justify-center items-center h-56">
+          <div className="relative w-16 h-16">
+            <div className="absolute w-full h-full border-4 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+          </div>
+        </div>  
+        :     
         <DataTable 
           title="Inflow Transaction Duplication"
           columns={inflowDuplicationColumns}
@@ -698,12 +653,19 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         </div>
           }
           customStyles={customStyles}
-        />
+        />}
       </div>
 
         {/*OUTFLOW DUPLICATION */}
         <div>
-        <DataTable 
+          {isLoadingOD ?
+          <div className="flex justify-center items-center h-56">
+            <div className="relative w-16 h-16">
+              <div className="absolute w-full h-full border-4 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+            </div>
+          </div>  
+          :
+          <DataTable 
           title="Outflow Transaction Duplication"
           columns={outflowDuplicationColumns}
           data={filteredOutflowDuplicationData}
@@ -723,6 +685,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           }
           customStyles={customStyles}
         />
+          }
       </div>
     </div>
   </div>
@@ -733,33 +696,48 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
   <div className="bg-white/75 shadow-xl rounded-lg p-6">
   <h1 className="text-xl font-bold">Login Anomalies</h1>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-      {/* Left Column - Inflow Transactions */}
+      {/* Left Column - Suspicious Login */}
       <div>
-      <DataTable
-    title="Suspicious Login"
-    columns={unusualActivityColumns}
-    data={filteredUnusualActivityData}
-    pagination
-    pointerOnHover
-    subHeader
-    subHeaderComponent={
-        <div className="flex items-center gap-2">
-            <input
-                type="text"
-                placeholder="Search..."
-                value={unusualActivitySearchText}
-                onChange={handleInflowSearch}
-                className="p-2 border border-gray-400 rounded-lg"
-            />
-        </div>
-    }
-    customStyles={customStyles}
-/>
+        {isLoadingSL ? 
+          <div className="flex justify-center items-center h-56">
+            <div className="relative w-16 h-16">
+              <div className="absolute w-full h-full border-4 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+            </div>
+          </div>  
+          :
+          <DataTable
+          title="Suspicious Login"
+          columns={unusualActivityColumns}
+          data={filteredUnusualActivityData}
+          pagination
+          pointerOnHover
+          subHeader
+          subHeaderComponent={
+              <div className="flex items-center gap-2">
+                  <input
+                      type="text"
+                      placeholder="Search..."
+                      value={unusualActivitySearchText}
+                      onChange={handleInflowSearch}
+                      className="p-2 border border-gray-400 rounded-lg"
+                  />
+              </div>
+          }
+          customStyles={customStyles}
+        />
+        }
       </div>
       
-      {/* Right Column - Outflow Transactions */}
+      {/* Right Column - Failed Login attempts */}
       <div>
-        <DataTable 
+        {isLoadingFLA ?
+          <div className="flex justify-center items-center h-56">
+            <div className="relative w-16 h-16">
+              <div className="absolute w-full h-full border-4 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+            </div>
+          </div>  
+          :
+          <DataTable 
           title="Failed Login Attempts"
           columns={failedAttemptsColumns}
           data={filteredFailedLoginAttemptsData}
@@ -779,14 +757,11 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           }
           customStyles={customStyles}
         />
+        }
       </div>
     </div>
   </div>
 </div>
-
-
-
-        
         </div>
     );
 }
