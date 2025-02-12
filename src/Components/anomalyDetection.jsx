@@ -16,10 +16,8 @@ function AnomalyDetection() {
     const [inflowDuplicationSearchText, setInflowDuplicationSearchText] = useState('');
     const [outflowDuplicationSearchText, setOutflowDuplicationSearchText] = useState('');
     const [failedLoginAttemptsSearchText, setFailedLoginAttemptsSearchText] = useState('');
-    const [inflowTransactionData, setInflowTransactionData] = useState([])
-    const [outflowTransactionData, setOutflowTransactionData] = useState([])
     
-  
+
     const formatCurrency = (value) => {
         if (value === undefined || value === null) {
             return `₱0.00`;
@@ -70,7 +68,7 @@ function AnomalyDetection() {
 
 
 
-    const columns = [
+    const inflowTransactionsColumns = [
       { name: 'Transaction ID', selector: row => row.transactionId },
       { name: 'Transaction Date', selector: row => row.transactionDate },
       { name: 'Amount', selector: row => formatCurrency(row.amount) },
@@ -95,6 +93,34 @@ function AnomalyDetection() {
       }
   ];
 
+  const outflowTransactionsColumns = [
+    { name: 'Transaction ID', selector: row => row.transactionId },
+    { name: 'Transaction Date', selector: row => row.transactionDate },
+    { name: 'Amount', selector: row => formatCurrency(row.amount) },
+    { name: 'Transaction Type', selector: row => row.transactionType },
+    { 
+      name: 'Anomaly Score', 
+      selector: row => (row.anomalyScore !== undefined && row.anomalyScore !== null) ? row.anomalyScore.toFixed(2) : "0.00"
+  },
+    {
+        name: 'Flag', 
+        cell: (row) => (
+            <button 
+                onClick={() => handleFlagTransaction(row.transactionId)}
+                className="bg-white  text-red-500 p-2 rounded-md"
+            >
+                <FaFlag />
+            </button>
+        ),
+        ignoreRowClick: true,
+        allowOverflow: true,
+        button: true,
+    }
+];
+
+
+
+
   const failedAttemptsColumns = [
     { name: 'ID', selector: row => row._id },
     { name: 'User ID', selector: row => row.userId },
@@ -106,7 +132,7 @@ function AnomalyDetection() {
         cell: (row) => (
             <button 
                 onClick={() => handleBlockUser(row.userId)}
-                className="btn btn-outline btn-error mt-2 mb-2"
+                className="btn btn-outline hover:bg-white hover:text-black text-white mt-2 mb-2"
             >
                 Block
             </button>
@@ -124,6 +150,7 @@ const budgetDuplicationColumns = [
   { name: 'Department', selector: row => row.department },
   { name: 'Total Request', selector: row => row.totalRequest },
   { name: 'Budget Request ID', selector: row => row.budgetReqId },
+  { name: 'Count', selector: row => row.count },
 ];
 
 const purchaseOrderDuplicationColumns = [
@@ -132,6 +159,7 @@ const purchaseOrderDuplicationColumns = [
   { name: 'Customer Name', selector: row => row.customerName },
   { name: 'Total Amount', selector: row => row.totalAmount },
   { name: 'PO ID', selector: row => row.poId },
+  { name: 'Count', selector: row => row.count },
 ];
 
 const inflowDuplicationColumns = [
@@ -141,6 +169,7 @@ const inflowDuplicationColumns = [
   { name: 'Invoice ID', selector: row => row.invoiceId },
   { name: 'Total Amount', selector: row => row.totalAmount },
   { name: 'Inflow ID', selector: row => row.inflowId },
+  { name: 'Count', selector: row => row.count },
 ];
 
 const outflowDuplicationColumns = [
@@ -150,6 +179,7 @@ const outflowDuplicationColumns = [
   { name: 'Payable ID', selector: row => row.payableId },
   { name: 'Total Amount', selector: row => row.totalAmount },
   { name: 'Outflow ID', selector: row => row.outflowId },
+  { name: 'Count', selector: row => row.count },
 ];
 
 const unusualActivityColumns = [
@@ -157,7 +187,52 @@ const unusualActivityColumns = [
   { name: 'username', selector: row => row.username },
   { name: 'Role', selector: row => row.role },
   { name: 'IP Address', selector: row => row.ipAddress },
+  { name: 'Count', selector: row => row.count },
 ];
+
+
+const inflowTransactionData = [
+  { transactionId: 1, 
+    transactionDate: '2022-01-01', 
+    amount: 121221, 
+    transactionType:'ASDA',
+    anomalyScore: 0.00, 
+  },
+  { transactionId: 2, 
+    transactionDate: '2022-01-01', 
+    amount: 121221, 
+    transactionType:'ASDA',
+    anomalyScore: 0.00, 
+  },
+  { transactionId: 3, 
+    transactionDate: '2022-01-01', 
+    amount: 121221, 
+    transactionType:'ASDA',
+    anomalyScore: 0.00, 
+  },
+]
+
+const outflowTransactionData = [
+  { transactionId: 1, 
+    transactionDate: '2022-01-01', 
+    amount: 121221, 
+    transactionType:'ASDA',
+    anomalyScore: 0.00, 
+  },
+  { transactionId: 2, 
+    transactionDate: '2022-01-01', 
+    amount: 121221, 
+    transactionType:'ASDA',
+    anomalyScore: 0.00, 
+  },
+  { transactionId: 3, 
+    transactionDate: '2022-01-01', 
+    amount: 121221, 
+    transactionType:'ASDA',
+    anomalyScore: 0.00, 
+  },
+]
+
 
     const unusualActivityData = [
       {
@@ -165,18 +240,21 @@ const unusualActivityColumns = [
           username: '2024-02-08 02:30 AM',
           role: '1232131',
           ipAddress: 'Cash Withdrawal',
+          count: 2,
       },
       {
         _id: '31232131',
         username: '2024-02-08 02:30 AM',
         role: '1232131',
         ipAddress: 'Cash Withdrawal',
+        count: 2,
     },
     {
       _id: '23112312',
       username: '2024-02-08 02:30 AM',
       role: '231131',
       ipAddress: 'Cash Withdrawal',
+      count: 2,
   },
     ];
 
@@ -189,6 +267,7 @@ const unusualActivityColumns = [
           anomtotalRequestalyScore: 0.97, 
           budgetReqId: 0.97, 
           totalRequest: 0.97, 
+          count: 2,
       },
       {
         _id: '32',
@@ -198,6 +277,7 @@ const unusualActivityColumns = [
         anomtotalRequestalyScore: 0.97, 
         budgetReqId: 0.97, 
         totalRequest: 0.97, 
+        count: 2,
     },
     {
       _id: '123',
@@ -207,6 +287,7 @@ const unusualActivityColumns = [
       anomtotalRequestalyScore: 0.97, 
       budgetReqId: 0.97, 
       totalRequest: 0.97, 
+      count: 2,
   },
     ];
 
@@ -217,6 +298,7 @@ const unusualActivityColumns = [
           customerName: '750000',
           totalAmount: 'Cash Withdrawal',
           poId: 0.97, 
+          count: 2,
       },
       {
         _id: '32',
@@ -224,6 +306,7 @@ const unusualActivityColumns = [
         customerName: 750000,
         totalAmount: 'Cash Withdrawal',
         poId: 0.97, 
+        count: 2,
     },
     {
       _id: '3213',
@@ -231,6 +314,7 @@ const unusualActivityColumns = [
       customerName: 750000,
       totalAmount: 'Cash Withdrawal',
       poId: 0.97, 
+      count: 2,
   },
     ];
 
@@ -242,7 +326,9 @@ const unusualActivityColumns = [
           auditor: '750000',
           invoiceId: 'Cash Withdrawal',
           totalAmount: 0.97, 
-          inflowId: '1231321'
+          inflowId: '1231321',
+          count: 2,
+          
       },
       {
         _id: '32',
@@ -250,7 +336,8 @@ const unusualActivityColumns = [
         auditor: '750000',
         invoiceId: 'Cash Withdrawal',
         totalAmount: 0.97, 
-        inflowId: '1231321'
+        inflowId: '1231321',
+        count: 2,
     },
     {
       _id: '12313',
@@ -258,7 +345,8 @@ const unusualActivityColumns = [
       auditor: '750000',
       invoiceId: 'Cash Withdrawal',
       totalAmount: 0.97, 
-      inflowId: '1231321'
+      inflowId: '1231321',
+      count: 2,
   },
     ];
 
@@ -269,7 +357,8 @@ const unusualActivityColumns = [
           approver: '750000',
           payableId: 'Cash Withdrawal',
           totalAmount: 0.97, 
-          outflowId: '1231321'
+          outflowId: '1231321',
+          count: 2,
       },
       {
         _id: '321321',
@@ -277,7 +366,8 @@ const unusualActivityColumns = [
         approver: '750000',
         payableId: 'Cash Withdrawal',
         totalAmount: 0.97, 
-       outflowId: '1231321'
+       outflowId: '1231321',
+       count: 2,
     },
     {
       _id: '3213211',
@@ -285,7 +375,8 @@ const unusualActivityColumns = [
       approver: '750000',
       payableId: 'Cash Withdrawal',
       totalAmount: 0.97, 
-      outflowId: '1231321'
+      outflowId: '1231321',
+      count: 2,
   },
     ];
 
@@ -300,6 +391,8 @@ const unusualActivityColumns = [
          ipAddress : '123.123.123',
          attempts: 4,
          attemptDate: '12/12/12',
+         count: 2,
+
       },
       {
         _id: '32213',
@@ -308,6 +401,7 @@ const unusualActivityColumns = [
        ipAddress : '123.123.123',
        attempts: 4,
        attemptDate: '12/12/12',
+       count: 2,
     },
     {
       _id: '222222',
@@ -316,12 +410,12 @@ const unusualActivityColumns = [
      ipAddress : '123.123.123',
      attempts: 4,
      attemptDate: '12/12/12',
+     count: 2,
   },
     ];
 
 
-    const combinedData = [...inflowTransactionData, ...outflowTransactionData];
-    const totalFlaggedAnomalies = combinedData.filter(row => row.anomalyScore > 0.8).length;
+    const totalFlaggedAnomalies = 1;
     const totalAnomaliesResolved = 1;
     const totalOnInvestigation = totalFlaggedAnomalies - totalAnomaliesResolved;
 
@@ -468,7 +562,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       <div>
       <DataTable
     title="Possible Anomaly Inflow Transactions"
-    columns={columns}
+    columns={inflowTransactionsColumns}
     data={filteredInflowTransactionData}
     pagination
     pointerOnHover
@@ -499,7 +593,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       <div>
         <DataTable 
           title="Possible Anomaly Outflow Transactions"
-          columns={columns}
+          columns={outflowTransactionsColumns}
           data={filteredOutflowTransactionData}
           pagination
           pointerOnHover
@@ -552,13 +646,6 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           onChange={handleBudgetDuplicationSearch}
           className="p-2 border border-gray-400 rounded-lg"
       />
-      <button 
-          onClick={handleReload} 
-          className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
-          title="Reload"
-      >
-          <FaRedo className="text-gray-700" />
-      </button>
   </div>
        
     }
@@ -584,13 +671,6 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 onChange={handlePurchaseOrderDuuplicationSearch}
                 className="p-2 border border-gray-400 rounded-lg"
             />
-            <button 
-                onClick={handleReload} 
-                className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
-                title="Reload"
-            >
-                <FaRedo className="text-gray-700" />
-            </button>
         </div>
           }
           customStyles={customStyles}
@@ -615,13 +695,6 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 onChange={handleInflowDuplicationSearch}
                 className="p-2 border border-gray-400 rounded-lg"
             />
-            <button 
-                onClick={handleReload} 
-                className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
-                title="Reload"
-            >
-                <FaRedo className="text-gray-700" />
-            </button>
         </div>
           }
           customStyles={customStyles}
@@ -646,13 +719,62 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 onChange={handleOutflowDuplicationSearch}
                 className="p-2 border border-gray-400 rounded-lg"
             />
-            <button 
-                onClick={handleReload} 
-                className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
-                title="Reload"
-            >
-                <FaRedo className="text-gray-700" />
-            </button>
+        </div>
+          }
+          customStyles={customStyles}
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div className="mt-5 mb-5">
+  <div className="bg-white/75 shadow-xl rounded-lg p-6">
+  <h1 className="text-xl font-bold"></h1>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+      {/* Left Column - Inflow Transactions */}
+      <div>
+      <DataTable
+    title="Unusual Activity"
+    columns={unusualActivityColumns}
+    data={filteredUnusualActivityData}
+    pagination
+    pointerOnHover
+    subHeader
+    subHeaderComponent={
+        <div className="flex items-center gap-2">
+            <input
+                type="text"
+                placeholder="Search..."
+                value={unusualActivitySearchText}
+                onChange={handleInflowSearch}
+                className="p-2 border border-gray-400 rounded-lg"
+            />
+        </div>
+    }
+    customStyles={customStyles}
+/>
+      </div>
+      
+      {/* Right Column - Outflow Transactions */}
+      <div>
+        <DataTable 
+          title="Failed Login Attempts"
+          columns={failedAttemptsColumns}
+          data={filteredFailedLoginAttemptsData}
+          pagination
+          pointerOnHover
+          subHeader
+          subHeaderComponent={
+            <div className="flex items-center gap-2">
+            <input
+                type="text"
+                placeholder="Search..."
+                value={failedLoginAttemptsSearchText}
+                onChange={handleOutflowSearch}
+                className="p-2 border border-gray-400 rounded-lg"
+            />
         </div>
           }
           customStyles={customStyles}
@@ -664,52 +786,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
 
 
 
-            <div className="mt-5">
-                <div className="bg-white/75 shadow-xl rounded-lg p-6">
-                <DataTable
-              title="Unusual Activity"
-              columns={unusualActivityColumns}
-              data={filteredUnusualActivityData}
-              pagination
-              highlightOnHover
-              pointerOnHover
-              subHeader
-              subHeaderComponent={
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={unusualActivitySearchText}
-                  onChange={handleUnusualActivitySearch}
-                  className="mb-2 p-2 border border-gray-400 rounded-lg"
-                />
-              }
-            />
-            </div>
-            </div>
-
-
-            <div className="mt-5 mb-5 ">
-                <div className="bg-white/75 shadow-xl rounded-lg p-6">
-                <DataTable
-              title="Failed Login Attempts"
-              columns={failedAttemptsColumns}
-              data={filteredFailedLoginAttemptsData}
-              pagination
-              highlightOnHover
-              pointerOnHover
-              subHeader
-              subHeaderComponent={
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={failedLoginAttemptsSearchText}
-                  onChange={handleFailedLoginAttemptsSearch}
-                  className="mb-2 p-2 border border-gray-400 rounded-lg"
-                />
-              }
-            />
-            </div>
-            </div>
+        
         </div>
     );
 }
