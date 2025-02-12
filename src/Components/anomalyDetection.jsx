@@ -731,12 +731,12 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
 
 <div className="mt-5 mb-5">
   <div className="bg-white/75 shadow-xl rounded-lg p-6">
-  <h1 className="text-xl font-bold"></h1>
+  <h1 className="text-xl font-bold">Login Anomalies</h1>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
       {/* Left Column - Inflow Transactions */}
       <div>
       <DataTable
-    title="Unusual Activity"
+    title="Suspicious Login"
     columns={unusualActivityColumns}
     data={filteredUnusualActivityData}
     pagination
