@@ -135,7 +135,8 @@ function AnomalyDetection() {
           username: item._id.username,
           role: item._id.role,
           count: item.count,
-          ipAddress: item.ipAddress
+          ipAddress: item.ipAddress,
+          deviceInfo: item.deviceInfo
         }))
         setUnusualActivityData(data)
         setIsLoadingSL(false)
@@ -327,6 +328,12 @@ const unusualActivityColumns = [
         <li key={index}>{item}</li>
       ))}
     </ul>) },
+  { name: 'Device Info', selector: row => ( 
+  <ul>
+    {row.deviceInfo.map((item, index) => (
+      <li key={index}>{item}</li>
+    ))}
+  </ul>) },
   { name: 'Staff ID', selector: row => row.userId },
   { name: 'username', selector: row => row.username },
   { name: 'Role', selector: row => row.role },

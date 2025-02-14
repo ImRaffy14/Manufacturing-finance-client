@@ -38,6 +38,8 @@ function blacklistedIP() {
     { name: 'User ID', selector: row => row.userId },
     { name: 'Username', selector: row => row.username },
     { name: 'IP Address', selector: row => row.ipAddress },
+    { name: 'Location', selector: row => row.location },
+    { name: 'Device Info', selector: row => row.deviceInfo },
     { name: 'Ban time', selector: row => convertTimestamp(row.banTime) },
     { name: 'Ban Duration', selector: row => convertMsToMinutes(row.banDuration) },
     { name: 'Banned', selector: row => row.banned ? 'True' : 'False' },

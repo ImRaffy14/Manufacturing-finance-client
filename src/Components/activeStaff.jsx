@@ -17,6 +17,8 @@ function ActiveStaff() {
     { name: 'User ID', selector: row => row.userId },
     { name: 'Username', selector: row => row.username },
     { name: 'IP Address', selector: row => row.ipAddress },
+    { name: 'Location', selector: row => row.location },
+    { name: 'Device Info', selector: row => row.deviceInfo },
     { name: 'Socket ID', selector: row => row.socketId },
     { name: 'Role', selector: row => row.role },
     { name: 'Date', selector: row => row.date },
