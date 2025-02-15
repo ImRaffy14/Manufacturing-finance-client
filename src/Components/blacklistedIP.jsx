@@ -5,33 +5,32 @@ import { toast } from 'react-toastify'
 
 function blacklistedIP() {
   const [searchText, setSearchText] = useState('');
-  const [data, setData] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
-  const socket = useSocket()
+  const socket = useSocket();
 
-  //CONVERT TIMESTAMP
   function convertTimestamp(msTimestamp) {
     const date = new Date(msTimestamp);
-
     const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
     const formattedDate = date.toLocaleDateString('en-US', options);
-
     const hours = date.getUTCHours().toString().padStart(2, '0');
     const mins = date.getUTCMinutes().toString().padStart(2, '0');
-    const formattedTime = `${hours}:${mins}`;
-
-    return `${formattedDate} ${formattedTime} UTC`;
+    return `${formattedDate} ${hours}:${mins} UTC`;
   }
 
-  //CONVERT MS TO MINUTES
   function convertMsToMinutes(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-
     return `${minutes} min ${seconds} sec`;
-}
+  }
+
+  const handleRowClick = (row) => {
+    setSelectedRowData(row);
+    document.getElementById('row_modal').showModal();
+  };
 
   const columns = [
     { name: 'ID', selector: row => row._id },
@@ -59,52 +58,40 @@ function blacklistedIP() {
     }
   ];
 
-
-  // FETCH BLACKLISTED DATA
   useEffect(() => {
-    if(!socket) return
+    if(!socket) return;
+    socket.emit('get_blacklisted');
 
-    socket.emit('get_blacklisted')
-
-    // GET BLACKLISTED DATA
     const handleReceiveBlacklisted = (response) => {
-      setIsLoading(false)
-      setData(response)
+      setIsLoading(false);
+      setData(response);
     }
 
-    // HANDLE ERROR FETCHING
     const handleError = (response) => {
-      toast.error('Server Internal Error', {
-        position: 'top-right'
-      })
+      toast.error('Server Internal Error', { position: 'top-right' });
     }
 
-    // HANDLE SUCCESS FETCHING
     const handleSuccess = (response) => {
-      toast.success(response.msg, {
-        position: 'top-right'
-      })
+      toast.success(response.msg, { position: 'top-right' });
     }
 
-    socket.on('blacklist_success', handleSuccess)
-    socket.on('blacklist_error', handleError)
-    socket.on('receive_blacklisted', handleReceiveBlacklisted)
+    socket.on('blacklist_success', handleSuccess);
+    socket.on('blacklist_error', handleError);
+    socket.on('receive_blacklisted', handleReceiveBlacklisted);
 
     return () => {
-      socket.off("receive_blacklisted")
-      socket.off("blacklist_error")
-      socket.off("blacklist_success")
+      socket.off("receive_blacklisted");
+      socket.off("blacklist_error");
+      socket.off("blacklist_success");
     }
-
-  },[socket])
+  },[socket]);
   
-
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
 
   const handleResolveClick = (row) => {
-    socket.emit('resolve_blacklisted', row)
+    socket.emit('resolve_blacklisted', row);
   };
 
   const filteredData = data.filter(row =>
@@ -113,7 +100,6 @@ function blacklistedIP() {
     )
   );
 
-  // LOADER
   if (isLoading) {
     return (
       <div className="flex w-full flex-col gap-4">
@@ -124,7 +110,6 @@ function blacklistedIP() {
       </div>
     );
   }
-
 
   return (
     <>
@@ -140,6 +125,7 @@ function blacklistedIP() {
                 defaultSortField="name"
                 highlightOnHover
                 pointerOnHover
+                onRowClicked={handleRowClick}
                 subHeader
                 subHeaderComponent={
                   <input
@@ -155,6 +141,25 @@ function blacklistedIP() {
           </div>
         </div>
       </div>
+
+      {selectedRowData && (
+        <dialog id="row_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Blacklisted IP Details</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedRowData).map(([key, value]) => (
+                <div className="flex justify-between" key={key}>
+                  <p className="font-medium"><strong>{key}:</strong></p>
+                  <p className="text-gray-700">{value.toString()}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('row_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
     </>
   );
 }

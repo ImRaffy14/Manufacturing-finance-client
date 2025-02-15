@@ -3,14 +3,14 @@ import DataTable from 'react-data-table-component';
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { MdBlock } from "react-icons/md";
 import { useSocket } from "../context/SocketContext";
-import { toast } from "react-toastify"
-
+import { toast } from "react-toastify";
 
 function ActiveStaff() {
   const [searchText, setSearchText] = useState('');
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const socket = useSocket()
+  const [selectedRowData, setSelectedRowData] = useState(null);
+  const socket = useSocket();
 
   const columns = [
     { name: 'ID', selector: row => row._id },
@@ -51,57 +51,51 @@ function ActiveStaff() {
       button: true
     },
   ];
-  
 
-  // FETCHING ACTIVE STAFF DATA
   useEffect(() => {
-    if(!socket) return
+    if (!socket) return;
 
-    socket.emit('get_active_staff')
+    socket.emit('get_active_staff');
 
-    // RECEIVE ACTIVE STAFF
     const receiveActiveStaff = (response) => {
-      setIsLoading(false)
-      setData(response)
-    }
-    
-    // HANDLE ERROR
-    const handleError = (response) => {
-      toast.error('Server Internal Error', {
-        positon: 'top-right'
-      })
-    }
+      setIsLoading(false);
+      setData(response);
+    };
 
-    // HANDLE SUCCESS FETCHING
+    const handleError = () => {
+      toast.error('Server Internal Error', { position: 'top-right' });
+    };
+
     const handleSuccessFetch = (response) => {
-      toast.success(response.msg, {
-        position: 'top-right'
-      })
-    }
+      toast.success(response.msg, { position: 'top-right' });
+    };
 
-    socket.on('active_staff_success', handleSuccessFetch)
-    socket.on('active_staff_error', handleError)
-    socket.on('receive_active_staff', receiveActiveStaff)
+    socket.on('active_staff_success', handleSuccessFetch);
+    socket.on('active_staff_error', handleError);
+    socket.on('receive_active_staff', receiveActiveStaff);
 
     return () => {
-      socket.off('receive_active_staff')
-      socket.off('active_staff_error')
-      socket.off('active_staff_success')
-    }
-
-  }, [socket])
-
+      socket.off('receive_active_staff');
+      socket.off('active_staff_error');
+      socket.off('active_staff_success');
+    };
+  }, [socket]);
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
   };
 
+  const handleRowClick = (row) => {
+    setSelectedRowData(row);
+    document.getElementById('row_modal').showModal();
+  };
+
   const handleDisconnect = (row) => {
-    socket.emit('force_disconnect_staff', row)
+    socket.emit('force_disconnect_staff', row);
   };
 
   const handleBlock = (row) => {
-    socket.emit('block_ip_address', row)
+    socket.emit('block_ip_address', row);
   };
 
   const filteredData = data.filter(row =>
@@ -110,22 +104,17 @@ function ActiveStaff() {
     )
   );
 
-  // LOADER
   if (isLoading) {
     return (
       <div className="flex w-full flex-col gap-4">
         <div className="skeleton h-[520px] w-full"></div>
-        <div className="skeleton h-20 w-full"></div>
-        <div className="skeleton h-20 w-full"></div>
-        <div className="skeleton h-20 w-full"></div>
       </div>
     );
   }
 
-
   return (
     <div className="max-w-screen-2xl mx-auto mt-4">
-      <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300">
+      <div className="bg-white rounded-lg shadow-xl border border-gray-300">
         <div className="mx-4">
           <div className="overflow-x-auto w-full">
             <DataTable
@@ -133,9 +122,9 @@ function ActiveStaff() {
               columns={columns}
               data={filteredData}
               pagination
-              defaultSortField="name"
               highlightOnHover
               pointerOnHover
+              onRowClicked={handleRowClick}
               subHeader
               subHeaderComponent={
                 <input
@@ -150,6 +139,27 @@ function ActiveStaff() {
           </div>
         </div>
       </div>
+
+      {selectedRowData && (
+        <dialog id="row_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">User Info</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedRowData).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1')}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('row_modal').close()}>
+              Close
+            </button>
+          </form>
+        </dialog>
+      )}
     </div>
   );
 }

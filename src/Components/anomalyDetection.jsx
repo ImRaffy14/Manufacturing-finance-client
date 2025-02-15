@@ -16,6 +16,17 @@ function AnomalyDetection() {
     const [inflowDuplicationSearchText, setInflowDuplicationSearchText] = useState('');
     const [outflowDuplicationSearchText, setOutflowDuplicationSearchText] = useState('');
     const [failedLoginAttemptsSearchText, setFailedLoginAttemptsSearchText] = useState('');
+    const [flaggedAnomalySearchText, setFlaggedAnomalySearchText] = useState ('');
+    const [selectedBudgetRow, setSelectedBudgetRow] = useState(null);
+    const [selectedPurchaseRow, setSelectedPurchaseRow] = useState(null);
+    const [selectedInflowRow, setSelectedInflowRow] = useState(null);
+    const [selectedOutflowRow, setSelectedOutflowRow] = useState(null);
+    const [selectedInflowTransaction, setSelectedInflowTransaction] = useState(null);
+    const [selectedOutflowTransaction, setSelectedOutflowTransaction] = useState(null);
+    const [selectedUnusualActivity, setSelectedUnusualActivity] = useState(null);
+    const [selectedFailedLoginAttempt, setSelectedFailedLoginAttempt] = useState(null);
+    const [selectedFlaggedAnomaly, setSelectedFlaggedAnomaly] = useState(null);
+  
 
     // TABLE DATA
     const [inflowTransactionData, setInflowTransactionData] = useState([]);
@@ -339,6 +350,30 @@ const unusualActivityColumns = [
   { name: 'Role', selector: row => row.role },
 ];
 
+const flaggedAnomalyColumns = [
+  { name: 'ID', selector: row => row._id },
+  { name: 'username', selector: row => row.username },
+  { name: 'Role', selector: row => row.role },
+];
+
+const flaggedAnomalyData = [
+  {
+    username: 'John',
+    role: 'admin',
+    _id: '1',
+  },
+  {
+    username: 'John',
+    role: 'admin',
+    _id: '2',
+  },
+  {
+    username: 'John',
+    role: 'admin',
+    _id: '3',
+  },
+]
+
 
     const totalFlaggedAnomalies = 0;
     const totalAnomaliesResolved = 0;
@@ -372,13 +407,60 @@ const handleOutflowDuplicationSearch = (event) => {
       setUnusualActivitySearchText(event.target.value);
   };
 
-  
-
   const handleDataDuplicationSearch = (event) => {
     setDataDuplicationSearchText(event.target.value);
 };
 const handleFailedLoginAttemptsSearch = (event) => {
   setFailedLoginAttemptsSearchText(event.target.value);
+};
+
+const handleFlaggedAnomalySearch = (event) => {
+  setFlaggedAnomalySearchText(event.target.value);
+};
+
+const handleBudgetRowClick = (row) => {
+  setSelectedBudgetRow(row);
+  document.getElementById("budget_modal").showModal();
+};
+
+const handlePurchaseRowClick = (row) => {
+  setSelectedPurchaseRow(row);
+  document.getElementById("purchase_modal").showModal();
+};
+
+const handleInflowRowClick = (row) => {
+  setSelectedInflowRow(row);
+  document.getElementById("inflow_modal").showModal();
+};
+
+const handleOutflowRowClick = (row) => {
+  setSelectedOutflowRow(row);
+  document.getElementById("outflow_modal").showModal();
+};
+
+const handleInflowTransactionClick = (row) => {
+  setSelectedInflowTransaction(row);
+  document.getElementById("inflow_transaction_modal").showModal();
+};
+
+const handleOutflowTransactionClick = (row) => {
+  setSelectedOutflowTransaction(row);
+  document.getElementById("outflow_transaction_modal").showModal();
+};
+
+const handleUnusualActivityClick = (row) => {
+  setSelectedUnusualActivity(row);
+  document.getElementById("unusual_activity_modal").showModal();
+};
+
+const handleFailedLoginAttemptClick = (row) => {
+  setSelectedFailedLoginAttempt(row);
+  document.getElementById("failed_login_attempt_modal").showModal();
+};
+
+const handleFlaggedAnomalyClick = (row) => {
+  setSelectedFlaggedAnomaly(row);
+  document.getElementById("flagged_anomaly_modal").showModal();
 };
 
     const filteredInflowTransactionData = inflowTransactionData.filter(row =>
@@ -426,6 +508,12 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
             value.toString().toLowerCase().includes(failedLoginAttemptsSearchText.toLowerCase())
         )
     );
+
+    const filteredFlaggedAnomalyData = flaggedAnomalyData.filter(row =>
+      Object.values(row).some(value =>
+          value.toString().toLowerCase().includes(flaggedAnomalySearchText.toLowerCase())
+      )
+  );
     const customStyles = {
       headRow: {
         style: {
@@ -496,6 +584,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         title="Possible Anomaly Inflow Transactions"
         columns={inflowTransactionsColumns}
         data={filteredInflowTransactionData}
+        onRowClicked={handleInflowTransactionClick}
         pagination
         pointerOnHover
         subHeader
@@ -534,6 +623,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           title="Possible Anomaly Outflow Transactions"
           columns={outflowTransactionsColumns}
           data={filteredOutflowTransactionData}
+          onRowClicked={handleOutflowTransactionClick}
           pagination
           pointerOnHover
           subHeader
@@ -580,6 +670,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         title="Budget Request Duplication"
         columns={budgetDuplicationColumns}
         data={filteredBudgetDuplicationData}
+        onRowClicked={handleBudgetRowClick}
         pagination
         pointerOnHover
         subHeader
@@ -613,6 +704,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           title="Purchase Order Duplication"
           columns={purchaseOrderDuplicationColumns}
           data={filteredPurchaseOrderDuplicationData}
+          onRowClicked={handlePurchaseRowClick}
           pagination
           pointerOnHover
           subHeader
@@ -645,6 +737,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           title="Inflow Transaction Duplication"
           columns={inflowDuplicationColumns}
           data={filteredInflowDuplicationData}
+          onRowClicked={handleInflowRowClick}
           pagination
           pointerOnHover
           subHeader
@@ -676,6 +769,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           title="Outflow Transaction Duplication"
           columns={outflowDuplicationColumns}
           data={filteredOutflowDuplicationData}
+          onRowClicked={handleOutflowRowClick}
           pagination
           pointerOnHover
           subHeader
@@ -716,6 +810,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           title="Suspicious Login"
           columns={unusualActivityColumns}
           data={filteredUnusualActivityData}
+          onRowClicked={handleUnusualActivityClick}
           pagination
           pointerOnHover
           subHeader
@@ -748,6 +843,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           title="Failed Login Attempts"
           columns={failedAttemptsColumns}
           data={filteredFailedLoginAttemptsData}
+          onRowClicked={handleFailedLoginAttemptClick}
           pagination
           pointerOnHover
           subHeader
@@ -769,6 +865,226 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
     </div>
   </div>
 </div>
+
+      <div className="items-center justify-center bg-white rounded-lg shadow-xl border border-gray-300 mb-10">
+          <div className="mx-4">
+            <div className="overflow-x-auto w-full">
+              <DataTable
+                title="Flaged Anomalies"
+                columns={flaggedAnomalyColumns}
+                data={filteredFlaggedAnomalyData}
+                onRowClicked={handleFlaggedAnomalyClick}
+                pagination
+                defaultSortField="name"
+                pointerOnHover
+                subHeader
+                subHeaderComponent={
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={flaggedAnomalySearchText}
+                    onChange={handleFlaggedAnomalySearch}
+                    className="mb-2 p-2 border border-gray-400 rounded-lg"
+                  />
+                }
+                customStyles={customStyles}
+              />
+            </div>
+          </div>
+        </div>
+
+
+{/* MODALS */}
+{selectedInflowTransaction && (
+        <dialog id="inflow_transaction_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Inflow Transaction Preview</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedInflowTransaction).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <button className="btn btn-outline btn-error">Flag Anomaly</button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('inflow_transaction_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
+      {selectedOutflowTransaction && (
+        <dialog id="outflow_transaction_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Outflow Transaction Preview</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedOutflowTransaction).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <button className="btn btn-outline btn-error">Flag Anomaly</button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('outflow_transaction_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
+
+{selectedBudgetRow && (
+        <dialog id="budget_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Budget Request Preview</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedBudgetRow).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <button className="btn btn-primary">Take Action</button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('budget_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
+      {selectedPurchaseRow && (
+        <dialog id="purchase_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Purchase Order Preview</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedPurchaseRow).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <button className="btn btn-primary">Take Action</button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('purchase_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
+      {selectedInflowRow && (
+        <dialog id="inflow_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Inflow Transaction Preview</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedInflowRow).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <button className="btn btn-primary">Take Action</button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('inflow_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
+      {selectedOutflowRow && (
+        <dialog id="outflow_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Outflow Transaction Preview</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedOutflowRow).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <button className="btn btn-primary">Take Action</button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('outflow_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
+            {selectedUnusualActivity && (
+        <dialog id="unusual_activity_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Suspicious Login Preview</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedUnusualActivity).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+            <button className="btn btn-outline btn-error">Block User</button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('unusual_activity_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
+      {selectedFailedLoginAttempt && (
+        <dialog id="failed_login_attempt_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Failed Login Attempt Preview</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedFailedLoginAttempt).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <button className="btn btn-outline btn-error">Block User</button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('failed_login_attempt_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
+      {selectedFlaggedAnomaly && (
+        <dialog id="flagged_anomaly_modal" className="modal">
+          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Flagged Anomaly Preview</h1>
+            <div className="space-y-4">
+              {Object.entries(selectedFlaggedAnomaly).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
+                  <p className="text-gray-700">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <button className="btn btn-primary">Take Action</button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => document.getElementById('flagged_anomaly_modal').close()}>Close</button>
+          </form>
+        </dialog>
+      )}
         </div>
     );
 }
