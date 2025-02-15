@@ -950,6 +950,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 </div>
               ))}
             </div>
+            <iframe src="your-source-url" className="w-full h-64 mt-4" title="Budget Preview"></iframe>
             <div className="flex justify-center mt-4">
               <button className="btn btn-primary">Take Action</button>
             </div>
@@ -971,6 +972,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 </div>
               ))}
             </div>
+            <iframe src="your-source-url" className="w-full h-64 mt-4" title="Purchase Preview"></iframe>
             <div className="flex justify-center mt-4">
               <button className="btn btn-primary">Take Action</button>
             </div>
@@ -992,6 +994,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 </div>
               ))}
             </div>
+            <iframe src="your-source-url" className="w-full h-64 mt-4" title="Inflow Preview"></iframe>
             <div className="flex justify-center mt-4">
               <button className="btn btn-primary">Take Action</button>
             </div>
@@ -1013,6 +1016,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 </div>
               ))}
             </div>
+            <iframe src="your-source-url" className="w-full h-64 mt-4" title="Outflow Preview"></iframe>
             <div className="flex justify-center mt-4">
               <button className="btn btn-primary">Take Action</button>
             </div>
@@ -1022,6 +1026,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           </form>
         </dialog>
       )}
+
             {selectedUnusualActivity && (
         <dialog id="unusual_activity_modal" className="modal">
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
