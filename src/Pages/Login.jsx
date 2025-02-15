@@ -23,6 +23,16 @@ function Login() {
     const [isNoLongerBL, setIsNoLongerBL] = useState('')
     const [timer, setTimer] = useState(300);
     const [timeLeft, setTimeLeft] = useState(0)
+    const [showTermsModal, setShowTermsModal] = useState(true);
+
+    useEffect(() => {
+        if (showTermsModal) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }, [showTermsModal]);
+
 
     // TIMER
     useEffect(() => {
@@ -294,6 +304,31 @@ function Login() {
 
     return (
         <>
+                {showTermsModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-cover bg-center z-50" style={{ backgroundImage: `url(${BackgroundImage})` }}>
+                    <div className="bg-white bg-opacity-90 p-10 rounded-lg shadow-2xl w-[800px] text-center">
+                        <h2 className="text-2xl font-bold mb-4">Terms and Conditions</h2>
+                        <p className="text-md text-gray-700 mb-6 text-left">
+                            Welcome to our financial management system. Your security is our priority, and we collect IP addresses for security purposes, anomaly detection, and monitoring unauthorized access attempts. By accessing this system, you agree to comply with the following terms:
+                        </p>
+                        <ul className="text-md text-gray-700 text-left list-disc pl-6 mb-6">
+                            <li>Your IP address will be recorded for security and auditing purposes.</li>
+                            <li>You must not share your login credentials with anyone.</li>
+                            <li>Unauthorized access attempts may result in account suspension.</li>
+                            <li>All transactions are logged and monitored for security purposes.</li>
+                            <li>By proceeding, you confirm that you understand and accept these terms.</li>
+                        </ul>
+                        <button
+                            onClick={() => setShowTermsModal(false)}
+                            className="btn btn-primary w-full py-3 text-lg"
+                        >
+                            Accept
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {!showTermsModal && (
             <div className="relative hero min-h-screen flex justify-center items-center bg-cover bg-center"
                 style={{ backgroundImage: `url(${BackgroundImage})` }}>
                 <div className="absolute inset-0 bg-black opacity-60"></div>
@@ -371,6 +406,7 @@ function Login() {
                     </div>
                 </div>
             </div>
+            )}
 
             {/* MFA MODAL */}
             <dialog id="mfa_modal" className="modal modal-bottom sm:modal-middle">
