@@ -10,6 +10,7 @@ function ActiveStaff() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRowData, setSelectedRowData] = useState(null);
+  const [password, setPassword] = useState("");
   const socket = useSocket();
 
   const columns = [
@@ -27,7 +28,7 @@ function ActiveStaff() {
       cell: (row) => (
         <button 
           className="btn btn-outline btn-error p-2 mt-2 mb-2"
-          onClick={() => handleDisconnect(row)}
+          onClick={() => document.getElementById("confirm_modal").showModal()}
         >
           <VscDebugDisconnect size={20} />
         </button>
@@ -41,7 +42,7 @@ function ActiveStaff() {
       cell: (row) => (
         <button 
           className="btn btn-outline btn-error p-2 mt-2 mb-2"
-          onClick={() => handleBlock(row)}
+          onClick={() => document.getElementById("confirm_modal").showModal()}
         >
           <MdBlock size={20} />
         </button>
@@ -160,6 +161,35 @@ function ActiveStaff() {
           </form>
         </dialog>
       )}
+
+<dialog id="confirm_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+
+                <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
+                >
+                Confirm Password  
+                </button>
+    
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
     </div>
   );
 }
