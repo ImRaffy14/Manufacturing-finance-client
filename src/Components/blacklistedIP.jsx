@@ -3,12 +3,14 @@ import DataTable from 'react-data-table-component';
 import { useSocket } from '../context/SocketContext'
 import { toast } from 'react-toastify'
 
-function blacklistedIP() {
+function blacklistedIP({ userData }) {
   const [searchText, setSearchText] = useState('');
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRowData, setSelectedRowData] = useState(null);
-    const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorVerification, setErrorVerification] = useState('')
+  const [isSubmitLoading, setIsSubmitLoading] = useState(true)
 
   const socket = useSocket();
 
@@ -48,7 +50,10 @@ function blacklistedIP() {
       cell: (row) => (
         <button 
           className="btn btn-outline btn-primary mt-2 mb-2" 
-          onClick={() => document.getElementById("confirm_modal").showModal()}
+          onClick={() => {
+            document.getElementById("confirm_modal").showModal();
+            setSelectedRowData(row); 
+          }}
         >
           Resolve
         </button>
@@ -69,13 +74,27 @@ function blacklistedIP() {
     }
 
     const handleError = (response) => {
+      setPassword('')
+      setIsSubmitLoading(true)
+      document.getElementById("confirm_modal").close();
       toast.error('Server Internal Error', { position: 'top-right' });
     }
 
     const handleSuccess = (response) => {
+      setErrorVerification('')
+      setPassword('')
+      setIsSubmitLoading(true)
+      document.getElementById("confirm_modal").close();
       toast.success(response.msg, { position: 'top-right' });
     }
 
+    const handleErrorVerification = (response) => {
+      setPassword('')
+      setIsSubmitLoading(true)
+      setErrorVerification(response.msg)
+    }
+
+    socket.on('error_verification', handleErrorVerification)
     socket.on('blacklist_success', handleSuccess);
     socket.on('blacklist_error', handleError);
     socket.on('receive_blacklisted', handleReceiveBlacklisted);
@@ -84,6 +103,7 @@ function blacklistedIP() {
       socket.off("receive_blacklisted");
       socket.off("blacklist_error");
       socket.off("blacklist_success");
+      socket.off('error_verification')
     }
   },[socket]);
   
@@ -91,8 +111,10 @@ function blacklistedIP() {
     setSearchText(event.target.value);
   };
 
-  const handleResolveClick = (row) => {
-    socket.emit('resolve_blacklisted', row);
+  const handleResolveClick = (e) => {
+    e.preventDefault()
+    setIsSubmitLoading(false)
+    socket.emit('resolve_blacklisted', { row: selectedRowData, password, userName: userData.userName});
   };
 
   const filteredData = data.filter(row =>
@@ -194,7 +216,7 @@ function blacklistedIP() {
 
 <dialog id="confirm_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" >
+          <form className="space-y-4" onSubmit={handleResolveClick} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -208,11 +230,21 @@ function blacklistedIP() {
                   />
               </div>
 
-                <button
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800"
-                >
-                Confirm Password  
-                </button>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+              
+              {isSubmitLoading && 
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
+                  >
+                  Confirm Password  
+                  </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
     
           </form>
         </div>

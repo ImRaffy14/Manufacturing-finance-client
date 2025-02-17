@@ -6,7 +6,7 @@ import { MdBlock } from "react-icons/md";
 import DataTable from 'react-data-table-component';
 import { useSocket } from "../context/SocketContext"
 
-function AnomalyDetection() {
+function AnomalyDetection({userData}) {
     const [inflowSearchText, setInflowSearchText] = useState('');
     const [outflowSearchText, setOutflowSearchText] = useState('');
     const [unusualActivitySearchText, setUnusualActivitySearchText] = useState('');
@@ -37,6 +37,7 @@ function AnomalyDetection() {
     const [outflowDupulicationData, setOutflowDuplicationData] = useState([])
     const [unusualActivityData, setUnusualActivityData] = useState([])
     const [failedLoginAttemptsData, setFailedLoginAttemptsData] = useState([])
+    const [flaggedAnomalyData, setFlaggedAnomalyData] = useState([])
 
     // FOR LOADERS
     const [isLoadingPOT, setIsLoadingPOT] = useState(true);
@@ -71,6 +72,7 @@ function AnomalyDetection() {
       socket.emit('get_outflow_duplication')
       socket.emit('get_suspicious_login')
       socket.emit('get_failed_attempt')
+      socket.emit('get_resolved_anomalies')
       
       // GET POSSIBLE OUTFLOW ANOMALY
       const handlePossibleOutflowAnomaly = (response) => {
@@ -160,6 +162,13 @@ function AnomalyDetection() {
         setIsLoadingFLA(false)
       }
 
+      // GET RESOLVED ANOMALIES
+      const getResolvedAnomalies = (response) => {
+        setFlaggedAnomalyData(response)
+      }
+
+
+      socket.on('receive_resolved_anomalies', getResolvedAnomalies)
       socket.on('receive_failed_attempt', handleFailedAttemptLogin)
       socket.on('receive_suspicious_login', handleSuspiciousLogin)
       socket.on('receive_outflow_duplication', handleOutflowDuplication)
@@ -177,6 +186,7 @@ function AnomalyDetection() {
         socket.off('receive_inflow_duplication')
         socket.off('receive_suspicious_login')
         socket.off('receive_failed_attempt')
+        socket.off('receive_resolved_anomalies')
       }
 
     },[socket])
@@ -282,7 +292,7 @@ const budgetDuplicationColumns = [
   { name: 'Budget Request ID', selector: row => (
     <ul>
       {row.budgetReqId.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index}>[{item}]</li>
       ))}
     </ul>
   ), width: '200px'},
@@ -296,7 +306,7 @@ const purchaseOrderDuplicationColumns = [
   { name: 'P.O ID', selector: row => ( 
     <ul>
       {row.poId.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index}>[{item}]</li>
       ))}
     </ul>), width: '200px' 
   },
@@ -311,7 +321,7 @@ const inflowDuplicationColumns = [
   { name: 'Inflow ID', selector: row => ( 
     <ul>
       {row.inflowId.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index}>[{item}]</li>
       ))}
     </ul>), width: '200px' },
   { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount )},
@@ -325,7 +335,7 @@ const outflowDuplicationColumns = [
   { name: 'Outflow ID', selector: row => ( 
     <ul>
       {row.outflowId.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index}>[{item}]</li>
       ))}
     </ul>), width: '200px'
   },
@@ -336,7 +346,7 @@ const unusualActivityColumns = [
   { name: 'IP Address', selector: row => ( 
     <ul>
       {row.ipAddress.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index}>[{item}]</li>
       ))}
     </ul>) },
   { name: 'Device Info', selector: row => ( 
@@ -352,27 +362,13 @@ const unusualActivityColumns = [
 
 const flaggedAnomalyColumns = [
   { name: 'ID', selector: row => row._id },
-  { name: 'username', selector: row => row.username },
-  { name: 'Role', selector: row => row.role },
+  { name: 'Anomaly Type', selector: row => row.anomalyType },
+  { name: 'Data ID', selector: row => row.dataId},
+  { name: 'Anomaly From ', selector: row => row.anomalyFrom },
+  { name: 'Resolved By', selector: row => row.resolvedBy},
+  { name: 'Resolved Date', selector: row => row.resolvedDate},
+  { name: 'Description', selector: row => row.description},
 ];
-
-const flaggedAnomalyData = [
-  {
-    username: 'John',
-    role: 'admin',
-    _id: '1',
-  },
-  {
-    username: 'John',
-    role: 'admin',
-    _id: '2',
-  },
-  {
-    username: 'John',
-    role: 'admin',
-    _id: '3',
-  },
-]
 
 
     const totalFlaggedAnomalies = 0;
@@ -537,6 +533,30 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       },
     };
     
+    // HANDLE OUTFLOW RESOLVE ANOMALY
+    const handleOutflowResolveAnomaly = () => {
+      const data = {
+        anomalyType: "Data Discrepancy",
+        dataId: selectedOutflowTransaction.id,
+        anomalyFrom: 'Outflow Transactions',
+        description: `${selectedOutflowTransaction.approver} approves a budget to ${selectedOutflowTransaction.department} department with unusual total amount of ₱${selectedOutflowTransaction.totalAmount}`,
+        resolvedBy: userData.userName
+      }
+      socket.emit('resolve_anomaly', data)
+    }
+
+    // HANDLE INFLOW RESOLVE ANOMALY
+    const handleInflowResolveAnomaly = () => {
+      const data = {
+        anomalyType: "Data Discrepancy",
+        dataId: selectedInflowTransaction.id,
+        anomalyFrom: 'Inflow Transactions',
+        description: `${selectedInflowTransaction.auditor} audits a money from a purchase order (P.O ID :${selectedInflowTransaction.invoiceId}) with unusual total amount of ₱${selectedInflowTransaction.totalAmount}`,
+        resolvedBy: userData.userName
+      }
+      socket.emit('resolve_anomaly', data)
+    }
+
 
     return (
         <div className="max-w-screen-2xl mx-auto mt-4">
@@ -908,7 +928,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
               ))}
             </div>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-outline btn-error">Flag Anomaly</button>
+              <button className="btn btn-outline btn-error" onClick={handleInflowResolveAnomaly}>Flag Anomaly</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -929,7 +949,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
               ))}
             </div>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-outline btn-error">Flag Anomaly</button>
+              <button className="btn btn-outline btn-error" onClick={handleOutflowResolveAnomaly}>Flag Anomaly</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
