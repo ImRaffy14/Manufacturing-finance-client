@@ -26,7 +26,8 @@ function AnomalyDetection({userData}) {
     const [selectedUnusualActivity, setSelectedUnusualActivity] = useState(null);
     const [selectedFailedLoginAttempt, setSelectedFailedLoginAttempt] = useState(null);
     const [selectedFlaggedAnomaly, setSelectedFlaggedAnomaly] = useState(null);
-  
+    const [password, setPassword] = useState("");
+    const [description, setDescription] = useState('')
 
     // TABLE DATA
     const [inflowTransactionData, setInflowTransactionData] = useState([]);
@@ -211,6 +212,7 @@ function AnomalyDetection({userData}) {
     socket.emit('get_possible_outflow_anomaly', {msg: 'get possible anomaly'})
   };
 
+  console.log(selectedBudgetRow);
 
     const inflowTransactionsColumns = [
       { name: 'ID', selector: row => row.id },
@@ -272,8 +274,13 @@ function AnomalyDetection({userData}) {
         name: 'Action', 
         cell: (row) => (
             <button 
-                onClick={() => handleBlockUser(row.userId)}
+            onClick={() => {
+              document.getElementById("block_modal").showModal();
+              setSelectedRowData(row);  
+          }}
+                
                 className="btn btn-outline hover:bg-white hover:text-black text-white mt-2 mb-2"
+                
             >
                 Block
             </button>
@@ -374,6 +381,10 @@ const flaggedAnomalyColumns = [
     const totalFlaggedAnomalies = 0;
     const totalAnomaliesResolved = 0;
     const totalOnInvestigation = 0;
+
+    const handleDescriptionChange = (event) => {
+      setDescription(event.target.value); 
+    };
 
     const handleInflowSearch = (event) => {
         setInflowSearchText(event.target.value);
@@ -939,7 +950,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
                   </div>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-outline btn-error" onClick={handleInflowResolveAnomaly}>Flag Anomaly</button>
+              <button className="btn btn-outline btn-error" onClick={handleInflowResolveAnomaly}>Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -986,7 +997,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
                   </div>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-outline btn-error" onClick={handleOutflowResolveAnomaly}>Flag Anomaly</button>
+              <button className="btn btn-outline btn-error" onClick={handleOutflowResolveAnomaly}>Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -996,48 +1007,51 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       )}
 
 {selectedBudgetRow && (
-        <dialog id="budget_modal" className="modal">
-          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
-            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Budget Request Preview</h1>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Request ID:</strong></p>
-                      <p className="text-gray-700">{selectedBudgetRow.requestId}</p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Department:</strong></p>
-                      <p className="text-gray-700">{selectedBudgetRow.department}</p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Categoty:</strong></p>
-                      <p className="text-gray-700">{selectedBudgetRow.category}</p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Total Request:</strong></p>
-                      <p className="text-gray-700">{selectedBudgetRow.totalRequest}</p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Budget Request ID:</strong></p>
-                      <p className="text-gray-700 max-w-2xl text-justify">
-                        {selectedBudgetRow.budgetReqId}
-                      </p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Count:</strong></p>
-                      <p className="text-gray-700">{selectedBudgetRow.count}</p>
-                    </div>
-                    
-                  </div>
-            <iframe src="your-source-url" className="w-full h-64 mt-4" title="Budget Preview"></iframe>
-            <div className="flex justify-center mt-4">
-              <button className="btn btn-primary">Take Action</button>
-            </div>
+  <dialog id="budget_modal" className="modal">
+    <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+      <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Budget Request Preview</h1>
+      <div className="space-y-4">
+        <div className="flex justify-between">
+          <p className="font-medium"><strong>Request ID:</strong></p>
+          <p className="text-gray-700">{selectedBudgetRow.requestId}</p>
+        </div>
+        <div className="flex justify-between">
+          <p className="font-medium"><strong>Department:</strong></p>
+          <p className="text-gray-700">{selectedBudgetRow.department}</p>
+        </div>
+        <div className="flex justify-between">
+          <p className="font-medium"><strong>Category:</strong></p>
+          <p className="text-gray-700">{selectedBudgetRow.category}</p>
+        </div>
+        <div className="flex justify-between">
+          <p className="font-medium"><strong>Total Request:</strong></p>
+          <p className="text-gray-700">{formatCurrency(selectedBudgetRow.totalRequest)}</p>
+        </div>
+        
+        {/* Dynamically render Budget Request IDs */}
+        {selectedBudgetRow.budgetReqId && selectedBudgetRow.budgetReqId.map((id, index) => (
+          <div key={index} className="flex justify-between">
+            <p className="font-medium"><strong>Budget Request ID {index + 1}:</strong></p>
+            <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
           </div>
-          <form method="dialog" className="modal-backdrop">
-            <button type="button" onClick={() => document.getElementById('budget_modal').close()}>Close</button>
-          </form>
-        </dialog>
-      )}
+        ))}
+
+        <div className="flex justify-between">
+          <p className="font-medium"><strong>Count:</strong></p>
+          <p className="text-gray-700">{selectedBudgetRow.count}</p>
+        </div>
+      </div>
+      <iframe src="your-source-url" className="w-full h-64 mt-4" title="Budget Preview"></iframe>
+      <div className="flex justify-center mt-4">
+        <button className="btn btn-primary">Investigate</button>
+      </div>
+    </div>
+    <form method="dialog" className="modal-backdrop">
+      <button type="button" onClick={() => document.getElementById('budget_modal').close()}>Close</button>
+    </form>
+  </dialog>
+)}
+
       {selectedPurchaseRow && (
         <dialog id="purchase_modal" className="modal">
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
@@ -1052,15 +1066,15 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="text-gray-700">{selectedPurchaseRow.customerName}</p>
                     </div>
                     <div className="flex justify-between">
-                      <p className="font-medium"><strong>Total AMount:</strong></p>
+                      <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedPurchaseRow.totalAmount)}</p>
                     </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Purchase Order ID:</strong></p>
-                      <p className="text-gray-700 max-w-xl text-justify">
-                        {selectedPurchaseRow.poId}
-                      </p>
-                    </div>
+                    {selectedPurchaseRow.poId && selectedPurchaseRow.poId.map((id, index) => (
+                      <div key={index} className="flex justify-between">
+                        <p className="font-medium"><strong>Purchase Order ID: {index + 1}:</strong></p>
+                        <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
+                      </div>
+                    ))}
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Count:</strong></p>
                       <p className="text-gray-700">{selectedPurchaseRow.count}</p>
@@ -1068,7 +1082,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
             <iframe src="your-source-url" className="w-full h-64 mt-4" title="Purchase Preview"></iframe>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-primary">Take Action</button>
+              <button className="btn btn-primary">Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1097,12 +1111,12 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedInflowRow.totalAmount)}</p>
                     </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Inflow Transaction ID:</strong></p>
-                      <p className="text-gray-700 max-w-xl text-justify">
-                        {selectedInflowRow.inflowId}
-                      </p>
-                    </div>
+                    {selectedInflowRow.inflowId && selectedInflowRow.inflowId.map((id, index) => (
+                      <div key={index} className="flex justify-between">
+                        <p className="font-medium"><strong>Inflow Transaction ID: {index + 1}:</strong></p>
+                        <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
+                      </div>
+                    ))}
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Count:</strong></p>
                       <p className="text-gray-700">{selectedInflowRow.count}</p>
@@ -1110,7 +1124,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
             <iframe src="your-source-url" className="w-full h-64 mt-4" title="Inflow Preview"></iframe>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-primary">Take Action</button>
+              <button className="btn btn-primary">Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1139,12 +1153,12 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedOutflowRow.totalAmount)}</p>
                     </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Inflow Transaction ID:</strong></p>
-                      <p className="text-gray-700 max-w-xl text-justify">
-                        {selectedOutflowRow.outflowId}
-                      </p>
-                    </div>
+                    {selectedOutflowRow.outflowId && selectedOutflowRow.outflowId.map((id, index) => (
+                      <div key={index} className="flex justify-between">
+                        <p className="font-medium"><strong>Outflow Transaction ID: {index + 1}:</strong></p>
+                        <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
+                      </div>
+                    ))}
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Count:</strong></p>
                       <p className="text-gray-700">{selectedOutflowRow.count}</p>
@@ -1152,7 +1166,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
             <iframe src="your-source-url" className="w-full h-64 mt-4" title="Outflow Preview"></iframe>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-primary">Take Action</button>
+              <button className="btn btn-primary">Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1178,19 +1192,24 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Role:</strong></p>
                       <p className="text-gray-700">{selectedUnusualActivity.role}</p>
                     </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>IP Address:</strong></p>
-                      <p className="text-gray-700 max-w-xl text-justify">
-                        {selectedUnusualActivity.ipAddress}
-                      </p>
-                    </div>
+                    {selectedUnusualActivity.ipAddress && selectedUnusualActivity.ipAddress.map((id, index) => (
+                      <div key={index} className="flex justify-between">
+                        <p className="font-medium"><strong>IP Address {index + 1}:</strong></p>
+                        <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
+                      </div>
+                    ))}
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Count:</strong></p>
                       <p className="text-gray-700">{selectedUnusualActivity.count}</p>
                     </div>
                     </div>
             <div className="flex justify-center mt-4">
-            <button className="btn btn-outline btn-error">Block User</button>
+            <button className="btn btn-outline btn-error"
+            onClick={() => {
+              document.getElementById("block_modal").showModal();
+              setSelectedRowData(row); 
+            }}
+            >Block User</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1231,7 +1250,12 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
                     </div>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-outline btn-error">Block User</button>
+              <button className="btn btn-outline btn-error"
+               onClick={() => {
+                document.getElementById("block_modal").showModal();
+                setSelectedRowData(row); 
+              }}
+              >Block User</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1258,7 +1282,9 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
                     </div>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-primary">Take Action</button>
+              <button className="btn btn-success"
+              onClick={() => {
+                document.getElementById("resolve_modal").showModal();}}>Resolve</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1266,6 +1292,63 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           </form>
         </dialog>
       )}
+
+<dialog id="resolve_modal" className="modal">
+      <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+        <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Resolve Anomaly</h1>
+        <div className="space-y-4">
+          <div className="flex-col">
+            <p className="font-lg text-center mb-2"><strong>Description:</strong></p>
+            <textarea
+              className="textarea textarea-bordered w-full ml-5 text-gray-700"
+              value={description}  
+              onChange={handleDescriptionChange}  
+              placeholder="Enter the description here"
+            ></textarea>
+          </div>
+          <div className="flex justify-center gap-10 mt-10">
+            <button className="btn btn-error">Delete</button>
+            <button className="btn btn-success">Revert</button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button
+            type="button"
+            onClick={() => document.getElementById('resolve_modal').close()}
+          >
+            Close
+          </button>
+        </form>
+      </div>
+    </dialog>
+
+      {/* PASSWORD VERIFICATION FOR Block */}
+    <dialog id="block_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="Submit"
+                  >
+                  Confirm Password  
+                  </button>
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
         </div>
     );
 }
