@@ -166,12 +166,12 @@ function AdminPage() {
 
                         {/* ANOMALY DETECTION */}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ADMIN') && (  
-                        <Route path="anomalyDetection" element={<AnomalyDetection />} />
+                        <Route path="anomalyDetection" element={<AnomalyDetection userData={user} />} />
                     )}
 
                     {/* BLACKLISTED IP */}
                     {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ADMIN') && (  
-                        <Route path="blacklistedIP" element={<BlackListedIP />} />
+                        <Route path="blacklistedIP" element={<BlackListedIP  userData={user} />} />
                     )}
 
                     <Route path="viewFinancialReports" element={<ViewFinancialReports userData={user}/>}/>
@@ -183,7 +183,7 @@ function AdminPage() {
                     <Route path="viewRequestPayable" element={<ViewRequestPayable  userData={user}/>} />
                     <Route path="reviewViewCollection" element={<ReviewViewCollection/>}/>
                     <Route path="chartOfAccounts" element={<ChartOfAccounts/>}/>
-                    <Route path="activeStaff" element={<ActiveStaff/>}/>
+                    <Route path="activeStaff" element={<ActiveStaff userData={user} />}/>
                 </Routes>
             </div>
         </div>
