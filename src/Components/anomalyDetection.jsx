@@ -942,14 +942,35 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         <dialog id="budget_modal" className="modal">
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Budget Request Preview</h1>
-            <div className="space-y-4">
-              {Object.entries(selectedBudgetRow).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Request ID:</strong></p>
+                      <p className="text-gray-700">{selectedBudgetRow.requestId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Department:</strong></p>
+                      <p className="text-gray-700">{selectedBudgetRow.department}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Categoty:</strong></p>
+                      <p className="text-gray-700">{selectedBudgetRow.category}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Total Request:</strong></p>
+                      <p className="text-gray-700">{selectedBudgetRow.totalRequest}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Budget Request ID:</strong></p>
+                      <p className="text-gray-700 max-w-2xl text-justify">
+                        {selectedBudgetRow.budgetReqId}
+                      </p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Count:</strong></p>
+                      <p className="text-gray-700">{selectedBudgetRow.count}</p>
+                    </div>
+                    
+                  </div>
             <iframe src="your-source-url" className="w-full h-64 mt-4" title="Budget Preview"></iframe>
             <div className="flex justify-center mt-4">
               <button className="btn btn-primary">Take Action</button>
@@ -965,13 +986,29 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Purchase Order Preview</h1>
             <div className="space-y-4">
-              {Object.entries(selectedPurchaseRow).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Order Number:</strong></p>
+                      <p className="text-gray-700">{selectedPurchaseRow.orderNumber}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Customer Name:</strong></p>
+                      <p className="text-gray-700">{selectedPurchaseRow.customerName}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Total AMount:</strong></p>
+                      <p className="text-gray-700">{selectedPurchaseRow.totalAmount}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Purchase Order ID:</strong></p>
+                      <p className="text-gray-700 max-w-xl text-justify">
+                        {selectedPurchaseRow.poId}
+                      </p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Count:</strong></p>
+                      <p className="text-gray-700">{selectedPurchaseRow.count}</p>
+                    </div>
+                    </div>
             <iframe src="your-source-url" className="w-full h-64 mt-4" title="Purchase Preview"></iframe>
             <div className="flex justify-center mt-4">
               <button className="btn btn-primary">Take Action</button>
@@ -987,13 +1024,33 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Inflow Transaction Preview</h1>
             <div className="space-y-4">
-              {Object.entries(selectedInflowRow).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Auditor ID:</strong></p>
+                      <p className="text-gray-700">{selectedInflowRow.auditorId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Auditor:</strong></p>
+                      <p className="text-gray-700">{selectedInflowRow.auditor}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Invoice ID:</strong></p>
+                      <p className="text-gray-700">{selectedInflowRow.invoiceId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Total Amount:</strong></p>
+                      <p className="text-gray-700">{selectedInflowRow.totalAmount}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Inflow Transaction ID:</strong></p>
+                      <p className="text-gray-700 max-w-xl text-justify">
+                        {selectedInflowRow.inflowId}
+                      </p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Count:</strong></p>
+                      <p className="text-gray-700">{selectedInflowRow.count}</p>
+                    </div>
+                    </div>
             <iframe src="your-source-url" className="w-full h-64 mt-4" title="Inflow Preview"></iframe>
             <div className="flex justify-center mt-4">
               <button className="btn btn-primary">Take Action</button>
@@ -1009,13 +1066,33 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Outflow Transaction Preview</h1>
             <div className="space-y-4">
-              {Object.entries(selectedOutflowRow).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Approver ID:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowRow.approverId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Approver:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowRow.approver}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Payable ID:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowRow.payableId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Total Amount:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowRow.totalAmount}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Inflow Transaction ID:</strong></p>
+                      <p className="text-gray-700 max-w-xl text-justify">
+                        {selectedOutflowRow.outflowId}
+                      </p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Count:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowRow.count}</p>
+                    </div>
+                    </div>
             <iframe src="your-source-url" className="w-full h-64 mt-4" title="Outflow Preview"></iframe>
             <div className="flex justify-center mt-4">
               <button className="btn btn-primary">Take Action</button>
@@ -1032,13 +1109,29 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Suspicious Login Preview</h1>
             <div className="space-y-4">
-              {Object.entries(selectedUnusualActivity).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>User ID:</strong></p>
+                      <p className="text-gray-700">{selectedUnusualActivity.userId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Username:</strong></p>
+                      <p className="text-gray-700">{selectedUnusualActivity.username}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Role:</strong></p>
+                      <p className="text-gray-700">{selectedUnusualActivity.role}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>IP Address:</strong></p>
+                      <p className="text-gray-700 max-w-xl text-justify">
+                        {selectedUnusualActivity.ipAddress}
+                      </p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Count:</strong></p>
+                      <p className="text-gray-700">{selectedUnusualActivity.count}</p>
+                    </div>
+                    </div>
             <div className="flex justify-center mt-4">
             <button className="btn btn-outline btn-error">Block User</button>
             </div>
@@ -1053,13 +1146,33 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Failed Login Attempt Preview</h1>
             <div className="space-y-4">
-              {Object.entries(selectedFailedLoginAttempt).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>ID:</strong></p>
+                      <p className="text-gray-700">{selectedFailedLoginAttempt._id}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>User ID:</strong></p>
+                      <p className="text-gray-700">{selectedFailedLoginAttempt.userId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Username:</strong></p>
+                      <p className="text-gray-700">{selectedFailedLoginAttempt.username}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>IP Address:</strong></p>
+                      <p className="text-gray-700 max-w-xl text-justify">
+                        {selectedFailedLoginAttempt.ipAddress}
+                      </p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Attemps:</strong></p>
+                      <p className="text-gray-700">{selectedFailedLoginAttempt.attempts}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Attempt Date:</strong></p>
+                      <p className="text-gray-700">{selectedFailedLoginAttempt.attemptDate}</p>
+                    </div>
+                    </div>
             <div className="flex justify-center mt-4">
               <button className="btn btn-outline btn-error">Block User</button>
             </div>
@@ -1074,13 +1187,19 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Flagged Anomaly Preview</h1>
             <div className="space-y-4">
-              {Object.entries(selectedFlaggedAnomaly).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Username:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.username}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Role:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.role}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>ID:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly._id}</p>
+                    </div>
+                    </div>
             <div className="flex justify-center mt-4">
               <button className="btn btn-primary">Take Action</button>
             </div>

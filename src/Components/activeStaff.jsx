@@ -146,13 +146,31 @@ function ActiveStaff() {
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">User Info</h1>
             <div className="space-y-4">
-              {Object.entries(selectedRowData).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1')}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>ID:</strong></p>
+                      <p className="text-gray-700">{selectedRowData._id}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>User ID:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.userId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Username:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.username}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Role:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.role}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>IP Address:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.ipAddress}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Date:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.date}</p>
+                    </div>
+                  </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('row_modal').close()}>

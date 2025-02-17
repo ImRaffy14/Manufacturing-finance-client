@@ -148,13 +148,43 @@ function blacklistedIP() {
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Blacklisted IP Details</h1>
             <div className="space-y-4">
-              {Object.entries(selectedRowData).map(([key, value]) => (
-                <div className="flex justify-between" key={key}>
-                  <p className="font-medium"><strong>{key}:</strong></p>
-                  <p className="text-gray-700">{value.toString()}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>ID:</strong></p>
+                      <p className="text-gray-700">{selectedRowData._id}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>User ID:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.userId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Username:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.username}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>IP Address:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.ipAddress}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Ban Time:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.banTime}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Ban Duration:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.banDuration}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Banned:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.banned ? 'true' : 'false'}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Device Info:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.deviceInfo}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Location:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.location}</p>
+                    </div>
+                  </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('row_modal').close()}>Close</button>
