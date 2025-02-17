@@ -577,13 +577,6 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                             <p className="text-4xl text-black font-bold">{totalAnomaliesResolved}</p>
                         </div>
                     </div>
-                    <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3">
-                        <p className="text-black font-semibold text-md">Total On Investigation</p>
-                        <div className="flex gap-3 my-3">
-                            <FaSearch className="text-blue-600 text-2xl my-2" />
-                            <p className="text-4xl text-black font-bold">{totalOnInvestigation}</p>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -920,13 +913,31 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Inflow Transaction Preview</h1>
             <div className="space-y-4">
-              {Object.entries(selectedInflowTransaction).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>ID:</strong></p>
+                      <p className="text-gray-700">{selectedInflowTransaction._id}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Date & Time:</strong></p>
+                      <p className="text-gray-700">{selectedInflowTransaction.dateTime}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Auditor:</strong></p>
+                      <p className="text-gray-700">{selectedInflowTransaction.auditor}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Invoice ID:</strong></p>
+                      <p className="text-gray-700">{selectedInflowTransaction.invoiceId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Customer Name:</strong></p>
+                      <p className="text-gray-700">{selectedInflowTransaction.customerName}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Total Amount:</strong></p>
+                      <p className="text-gray-700">{formatCurrency(selectedInflowTransaction.totalAmount)}</p>
+                    </div>
+                  </div>
             <div className="flex justify-center mt-4">
               <button className="btn btn-outline btn-error" onClick={handleInflowResolveAnomaly}>Flag Anomaly</button>
             </div>
@@ -941,13 +952,39 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Outflow Transaction Preview</h1>
             <div className="space-y-4">
-              {Object.entries(selectedOutflowTransaction).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <p className="font-medium"><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong></p>
-                  <p className="text-gray-700">{value}</p>
-                </div>
-              ))}
-            </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>ID:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowTransaction._id}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Date & Time:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowTransaction.dateTime}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Approver:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowTransaction.approver}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Approver ID:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowTransaction.approverId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Payable ID:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowTransaction.payableId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Category:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowTransaction.category}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Department:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowTransaction.department}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Total Amount:</strong></p>
+                      <p className="text-gray-700">{formatCurrency(selectedOutflowTransaction.totalAmount)}</p>
+                    </div>
+                  </div>
             <div className="flex justify-center mt-4">
               <button className="btn btn-outline btn-error" onClick={handleOutflowResolveAnomaly}>Flag Anomaly</button>
             </div>
@@ -1016,7 +1053,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Total AMount:</strong></p>
-                      <p className="text-gray-700">{selectedPurchaseRow.totalAmount}</p>
+                      <p className="text-gray-700">{formatCurrency(selectedPurchaseRow.totalAmount)}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Purchase Order ID:</strong></p>
@@ -1058,7 +1095,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Total Amount:</strong></p>
-                      <p className="text-gray-700">{selectedInflowRow.totalAmount}</p>
+                      <p className="text-gray-700">{formatCurrency(selectedInflowRow.totalAmount)}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Inflow Transaction ID:</strong></p>
@@ -1100,7 +1137,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Total Amount:</strong></p>
-                      <p className="text-gray-700">{selectedOutflowRow.totalAmount}</p>
+                      <p className="text-gray-700">{formatCurrency(selectedOutflowRow.totalAmount)}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Inflow Transaction ID:</strong></p>
