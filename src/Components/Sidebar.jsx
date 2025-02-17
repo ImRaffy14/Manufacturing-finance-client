@@ -24,6 +24,7 @@ import { MdOutlinePayments } from "react-icons/md";
 import { FaRegChartBar } from "react-icons/fa6";
 import { TbPigMoney } from "react-icons/tb";
 import { TbZoomMoney } from "react-icons/tb";
+import { AiOutlineMenu } from "react-icons/ai";
 import { MdBlock } from "react-icons/md";
 import { VscVmActive } from "react-icons/vsc";
 import { useSocket } from '../context/SocketContext';
@@ -152,16 +153,17 @@ const toggleSidebar = () => {
     <div className={`flex flex-col overflow-auto bg-white text-black border-r-2 sticky top-0 max-md:hidden transition-all duration-300 
       ${isCollapsed ? "w-20 px-4 py-4" : "w-72 lg:w-80 px-2 py-4"}`} aria-label="Sidebar">
           {/* TOGGLE */}
-      <div className="flex justify-e">
-        <button
-          onClick={toggleSidebar}
-          className={`mb-4 p-1 text-black border border-gray-300 rounded-md hover:bg-gray-200 transition duration-200 ${isCollapsed ? "w-11" : "w-11"}`}
-          aria-expanded={!isCollapsed}
-          aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-        >
-          {isCollapsed ? "▶" : "◀"}
-        </button>
-      </div>
+          <div className="flex justify-end mr-2">
+  <button
+    onClick={toggleSidebar}
+    className="mb-4 p-1 text-black border border-gray-300 rounded-md hover:bg-gray-200 transition duration-200"
+    aria-expanded={!isCollapsed}
+    aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+  >
+    <AiOutlineMenu className="w-6 h-6" />  {/* Hamburger icon */}
+  </button>
+</div>
+
       {/* LOGO */}
       <div
         className="flex items-center gap-2 cursor-pointer mb-4 justify-center"
@@ -198,13 +200,13 @@ const toggleSidebar = () => {
               {isCollapsed && <TbBrandCashapp className="w-5 h-5" />}
               {!isCollapsed && (
                 <li>
-                  <details open>
+                  <details false>
                     <summary>
                       <TbBrandCashapp className="w-5 h-5" /> Cash Management
                     </summary>
                     <ul>
                       <li>
-                        <details open>
+                        <details false>
                           <summary><MdOutlineCallReceived /> Cash Collection</summary>
                           <ul>
                             <li className="flex hover:text-blue-500">
@@ -228,7 +230,7 @@ const toggleSidebar = () => {
               {isCollapsed && <TbPigMoney className="w-5 h-5" />}
               {!isCollapsed && (
                 <li>
-                  <details open>
+                  <details false>
                     <summary>
                       <TbPigMoney className="w-5 h-5" /> Budget Management
                       {budgetLength > 0 && (
@@ -237,7 +239,7 @@ const toggleSidebar = () => {
                     </summary>
                     <ul>
                       <li>
-                        <details open>
+                        <details false>
                           <summary>
                             <TbZoomMoney /> Manage Budget
                             {budgetLength > 0 && (
@@ -276,7 +278,7 @@ const toggleSidebar = () => {
               {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}
               {!isCollapsed && (
                 <li>
-                  <details open>
+                  <details false>
                     <summary>
                       <RiUserReceived2Fill className="w-5 h-5" />
                       Accounts Receivable
@@ -286,7 +288,7 @@ const toggleSidebar = () => {
                     </summary>
                     <ul>
                       <li>
-                        <details open>
+                        <details false>
                           <summary>
                             <FaFileInvoiceDollar />
                             Purchase Order
@@ -331,7 +333,7 @@ const toggleSidebar = () => {
               {isCollapsed && <TbCreditCardPay className="w-5 h-5" />}
               {!isCollapsed && (
                 <li>
-                  <details open>
+                  <details false>
                     <summary>
                       <TbCreditCardPay className="w-5 h-5" /> Accounts Payable
                       {payableLength > 0 && (
@@ -340,7 +342,7 @@ const toggleSidebar = () => {
                     </summary>
                     <ul>
                       <li>
-                        <details open>
+                        <details false>
                           <summary>
                             <MdOutlinePayments /> Manage Payables
                             {payableLength > 0 && (
@@ -379,7 +381,7 @@ const toggleSidebar = () => {
               {isCollapsed && <FaList className="w-5 h-5" />}
               {!isCollapsed && (
                 <li>
-                  <details open>
+                  <details false>
                     <summary>
                       <FaList className="w-5 h-5" /> General Ledger
                       {paidLength > 0 && (
@@ -388,7 +390,7 @@ const toggleSidebar = () => {
                     </summary>
                     <ul>
                       <li>
-                        <details open>
+                        <details false>
                           <summary>
                             <AiOutlineAudit /> Internal Audit and Controls
                             {paidLength > 0 && (
@@ -415,7 +417,7 @@ const toggleSidebar = () => {
                         </details>
                       </li>
                       <li>
-                        <details open>
+                        <details false>
                           <summary>
                             <TbReportSearch /> Financial Reporting
                           </summary>
@@ -455,7 +457,7 @@ const toggleSidebar = () => {
               {isCollapsed && <MdAccountCircle className="w-5 h-5" />}
               {!isCollapsed && (
                 <li>
-                  <details open>
+                  <details false>
                     <summary>
                       <MdAccountCircle className="w-5 h-5" /> Accounts Management
                       {notifications.accountRequest > 0 && (
@@ -464,7 +466,7 @@ const toggleSidebar = () => {
                     </summary>
                     <ul>
                       <li>
-                        <details open>
+                        <details false>
                           <summary>
                             <MdManageAccounts /> Manage Accounts
                             {notifications.accountRequest > 0 && (
@@ -503,7 +505,7 @@ const toggleSidebar = () => {
               {isCollapsed && <MdAccountCircle className="w-5 h-5" />}
               {!isCollapsed && (
                 <li>
-                  <details open>
+                  <details false>
                     <summary>
                       <MdAccountCircle className="w-5 h-5" /> System Configuration
                       {notifications.accountRequest > 0 && (
