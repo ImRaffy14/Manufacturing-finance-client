@@ -5,6 +5,7 @@ import { FaRedo } from "react-icons/fa";
 import { MdBlock } from "react-icons/md";
 import DataTable from 'react-data-table-component';
 import { useSocket } from "../context/SocketContext"
+import { toast } from "react-toastify"
 
 function AnomalyDetection({userData}) {
     const [inflowSearchText, setInflowSearchText] = useState('');
@@ -150,7 +151,9 @@ function AnomalyDetection({userData}) {
           role: item._id.role,
           count: item.count,
           ipAddress: item.ipAddress,
-          deviceInfo: item.deviceInfo
+          deviceInfo: item.deviceInfo,
+          location: item.location,
+          socketId: item.socketId
         }))
         setUnusualActivityData(data)
         setIsLoadingSL(false)
@@ -168,7 +171,22 @@ function AnomalyDetection({userData}) {
         setFlaggedAnomalyData(response)
       }
 
+      // RESPONSE FROM NEW INVESTIGATE
+      const handleNewInvestigate = (response) => {
+        toast.success('The data is now on investigation', {
+          position: "top-right"
+        })
+      }
 
+      // ERROR ON SETTING ON INVESTIGATION
+      const handleErrorInvestigation = (response) => {
+        toast.error(response.msg, {
+          position: "top-right"
+        })
+      }
+
+      socket.on('new_investigate_error', handleErrorInvestigation)
+      socket.on('receive_new_investigate', handleNewInvestigate)
       socket.on('receive_resolved_anomalies', getResolvedAnomalies)
       socket.on('receive_failed_attempt', handleFailedAttemptLogin)
       socket.on('receive_suspicious_login', handleSuspiciousLogin)
@@ -188,6 +206,8 @@ function AnomalyDetection({userData}) {
         socket.off('receive_suspicious_login')
         socket.off('receive_failed_attempt')
         socket.off('receive_resolved_anomalies')
+        socket.off('receive_new_investigate')
+        socket.off('new_investigate_error')
       }
 
     },[socket])
@@ -212,7 +232,6 @@ function AnomalyDetection({userData}) {
     socket.emit('get_possible_outflow_anomaly', {msg: 'get possible anomaly'})
   };
 
-  console.log(selectedBudgetRow);
 
     const inflowTransactionsColumns = [
       { name: 'ID', selector: row => row.id },
@@ -359,22 +378,38 @@ const unusualActivityColumns = [
   { name: 'Device Info', selector: row => ( 
   <ul>
     {row.deviceInfo.map((item, index) => (
-      <li key={index}>{item}</li>
+      <li key={index}>[{item}]</li>
     ))}
   </ul>) },
+  { name: 'Location', selector: row => ( 
+    <ul>
+      {row.location.map((item, index) => (
+        <li key={index}>[{item}]</li>
+      ))}
+    </ul>) },
+  { name: 'Socket ID', selector: row => ( 
+    <ul>
+      {row.socketId.map((item, index) => (
+        <li key={index}>[{item}]</li>
+      ))}
+    </ul>) },
   { name: 'Staff ID', selector: row => row.userId },
-  { name: 'username', selector: row => row.username },
+  { name: 'Username', selector: row => row.username },
   { name: 'Role', selector: row => row.role },
 ];
 
 const flaggedAnomalyColumns = [
   { name: 'ID', selector: row => row._id },
   { name: 'Anomaly Type', selector: row => row.anomalyType },
+  { name: 'Anomaly From', selector: row => row.anomalyFrom },
   { name: 'Data ID', selector: row => row.dataId},
-  { name: 'Anomaly From ', selector: row => row.anomalyFrom },
+  { name: 'Description', selector: row => row.description},
+  { name: 'Investigate By', selector: row => row.investigateBy},
+  { name: 'Investigate Date', selector: row => row.investigateDate },
   { name: 'Resolved By', selector: row => row.resolvedBy},
   { name: 'Resolved Date', selector: row => row.resolvedDate},
-  { name: 'Description', selector: row => row.description},
+  { name: 'Resolution Action', selector: row => row.resolutionAction},
+  { name: 'Status', selector: row => row.status },
 ];
 
 
@@ -544,29 +579,95 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       },
     };
     
-    // HANDLE OUTFLOW RESOLVE ANOMALY
-    const handleOutflowResolveAnomaly = () => {
+    // HANDLE OUTFLOW TO INVESTIGATE
+    const handleInvestigateOutflow = () => {
       const data = {
         anomalyType: "Data Discrepancy",
         dataId: selectedOutflowTransaction.id,
-        anomalyFrom: 'Outflow Transactions',
+        anomalyFrom: 'Outflow Transactions Data',
         description: `${selectedOutflowTransaction.approver} approves a budget to ${selectedOutflowTransaction.department} department with unusual total amount of ₱${selectedOutflowTransaction.totalAmount}`,
-        resolvedBy: userData.userName
+        investigateBy: userData.userName,
+        investigateDate: Date.now(),
+        status: 'On investigation'
       }
-      socket.emit('resolve_anomaly', data)
+      document.getElementById("outflow_transaction_modal").close();
+      socket.emit('investigate_anomaly', data)
     }
 
-    // HANDLE INFLOW RESOLVE ANOMALY
-    const handleInflowResolveAnomaly = () => {
+    // HANDLE INFLOW TO INVESTIGATE
+    const handleInvestigateInflow = () => {
       const data = {
         anomalyType: "Data Discrepancy",
         dataId: selectedInflowTransaction.id,
-        anomalyFrom: 'Inflow Transactions',
+        anomalyFrom: 'Inflow Transactions Data',
         description: `${selectedInflowTransaction.auditor} audits a money from a purchase order (P.O ID :${selectedInflowTransaction.invoiceId}) with unusual total amount of ₱${selectedInflowTransaction.totalAmount}`,
-        resolvedBy: userData.userName
+        investigateBy: userData.userName,
+        investigateDate: Date.now(),
+        status: 'On investigation'
       }
-      socket.emit('resolve_anomaly', data)
+      document.getElementById("inflow_transaction_modal").close();
+      socket.emit('investigate_anomaly', data)
     }
+
+    // HANDLE BUDGET DUPLICATION TO INVESTIGATE
+      const handleInvestigateBudgetDupli = () => {
+        const data = {
+          anomalyType: "Data Duplication",
+          dataId: selectedBudgetRow.requestId,
+          anomalyFrom: 'Budget Request Data',
+          description: `Duplicated data request from ${selectedBudgetRow.department}. Budget Request ID: [${selectedBudgetRow.budgetReqId.map(data => `${data}`).join(', ')}]`,
+          investigateBy: userData.userName,
+          investigateDate: Date.now(),
+          status: 'On investigation'
+        }
+        document.getElementById("budget_modal").close();
+        socket.emit('investigate_anomaly', data)
+      }
+
+      // HANDLE PURCHASE ORDER DUPLICATION TO INVESTIGATE
+      const handleInvestigatePO = () => {
+        const data = {
+          anomalyType: "Data Duplication",
+          dataId: selectedBudgetRow.requestId,
+          anomalyFrom: 'Purchase Order Data',
+          description: `Duplicated data request from ${selectedPurchaseRow.orderNumber} Customer name: ${selectedPurchaseRow.customerName}. Purchase Order ID: [${selectedPurchaseRow.poId.map(data => `${data}`).join(', ')}]`,
+          investigateBy: userData.userName,
+          investigateDate: Date.now(),
+          status: 'On investigation'
+        }
+        document.getElementById("purchase_modal").close();
+        socket.emit('investigate_anomaly', data)
+      }
+
+      // HANDLE INFLOW TRANSACTION DUPLICATION TO INVESTIGATE
+      const handleInvestigateInflowDupli = () => {
+        const data = {
+          anomalyType: "Data Duplication",
+          dataId: selectedInflowRow.invoiceId,
+          anomalyFrom: 'Inflow Transaction Data',
+          description: `${selectedInflowRow.auditor} audits the invoice id: ${selectedInflowRow.invoiceId} many times. Inflow Transaction ID: [${selectedInflowRow.inflowId.map(data => `${data}`).join(', ')}]`,
+          investigateBy: userData.userName,
+          investigateDate: Date.now(),
+          status: 'On investigation'
+        }
+        document.getElementById("inflow_modal").close();
+        socket.emit('investigate_anomaly', data)
+      }
+      
+      // HANDLE OUTFLOW TRANSACTION DUPLICATION TO INVESTIGATE
+      const handleInvestigateOutflowDupli = () => {
+        const data = {
+          anomalyType: "Data Duplication",
+          dataId: selectedOutflowRow.payableId,
+          anomalyFrom: 'Outflow Transaction Data',
+          description: `${selectedOutflowRow.approver} approves a budget for Payable ID: ${selectedOutflowRow.payableId} many times. Outflow Transaction ID: [${selectedOutflowRow.outflowId.map(data => `${data}`).join(', ')}]`,
+          investigateBy: userData.userName,
+          investigateDate: Date.now(),
+          status: 'On investigation'
+        }
+        document.getElementById("outflow_modal").close();
+        socket.emit('investigate_anomaly', data)
+      }
 
 
     return (
@@ -950,7 +1051,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
                   </div>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-outline btn-error" onClick={handleInflowResolveAnomaly}>Investigate</button>
+              <button className="btn btn-outline btn-error" onClick={handleInvestigateInflow}>Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -997,7 +1098,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     </div>
                   </div>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-outline btn-error" onClick={handleOutflowResolveAnomaly}>Investigate</button>
+              <button className="btn btn-outline btn-error" onClick={handleInvestigateOutflow}>Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1027,7 +1128,10 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <p className="font-medium"><strong>Total Request:</strong></p>
           <p className="text-gray-700">{formatCurrency(selectedBudgetRow.totalRequest)}</p>
         </div>
-        
+        <div className="flex justify-between border-b-2 border-gray-500">
+          <p className="font-medium"><strong>Count:</strong></p>
+          <p className="text-gray-700">{selectedBudgetRow.count}</p>
+        </div>
         {/* Dynamically render Budget Request IDs */}
         {selectedBudgetRow.budgetReqId && selectedBudgetRow.budgetReqId.map((id, index) => (
           <div key={index} className="flex justify-between">
@@ -1035,15 +1139,9 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
             <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
           </div>
         ))}
-
-        <div className="flex justify-between">
-          <p className="font-medium"><strong>Count:</strong></p>
-          <p className="text-gray-700">{selectedBudgetRow.count}</p>
-        </div>
       </div>
-      <iframe src="your-source-url" className="w-full h-64 mt-4" title="Budget Preview"></iframe>
       <div className="flex justify-center mt-4">
-        <button className="btn btn-primary">Investigate</button>
+        <button className="btn btn-primary" onClick={handleInvestigateBudgetDupli}>Investigate</button>
       </div>
     </div>
     <form method="dialog" className="modal-backdrop">
@@ -1069,20 +1167,19 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedPurchaseRow.totalAmount)}</p>
                     </div>
+                    <div className="flex justify-between border-b-2 border-gray-500">
+                      <p className="font-medium"><strong>Count:</strong></p>
+                      <p className="text-gray-700">{selectedPurchaseRow.count}</p>
+                    </div>
                     {selectedPurchaseRow.poId && selectedPurchaseRow.poId.map((id, index) => (
                       <div key={index} className="flex justify-between">
                         <p className="font-medium"><strong>Purchase Order ID: {index + 1}:</strong></p>
                         <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
                       </div>
                     ))}
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Count:</strong></p>
-                      <p className="text-gray-700">{selectedPurchaseRow.count}</p>
                     </div>
-                    </div>
-            <iframe src="your-source-url" className="w-full h-64 mt-4" title="Purchase Preview"></iframe>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-primary">Investigate</button>
+              <button className="btn btn-primary" onClick={handleInvestigatePO}>Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1111,20 +1208,19 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedInflowRow.totalAmount)}</p>
                     </div>
+                    <div className="flex justify-between border-b-2 border-gray-500">
+                      <p className="font-medium"><strong>Count:</strong></p>
+                      <p className="text-gray-700">{selectedInflowRow.count}</p>
+                    </div>
                     {selectedInflowRow.inflowId && selectedInflowRow.inflowId.map((id, index) => (
                       <div key={index} className="flex justify-between">
                         <p className="font-medium"><strong>Inflow Transaction ID: {index + 1}:</strong></p>
                         <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
                       </div>
                     ))}
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Count:</strong></p>
-                      <p className="text-gray-700">{selectedInflowRow.count}</p>
                     </div>
-                    </div>
-            <iframe src="your-source-url" className="w-full h-64 mt-4" title="Inflow Preview"></iframe>
             <div className="flex justify-center mt-4">
-              <button className="btn btn-primary">Investigate</button>
+              <button className="btn btn-primary" onClick={handleInvestigateInflowDupli}>Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1153,20 +1249,19 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedOutflowRow.totalAmount)}</p>
                     </div>
+                    <div className="flex justify-between border-b-2 border-gray-500">
+                      <p className="font-medium"><strong>Count:</strong></p>
+                      <p className="text-gray-700">{selectedOutflowRow.count}</p>
+                    </div>
                     {selectedOutflowRow.outflowId && selectedOutflowRow.outflowId.map((id, index) => (
                       <div key={index} className="flex justify-between">
                         <p className="font-medium"><strong>Outflow Transaction ID: {index + 1}:</strong></p>
                         <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
                       </div>
                     ))}
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Count:</strong></p>
-                      <p className="text-gray-700">{selectedOutflowRow.count}</p>
                     </div>
-                    </div>
-            <iframe src="your-source-url" className="w-full h-64 mt-4" title="Outflow Preview"></iframe>
-            <div className="flex justify-center mt-4">
-              <button className="btn btn-primary">Investigate</button>
+            <div className="flex justify-center mt-10">
+              <button className="btn btn-primary" onClick={handleInvestigateOutflowDupli}>Investigate</button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1188,29 +1283,30 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Username:</strong></p>
                       <p className="text-gray-700">{selectedUnusualActivity.username}</p>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between border-b-2 border-gray-500">
                       <p className="font-medium"><strong>Role:</strong></p>
                       <p className="text-gray-700">{selectedUnusualActivity.role}</p>
                     </div>
                     {selectedUnusualActivity.ipAddress && selectedUnusualActivity.ipAddress.map((id, index) => (
                       <div key={index} className="flex justify-between">
                         <p className="font-medium"><strong>IP Address {index + 1}:</strong></p>
-                        <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
+                        <p className="text-gray-700 max-w-2xl text-justify">[{id}]</p>
                       </div>
                     ))}
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Count:</strong></p>
-                      <p className="text-gray-700">{selectedUnusualActivity.count}</p>
+                    {selectedUnusualActivity.location && selectedUnusualActivity.location.map((id, index) => (
+                      <div key={index} className="flex justify-between">
+                        <p className="font-medium"><strong>Location {index + 1}:</strong></p>
+                        <p className="text-gray-700 max-w-2xl text-justify">[{id}]</p>
+                      </div>
+                    ))}
+                    {selectedUnusualActivity.deviceInfo && selectedUnusualActivity.deviceInfo.map((id, index) => (
+                      <div key={index} className="flex justify-between">
+                        <p className="font-medium"><strong>Device Info {index + 1}:</strong></p>
+                        <p className="text-gray-700 max-w-2xl text-justify">[{id}]</p>
+                      </div>
+                    ))}
                     </div>
-                    </div>
-            <div className="flex justify-center mt-4">
-            <button className="btn btn-outline btn-error"
-            onClick={() => {
-              document.getElementById("block_modal").showModal();
-              setSelectedRowData(row); 
-            }}
-            >Block User</button>
-            </div>
+
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('unusual_activity_modal').close()}>Close</button>
@@ -1241,7 +1337,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       </p>
                     </div>
                     <div className="flex justify-between">
-                      <p className="font-medium"><strong>Attemps:</strong></p>
+                      <p className="font-medium"><strong>Attempts:</strong></p>
                       <p className="text-gray-700">{selectedFailedLoginAttempt.attempts}</p>
                     </div>
                     <div className="flex justify-between">
