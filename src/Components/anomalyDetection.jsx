@@ -29,6 +29,8 @@ function AnomalyDetection({userData}) {
     const [selectedFlaggedAnomaly, setSelectedFlaggedAnomaly] = useState(null);
     const [password, setPassword] = useState("");
     const [description, setDescription] = useState('')
+    const [selectedRowData, setSelectedRowData] = useState([])
+    const [errorVerification, setErrorVerification] = useState('')
 
     // TABLE DATA
     const [inflowTransactionData, setInflowTransactionData] = useState([]);
@@ -50,6 +52,7 @@ function AnomalyDetection({userData}) {
     const [isLoadingOD, setIsLoadingOD] = useState(true)
     const [isLoadingSL, setIsLoadingSL] = useState(true)
     const [isLoadingFLA, setIsLoadingFLA] = useState(true)
+    const [isSubmitLoading, setIsSubmitLoading] = useState(true)
     
 
     const formatCurrency = (value) => {
@@ -185,6 +188,38 @@ function AnomalyDetection({userData}) {
         })
       }
 
+      // BLOCK IP ADDRESS FROM FAL SUCCESS
+      const handleBlockIp = (response) => {
+        setIsSubmitLoading(true)
+        setPassword('')
+        document.getElementById("block_modal").close();
+        document.getElementById("failed_login_attempt_modal").close();
+        toast.success(response.msg, {
+          position: "top-right"
+        })
+      }
+
+      // BLOCK IP ADDRESS FROM FAL ERROR
+      const handleBlockIpError = (response) => {
+        setIsSubmitLoading(true)
+        setPassword('')
+        document.getElementById("block_modal").close();
+        document.getElementById("failed_login_attempt_modal").close();
+        toast.error('Server Internal Error', {
+          position: "top-right"
+        })
+      }
+
+      // HANDLE ERROR VERIFICATION
+      const handleErrorVerification = (response) => {
+        setIsSubmitLoading(true)
+        setPassword('')
+        setErrorVerification(response.msg)
+      }
+
+      socket.on('error_verification', handleErrorVerification)
+      socket.on('block_ip_FAL_success', handleBlockIp)
+      socket.on('block_ip_FAL_error', handleBlockIpError)
       socket.on('new_investigate_error', handleErrorInvestigation)
       socket.on('receive_new_investigate', handleNewInvestigate)
       socket.on('receive_resolved_anomalies', getResolvedAnomalies)
@@ -208,16 +243,19 @@ function AnomalyDetection({userData}) {
         socket.off('receive_resolved_anomalies')
         socket.off('receive_new_investigate')
         socket.off('new_investigate_error')
+        socket.off('error_verification')
+        socket.off('block_ip_FAL_success')
+        socket.off('block_ip_FAL_error')
       }
 
     },[socket])
 
-    const handleFlagTransaction = (transactionId) => {
-      console.log(`Flagged transaction: ${transactionId}`);
-  };
 
-  const handleBlockUser = (userId) => {
-    console.log(`Blocked User: ${userId}`);
+  // HANDLE BLOCK USER FROM FAILED ATTEMPTS LOGS
+  const handleBlockUser = (e) => {
+    e.preventDefault()
+    setIsSubmitLoading(false)
+    socket.emit('block_ip_FAL', { row: selectedRowData, userName: userData.userName, password})
 };
 
   const handleReloadInflowP = () => {
@@ -241,20 +279,6 @@ function AnomalyDetection({userData}) {
       { name: 'P.O ID', selector: row => row.invoiceId },
       { name: 'Customer Name', selector: row => row.customerName },
       { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount) },
-      {
-          name: 'Flag', 
-          cell: (row) => (
-              <button 
-                  onClick={() => handleFlagTransaction(row.id)}
-                  className="bg-white  text-red-500 p-2 rounded-md"
-              >
-                  <FaFlag />
-              </button>
-          ),
-          ignoreRowClick: true,
-          allowOverflow: true,
-          button: true,
-      }
   ];
 
   const outflowTransactionsColumns = [
@@ -266,20 +290,7 @@ function AnomalyDetection({userData}) {
     { name: 'Category', selector: row => row.category },
     { name: 'Department', selector: row => row.department },
     { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount) },
-    {
-        name: 'Flag', 
-        cell: (row) => (
-            <button 
-                onClick={() => handleFlagTransaction(row.id)}
-                className="bg-white  text-red-500 p-2 rounded-md"
-            >
-                <FaFlag />
-            </button>
-        ),
-        ignoreRowClick: true,
-        allowOverflow: true,
-        button: true,
-    }
+
 ];
 
 
@@ -496,7 +507,7 @@ const handleUnusualActivityClick = (row) => {
 };
 
 const handleFailedLoginAttemptClick = (row) => {
-  setSelectedFailedLoginAttempt(row);
+  setSelectedRowData(row);
   document.getElementById("failed_login_attempt_modal").showModal();
 };
 
@@ -1313,43 +1324,42 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           </form>
         </dialog>
       )}
-      {selectedFailedLoginAttempt && (
+      {selectedRowData && (
         <dialog id="failed_login_attempt_modal" className="modal">
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Failed Login Attempt Preview</h1>
             <div className="space-y-4">
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>ID:</strong></p>
-                      <p className="text-gray-700">{selectedFailedLoginAttempt._id}</p>
+                      <p className="text-gray-700">{selectedRowData._id}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>User ID:</strong></p>
-                      <p className="text-gray-700">{selectedFailedLoginAttempt.userId}</p>
+                      <p className="text-gray-700">{selectedRowData.userId}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Username:</strong></p>
-                      <p className="text-gray-700">{selectedFailedLoginAttempt.username}</p>
+                      <p className="text-gray-700">{selectedRowData.username}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>IP Address:</strong></p>
                       <p className="text-gray-700 max-w-xl text-justify">
-                        {selectedFailedLoginAttempt.ipAddress}
+                        {selectedRowData.ipAddress}
                       </p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Attempts:</strong></p>
-                      <p className="text-gray-700">{selectedFailedLoginAttempt.attempts}</p>
+                      <p className="text-gray-700">{selectedRowData.attempts}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Attempt Date:</strong></p>
-                      <p className="text-gray-700">{selectedFailedLoginAttempt.attemptDate}</p>
+                      <p className="text-gray-700">{selectedRowData.attemptDate}</p>
                     </div>
                     </div>
             <div className="flex justify-center mt-4">
               <button className="btn btn-outline btn-error"
                onClick={() => {
                 document.getElementById("block_modal").showModal();
-                setSelectedRowData(row); 
               }}
               >Block User</button>
             </div>
@@ -1421,7 +1431,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       {/* PASSWORD VERIFICATION FOR Block */}
     <dialog id="block_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" >
+          <form className="space-y-4" onSubmit={handleBlockUser} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -1434,11 +1444,21 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     onChange={(e) => setPassword(e.target.value)}
                   />
               </div>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+
+              {isSubmitLoading && 
                   <button
-                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="Submit"
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
                   >
                   Confirm Password  
                   </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
           </form>
         </div>
           <form method="dialog" className="modal-backdrop">
