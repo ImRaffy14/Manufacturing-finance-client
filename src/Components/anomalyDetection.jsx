@@ -1438,9 +1438,8 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Status:</strong></p>
                       <p
-                        className={`text-gray-700 ${
-                          selectedFlaggedAnomaly.status === 'On investigation' ? 'text-blue-500' : 
-                          selectedFlaggedAnomaly.status === 'Resolved' ? 'text-red-500' : ''
+                        className={`${
+                          selectedFlaggedAnomaly.status === "On investigation" ? "text-blue-500 font-bold" : "text-green-500 font-bold" 
                         }`}
                       >
                         {selectedFlaggedAnomaly.status} 
@@ -1450,10 +1449,34 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Updated At:</strong></p>
                       <p className="text-gray-700">{selectedFlaggedAnomaly.updatedAt}</p>
                     </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Description:</strong></p>
-                      <p className="text-gray-700 max-w-2xl">{selectedFlaggedAnomaly.description}</p>
+                    <div className="border-b-2 border-gray-500"></div>
+                    <div className="flex justify-center mb-4">
+                      <p className="font-medium text-lg"><strong>Description:</strong></p>
                     </div>
+                    <div className="flex justify-center mb-4">
+                      <p className="text-gray-700 w-full h-28 overflow-y-auto break-words">
+                        {selectedFlaggedAnomaly.description}
+                      </p>
+                    </div>
+                    <div className="border-b-2 border-gray-500"></div>
+                    <div className="flex justify-between ">
+                      <p className="font-medium"><strong>Resolved By:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.resolvedBy}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Resolved Date:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.resolvedDate}</p>
+                    </div>
+                    <div className="border-b-2 border-gray-500"></div>
+                    <div className="flex justify-center mb-4">
+                      <p className="font-medium text-lg"><strong>Resolution Action:</strong></p>
+                    </div>
+                    <div className="flex justify-center mb-4">
+                      <p className="text-gray-700 w-full h-32 overflow-y-auto break-words">
+                        {selectedFlaggedAnomaly.resolutionAction}
+                      </p>
+                    </div>
+                      <div className="border-b-2 border-gray-500"></div>
                     </div>
             <div className="flex justify-center mt-4">
               <button className="btn btn-success"
@@ -1467,14 +1490,14 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         </dialog>
       )}
 
-<dialog id="resolve_modal" className="modal">
+    <dialog id="resolve_modal" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-xl mb-4">Resolve Anomaly</h3>
             <div className="flex flex-col gap-4">
-              <p className="font-bold">Description:</p>
+              <p className="font-bold">Resolution Action:</p>
                 <textarea
                   className="textarea textarea-error border-gray-300 rounded-lg p-3"
-                  placeholder="Add a descruption"
+                  placeholder="Resolution Action"
                   rows="4"
                   value={description}
                   onChange={handleDescriptionChange}

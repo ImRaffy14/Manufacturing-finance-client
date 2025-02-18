@@ -8,7 +8,7 @@ function ChartOfAccounts() {
   const modalRef = useRef(null); // Using useRef to directly reference the modal element
 
   const columns = [
-    { name: 'Account Number', selector: row => row.accountNumber },
+    { name: 'Account Code', selector: row => row.accountCode },
     { name: 'Account Name', selector: row => row.accountName },
     { name: 'Category', selector: row => row.category },
     { name: 'Subcategory', selector: row => row.subCategory },
@@ -17,10 +17,16 @@ function ChartOfAccounts() {
   ];
 
   const data = [
-    { id: 1, accountNumber: "1001", accountName: "Cash", category: "Asset", subCategory: "secret", balance: 50000, description: '12123123eqeqweqwe' },
-    { id: 2, accountNumber: "2001", accountName: "Accounts Payable", category: "Liability", subCategory: "secret", balance: 15000, description: '12123123eqeqweqwe' },
-    { id: 3, accountNumber: "3001", accountName: "Revenue", category: "Income", subCategory: "secret", balance: 80000, description: '12123123eqeqweqwe' },
-    { id: 4, accountNumber: "4001", accountName: "Office Expenses", category: "Expense", subCategory: "secret", balance: 10000, description: '12123123eqeqweqwe' },
+    {  accountCode: "101", accountName: "Total Cash", category: "Asset", subCategory: "Current Asset", description: 'Cash Available Operations' ,balance: 50000, },
+    {  accountCode: "102", accountName: "Unsold Products", category: "Asset", subCategory: "Inventory",description: 'Value of unsold stock/produts', balance: 15000,  },
+    {  accountCode: "201", accountName: "Accounts Payable-Raw Materials", category: "Liability", subCategory: "Current Liability" ,description: 'Amount owed for procured raw materials', balance: 15000,  },
+    {  accountCode: "202", accountName: "Accounts Payable-Salary & Wages", category: "Liability", subCategory: "Current Liability" ,description: 'Salary and wages payable to employees', balance: 15000,  },
+    {  accountCode: "203", accountName: "Accounts Payable-Utilities", category: "Liability", subCategory: "Current Liability" ,description: 'Outstanding bills for utilities', balance: 15000,  },
+    {  accountCode: "301", accountName: "Total Sales", category: "Revenue", subCategory: "Sales Revenue" ,description: 'Income generated from product sales', balance: 15000,  },
+    {  accountCode: "401", accountName: "Raw Material Expenses", category: "Expense", subCategory: "Cost of Goods Sold" ,description: 'Cost incurred for raw materials', balance: 15000,  },
+    {  accountCode: "402", accountName: "Machinery Expenses", category: "Expense", subCategory: "Operating Expense" ,description: 'Costs for machine maintenance/purchase', balance: 15000,  },
+    {  accountCode: "403", accountName: "Salary & Wages Expense", category: "Expense", subCategory: "Operating Expense" ,description: 'Employee salaries and wages', balance: 15000,  },
+    {  accountCode: "404", accountName: "Utilities Expense", category: "Expense", subCategory: "Operatin Expense" ,description: 'Electricity, water, and other utility costs', balance: 15000,  },
   ];
 
   const formatCurrency = (value) => {
@@ -83,8 +89,8 @@ function ChartOfAccounts() {
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Account Details</h1>
             <div className="space-y-4">
               <div className="flex justify-between">
-                <p className="font-medium"><strong>Account Number:</strong></p>
-                <p className="text-gray-700">{selectedRowData.accountNumber}</p>
+                <p className="font-medium"><strong>Account Code:</strong></p>
+                <p className="text-gray-700">{selectedRowData.accountCode}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-medium"><strong>Account Name:</strong></p>

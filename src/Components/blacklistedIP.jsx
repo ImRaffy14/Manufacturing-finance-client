@@ -133,7 +133,6 @@ function blacklistedIP({ userData }) {
       </div>
     );
   }
-
   return (
     <>
       <div className="max-w-screen-2xl mx-auto mt-4">
@@ -164,7 +163,7 @@ function blacklistedIP({ userData }) {
           </div>
         </div>
       </div>
-
+              
       {selectedRowData && (
         <dialog id="row_modal" className="modal">
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
