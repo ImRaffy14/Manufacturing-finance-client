@@ -62,6 +62,8 @@ function ActiveStaff({ userData }) {
     },
   ];
 
+  console.log(selectedRowData);
+
   useEffect(() => {
     if (!socket) return;
 
@@ -197,6 +199,18 @@ function ActiveStaff({ userData }) {
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>IP Address:</strong></p>
                       <p className="text-gray-700">{selectedRowData.ipAddress}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Device Info:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.deviceInfo}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Socket ID:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.socketId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Location:</strong></p>
+                      <p className="text-gray-700">{selectedRowData.location}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Date:</strong></p>

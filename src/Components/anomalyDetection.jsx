@@ -590,6 +590,28 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       },
     };
     
+    const customStyles2 = {
+      headRow: {
+        style: {
+          backgroundColor: 'rgba(200, 50, 50, 0.90)', 
+          color: 'white',
+        },
+      },
+      title: {
+        style: {
+          color: 'white',
+          fontSize: '18px',
+          padding: '10px',
+          textAlign: 'center',
+        },
+      },
+      rows: {
+        style: {
+          backgroundColor: 'rgba(0, 85, 170, 0.85)', 
+          color: 'white',
+        },
+      },
+    };
     // HANDLE OUTFLOW TO INVESTIGATE
     const handleInvestigateOutflow = () => {
       const data = {
@@ -680,6 +702,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         socket.emit('investigate_anomaly', data)
       }
 
+      console.log(selectedFlaggedAnomaly);
 
     return (
         <div className="max-w-screen-2xl mx-auto mt-4">
@@ -698,6 +721,13 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                         <div className="flex gap-3 my-3">
                             <FaCheckCircle className="text-green-600 text-2xl my-2" />
                             <p className="text-4xl text-black font-bold">{totalAnomaliesResolved}</p>
+                        </div>
+                    </div>
+                    <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3">
+                        <p className="text-black font-semibold text-md">Total On Investigation</p>
+                        <div className="flex gap-3 my-3">
+                            <FaSearch className="text-blue-600 text-2xl my-2" />
+                            <p className="text-4xl text-black font-bold">{totalOnInvestigation}</p>
                         </div>
                     </div>
                 </div>
@@ -1023,7 +1053,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                     className="mb-2 p-2 border border-gray-400 rounded-lg"
                   />
                 }
-                customStyles={customStyles}
+                customStyles={customStyles2}
               />
             </div>
           </div>
@@ -1281,49 +1311,52 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         </dialog>
       )}
 
-            {selectedUnusualActivity && (
-        <dialog id="unusual_activity_modal" className="modal">
-          <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
-            <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Suspicious Login Preview</h1>
-            <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>User ID:</strong></p>
-                      <p className="text-gray-700">{selectedUnusualActivity.userId}</p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Username:</strong></p>
-                      <p className="text-gray-700">{selectedUnusualActivity.username}</p>
-                    </div>
-                    <div className="flex justify-between border-b-2 border-gray-500">
-                      <p className="font-medium"><strong>Role:</strong></p>
-                      <p className="text-gray-700">{selectedUnusualActivity.role}</p>
-                    </div>
-                    {selectedUnusualActivity.ipAddress && selectedUnusualActivity.ipAddress.map((id, index) => (
-                      <div key={index} className="flex justify-between">
-                        <p className="font-medium"><strong>IP Address {index + 1}:</strong></p>
-                        <p className="text-gray-700 max-w-2xl text-justify">[{id}]</p>
-                      </div>
-                    ))}
-                    {selectedUnusualActivity.location && selectedUnusualActivity.location.map((id, index) => (
-                      <div key={index} className="flex justify-between">
-                        <p className="font-medium"><strong>Location {index + 1}:</strong></p>
-                        <p className="text-gray-700 max-w-2xl text-justify">[{id}]</p>
-                      </div>
-                    ))}
-                    {selectedUnusualActivity.deviceInfo && selectedUnusualActivity.deviceInfo.map((id, index) => (
-                      <div key={index} className="flex justify-between">
-                        <p className="font-medium"><strong>Device Info {index + 1}:</strong></p>
-                        <p className="text-gray-700 max-w-2xl text-justify">[{id}]</p>
-                      </div>
-                    ))}
-                    </div>
+{selectedUnusualActivity && (
+  <dialog id="unusual_activity_modal" className="modal">
+    <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+      <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Suspicious Login Preview</h1>
+      <div className="space-y-4">
+        <div className="flex justify-between">
+          <p className="font-medium"><strong>User ID:</strong></p>
+          <p className="text-gray-700">{selectedUnusualActivity.userId}</p>
+        </div>
+        <div className="flex justify-between">
+          <p className="font-medium"><strong>Username:</strong></p>
+          <p className="text-gray-700">{selectedUnusualActivity.username}</p>
+        </div>
+        <div className="flex justify-between border-b-2 border-gray-500">
+          <p className="font-medium"><strong>Role:</strong></p>
+          <p className="text-gray-700">{selectedUnusualActivity.role}</p>
+        </div>
 
+        {selectedUnusualActivity.ipAddress && selectedUnusualActivity.ipAddress.map((ip, index) => (
+          <div key={index} className="flex flex-wrap justify-between border-b-2 border-gray-500 pb-4">
+            <div className="flex-1">
+              <p className="font-medium"><strong>IP Address {index + 1}:</strong></p>
+              <p className="text-gray-700">{ip}</p>
+            </div>
+            {selectedUnusualActivity.location && selectedUnusualActivity.location[index] && (
+              <div className="flex-1">
+                <p className="font-medium"><strong>Location {index + 1}:</strong></p>
+                <p className="text-gray-700">{selectedUnusualActivity.location[index]}</p>
+              </div>
+            )}
+            {selectedUnusualActivity.deviceInfo && selectedUnusualActivity.deviceInfo[index] && (
+              <div className="flex-1">
+                <p className="font-medium"><strong>Device Info {index + 1}:</strong></p>
+                <p className="text-gray-700">{selectedUnusualActivity.deviceInfo[index]}</p>
+              </div>
+            )}
           </div>
-          <form method="dialog" className="modal-backdrop">
-            <button type="button" onClick={() => document.getElementById('unusual_activity_modal').close()}>Close</button>
-          </form>
-        </dialog>
-      )}
+        ))}
+      </div>
+    </div>
+    <form method="dialog" className="modal-backdrop">
+      <button type="button" onClick={() => document.getElementById('unusual_activity_modal').close()}>Close</button>
+    </form>
+  </dialog>
+)}
+
       {selectedRowData && (
         <dialog id="failed_login_attempt_modal" className="modal">
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
@@ -1374,17 +1407,52 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Flagged Anomaly Preview</h1>
             <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Username:</strong></p>
-                      <p className="text-gray-700">{selectedFlaggedAnomaly.username}</p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Role:</strong></p>
-                      <p className="text-gray-700">{selectedFlaggedAnomaly.role}</p>
-                    </div>
-                    <div className="flex justify-between">
+            <div className="flex justify-between">
                       <p className="font-medium"><strong>ID:</strong></p>
                       <p className="text-gray-700">{selectedFlaggedAnomaly._id}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Anomaly From:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.anomalyFrom}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Anomaly Type:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.anomalyType}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Created At:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.createdAt}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Data ID:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.dataId}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Investigated By:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.investigateBy}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Investigate Date:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.investigateDate}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Status:</strong></p>
+                      <p
+                        className={`text-gray-700 ${
+                          selectedFlaggedAnomaly.status === 'On investigation' ? 'text-blue-500' : 
+                          selectedFlaggedAnomaly.status === 'Resolved' ? 'text-red-500' : ''
+                        }`}
+                      >
+                        {selectedFlaggedAnomaly.status} 
+                      </p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Updated At:</strong></p>
+                      <p className="text-gray-700">{selectedFlaggedAnomaly.updatedAt}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-medium"><strong>Description:</strong></p>
+                      <p className="text-gray-700 max-w-2xl">{selectedFlaggedAnomaly.description}</p>
                     </div>
                     </div>
             <div className="flex justify-center mt-4">
@@ -1400,34 +1468,33 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       )}
 
 <dialog id="resolve_modal" className="modal">
-      <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
-        <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Resolve Anomaly</h1>
-        <div className="space-y-4">
-          <div className="flex-col">
-            <p className="font-lg text-center mb-2"><strong>Description:</strong></p>
-            <textarea
-              className="textarea textarea-bordered w-full ml-5 text-gray-700"
-              value={description}  
-              onChange={handleDescriptionChange}  
-              placeholder="Enter the description here"
-            ></textarea>
-          </div>
-          <div className="flex justify-center gap-10 mt-10">
-            <button className="btn btn-error">Delete</button>
-            <button className="btn btn-success">Revert</button>
-          </div>
+        <div className="modal-box">
+          <h3 className="font-bold text-xl mb-4">Resolve Anomaly</h3>
+            <div className="flex flex-col gap-4">
+              <p className="font-bold">Description:</p>
+                <textarea
+                  className="textarea textarea-error border-gray-300 rounded-lg p-3"
+                  placeholder="Add a descruption"
+                  rows="4"
+                  value={description}
+                  onChange={handleDescriptionChange}
+                  required />
+              <div className="flex justify-end gap-4">
+                <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" >
+                  Revert
+                </button>
+                <button
+                  className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
         </div>
-        <form method="dialog" className="modal-backdrop">
-          <button
-            type="button"
-            onClick={() => document.getElementById('resolve_modal').close()}
-          >
-            Close
-          </button>
-        </form>
-      </div>
+            <form method="dialog" className="modal-backdrop">
+              <button>close</button>
+            </form>
     </dialog>
-
       {/* PASSWORD VERIFICATION FOR Block */}
     <dialog id="block_modal" className="modal">
         <div className="modal-box">

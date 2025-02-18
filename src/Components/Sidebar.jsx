@@ -451,53 +451,7 @@ const toggleSidebar = () => {
               )}
             </ul>
           )}
-          {/* ACCOUNTS MANAGEMENT */}
-          {(userData.role === 'ADMIN' || userData.role === 'CHIEF FINANCIAL OFFICER') && (
-            <ul className="menu rounded-box w-56">
-              {isCollapsed && <MdAccountCircle className="w-5 h-5" />}
-              {!isCollapsed && (
-                <li>
-                  <details false>
-                    <summary>
-                      <MdAccountCircle className="w-5 h-5" /> Accounts Management
-                      {notifications.accountRequest > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-                      )}
-                    </summary>
-                    <ul>
-                      <li>
-                        <details false>
-                          <summary>
-                            <MdManageAccounts /> Manage Accounts
-                            {notifications.accountRequest > 0 && (
-                              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
-                            )}
-                          </summary>
-                          <ul>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="accountCreation" activeClassName="text-blue-500">
-                                ● Account Requests
-                                {notifications.accountRequest > 0 && (
-                                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
-                                    {notifications.accountRequest}
-                                  </span>
-                                )}
-                              </NavLink>
-                            </li>
-                            <li className="hover:text-blue-500">
-                              <NavLink to="viewAllAccounts" activeClassName="text-blue-500">
-                                ● View All Accounts
-                              </NavLink>
-                            </li>
-                          </ul>
-                        </details>
-                      </li>
-                    </ul>
-                  </details>
-                </li>
-              )}
-            </ul>
-          )}
+
 
           {/* System Config */}
           {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (
@@ -573,3 +527,55 @@ const toggleSidebar = () => {
 };
 
 export default Sidebar;
+
+
+
+/**
+
+ {(userData.role === 'ADMIN' || userData.role === 'CHIEF FINANCIAL OFFICER') && (
+  <ul className="menu rounded-box w-56">
+    {isCollapsed && <MdAccountCircle className="w-5 h-5" />}
+    {!isCollapsed && (
+      <li>
+        <details false>
+          <summary>
+            <MdAccountCircle className="w-5 h-5" /> Accounts Management
+            {notifications.accountRequest > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+            )}
+          </summary>
+          <ul>
+            <li>
+              <details false>
+                <summary>
+                  <MdManageAccounts /> Manage Accounts
+                  {notifications.accountRequest > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
+                  )}
+                </summary>
+                <ul>
+                  <li className="hover:text-blue-500">
+                    <NavLink to="accountCreation" activeClassName="text-blue-500">
+                      ● Account Requests
+                      {notifications.accountRequest > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
+                          {notifications.accountRequest}
+                        </span>
+                      )}
+                    </NavLink>
+                  </li>
+                  <li className="hover:text-blue-500">
+                    <NavLink to="viewAllAccounts" activeClassName="text-blue-500">
+                      ● View All Accounts
+                    </NavLink>
+                  </li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </details>
+      </li>
+    )}
+  </ul>
+)}
+ */
