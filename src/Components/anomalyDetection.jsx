@@ -1089,7 +1089,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           <div className="mx-4">
             <div className="overflow-x-auto w-full">
               <DataTable
-                title="Flaged Anomalies"
+                title="On investigate & Resolved Anomalies"
                 columns={flaggedAnomalyColumns}
                 data={filteredFlaggedAnomalyData}
                 onRowClicked={handleFlaggedAnomalyClick}
