@@ -31,6 +31,7 @@ function AnomalyDetection({userData}) {
     const [description, setDescription] = useState('')
     const [selectedRowData, setSelectedRowData] = useState([])
     const [errorVerification, setErrorVerification] = useState('')
+    const [isRequired, setIsRequired] = useState('')
 
     // TABLE DATA
     const [inflowTransactionData, setInflowTransactionData] = useState([]);
@@ -217,6 +218,22 @@ function AnomalyDetection({userData}) {
         setErrorVerification(response.msg)
       }
 
+      // HANDLE RESOLVE RESPONSE
+      const handleResolvedResponse = (response) => {
+        if(response.errMsg){
+          toast.error(response.errMsg, {
+            position: "top-right"
+          })
+          setDescription("")
+          return
+        }
+        toast.success(response.msg, {
+          position: "top-right"
+        })
+        setDescription("")
+      }
+
+      socket.on('response_resolved', handleResolvedResponse)
       socket.on('error_verification', handleErrorVerification)
       socket.on('block_ip_FAL_success', handleBlockIp)
       socket.on('block_ip_FAL_error', handleBlockIpError)
@@ -246,6 +263,7 @@ function AnomalyDetection({userData}) {
         socket.off('error_verification')
         socket.off('block_ip_FAL_success')
         socket.off('block_ip_FAL_error')
+        socket.off('response_resolved')
       }
 
     },[socket])
@@ -272,7 +290,7 @@ function AnomalyDetection({userData}) {
 
 
     const inflowTransactionsColumns = [
-      { name: 'ID', selector: row => row.id },
+      { name: 'ID', selector: row => row._id },
       { name: 'Date & Time', selector: row => row.dateTime },
       { name: 'Auditor ID', selector: row => row.auditorId },
       { name: 'Auditor', selector: row => row.auditor },
@@ -282,7 +300,7 @@ function AnomalyDetection({userData}) {
   ];
 
   const outflowTransactionsColumns = [
-    { name: 'ID', selector: row => row.id },
+    { name: 'ID', selector: row => row._id },
     { name: 'Date & Time', selector: row => row.dateTime },
     { name: 'Approver ID', selector: row => row.approverId },
     { name: 'Approver', selector: row => row.approver },
@@ -326,7 +344,7 @@ const budgetDuplicationColumns = [
   { name: 'Request ID', selector: row => row.requestId, width: '200px' },
   { name: 'Category', selector: row => row.category, width: '180px' },
   { name: 'Department', selector: row => row.department },
-  { name: 'Budget Request ID', selector: row => (
+  { name: 'Payble ID', selector: row => (
     <ul>
       {row.budgetReqId.map((item, index) => (
         <li key={index}>[{item}]</li>
@@ -616,7 +634,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
     const handleInvestigateOutflow = () => {
       const data = {
         anomalyType: "Data Discrepancy",
-        dataId: selectedOutflowTransaction.id,
+        dataId: selectedOutflowTransaction._id,
         anomalyFrom: 'Outflow Transactions Data',
         description: `${selectedOutflowTransaction.approver} approves a budget to ${selectedOutflowTransaction.department} department with unusual total amount of ₱${selectedOutflowTransaction.totalAmount}`,
         investigateBy: userData.userName,
@@ -631,7 +649,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
     const handleInvestigateInflow = () => {
       const data = {
         anomalyType: "Data Discrepancy",
-        dataId: selectedInflowTransaction.id,
+        dataId: selectedInflowTransaction._id,
         anomalyFrom: 'Inflow Transactions Data',
         description: `${selectedInflowTransaction.auditor} audits a money from a purchase order (P.O ID :${selectedInflowTransaction.invoiceId}) with unusual total amount of ₱${selectedInflowTransaction.totalAmount}`,
         investigateBy: userData.userName,
@@ -661,7 +679,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       const handleInvestigatePO = () => {
         const data = {
           anomalyType: "Data Duplication",
-          dataId: selectedBudgetRow.requestId,
+          dataId: selectedPurchaseRow.orderNumber,
           anomalyFrom: 'Purchase Order Data',
           description: `Duplicated data request from ${selectedPurchaseRow.orderNumber} Customer name: ${selectedPurchaseRow.customerName}. Purchase Order ID: [${selectedPurchaseRow.poId.map(data => `${data}`).join(', ')}]`,
           investigateBy: userData.userName,
@@ -677,7 +695,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         const data = {
           anomalyType: "Data Duplication",
           dataId: selectedInflowRow.invoiceId,
-          anomalyFrom: 'Inflow Transaction Data',
+          anomalyFrom: 'Inflow Transactions Data',
           description: `${selectedInflowRow.auditor} audits the invoice id: ${selectedInflowRow.invoiceId} many times. Inflow Transaction ID: [${selectedInflowRow.inflowId.map(data => `${data}`).join(', ')}]`,
           investigateBy: userData.userName,
           investigateDate: Date.now(),
@@ -692,7 +710,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         const data = {
           anomalyType: "Data Duplication",
           dataId: selectedOutflowRow.payableId,
-          anomalyFrom: 'Outflow Transaction Data',
+          anomalyFrom: 'Outflow Transactions Data',
           description: `${selectedOutflowRow.approver} approves a budget for Payable ID: ${selectedOutflowRow.payableId} many times. Outflow Transaction ID: [${selectedOutflowRow.outflowId.map(data => `${data}`).join(', ')}]`,
           investigateBy: userData.userName,
           investigateDate: Date.now(),
@@ -702,7 +720,42 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         socket.emit('investigate_anomaly', data)
       }
 
-      console.log(selectedFlaggedAnomaly);
+      // HANDLE REVERT ANOMALY DATA
+      const handleRevertAnomalyData = () => {
+        if(!description){
+         return setIsRequired('Resolution Action is required.')
+        }
+        setIsRequired('')
+        const data = {
+          _id: selectedFlaggedAnomaly._id,
+          resolvedBy: userData.userName,
+          resolvedDate: Date.now(),
+          resolutionAction: description,
+          status: 'Resolved'
+        }
+
+        socket.emit('revert_resolved_anomaly', data)
+      }
+
+      // HANLE REMOVE ANOMALY DATA
+      const handleRemoveAnomalyData = () => {
+        if(!description){
+          return setIsRequired('Resolution Action is required.')
+        }
+        setIsRequired('')
+        const data = {
+          _id: selectedFlaggedAnomaly._id,
+          dataId: selectedFlaggedAnomaly.dataId,
+          anomalyFrom: selectedFlaggedAnomaly.anomalyFrom,
+          anomalyType: selectedFlaggedAnomaly.anomalyType,
+          resolvedBy: userData.userName,
+          resolvedDate: Date.now(),
+          resolutionAction: description,
+          status: 'Resolved'
+        }
+
+        socket.emit('remove_resolved_anomaly', data)
+      }
 
     return (
         <div className="max-w-screen-2xl mx-auto mt-4">
@@ -1176,7 +1229,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         {/* Dynamically render Budget Request IDs */}
         {selectedBudgetRow.budgetReqId && selectedBudgetRow.budgetReqId.map((id, index) => (
           <div key={index} className="flex justify-between">
-            <p className="font-medium"><strong>Budget Request ID {index + 1}:</strong></p>
+            <p className="font-medium"><strong>Payable ID {index + 1}:</strong></p>
             <p className="text-gray-700 max-w-2xl text-justify">{id}</p>
           </div>
         ))}
@@ -1479,9 +1532,11 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <div className="border-b-2 border-gray-500"></div>
                     </div>
             <div className="flex justify-center mt-4">
+              {selectedFlaggedAnomaly.status === "On investigation" && 
               <button className="btn btn-success"
               onClick={() => {
                 document.getElementById("resolve_modal").showModal();}}>Resolve</button>
+              }
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -1502,14 +1557,19 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                   value={description}
                   onChange={handleDescriptionChange}
                   required />
+                  {isRequired && <h1 className="text-red-500">{isRequired}</h1>}
               <div className="flex justify-end gap-4">
-                <button className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" >
-                  Revert
+                <button
+                className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" 
+                onClick={handleRevertAnomalyData}
+                >
+                  Revert data
                 </button>
                 <button
                   className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
+                  onClick={handleRemoveAnomalyData}
                 >
-                  Delete
+                  Remove data
                 </button>
               </div>
             </div>
