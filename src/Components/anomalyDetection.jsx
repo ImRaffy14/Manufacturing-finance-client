@@ -1143,10 +1143,21 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedInflowTransaction.totalAmount)}</p>
                     </div>
+                    <div className="flex">
+                      <p className="font-medium italic text-red-500"><strong>Note:</strong> Review the given data before proceeding to investigate.</p>
+                    </div>
                   </div>
-            <div className="flex justify-center mt-4">
-              <button className="btn btn-outline btn-error" onClick={handleInvestigateInflow}>Investigate</button>
-            </div>
+                  <div className="flex justify-center mt-4">
+                    <button
+                      className="btn btn-outline btn-error"
+                      onClick={() => {
+                        document.getElementById("possible_inflow_investigate_modal").showModal();
+                        handleInvestigateInflow();
+                      }}
+                    >
+                      Investigate
+                    </button>
+                  </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('inflow_transaction_modal').close()}>Close</button>
@@ -1190,10 +1201,20 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedOutflowTransaction.totalAmount)}</p>
                     </div>
+                    <div className="flex">
+                      <p className="font-medium italic text-red-500"><strong>Note:</strong> Review the given data before proceeding to investigate.</p>
+                    </div>
                   </div>
-            <div className="flex justify-center mt-4">
-              <button className="btn btn-outline btn-error" onClick={handleInvestigateOutflow}>Investigate</button>
-            </div>
+                  <div className="flex justify-center mt-4">
+                    <button
+                      className="btn btn-outline btn-error"
+                      onClick={() => {
+                        document.getElementById("possible_outflow_investigate_modal").showModal();
+                      }}
+                    >
+                      Investigate
+                    </button>
+                  </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('outflow_transaction_modal').close()}>Close</button>
@@ -1235,8 +1256,15 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         ))}
       </div>
       <div className="flex justify-center mt-4">
-        <button className="btn btn-primary" onClick={handleInvestigateBudgetDupli}>Investigate</button>
-      </div>
+                    <button
+                      className="btn btn-outline btn-error"
+                      onClick={() => {
+                        document.getElementById("budget_investigate_modal").showModal();
+                      }}
+                    >
+                      Investigate
+                    </button>
+                  </div>
     </div>
     <form method="dialog" className="modal-backdrop">
       <button type="button" onClick={() => document.getElementById('budget_modal').close()}>Close</button>
@@ -1272,9 +1300,16 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       </div>
                     ))}
                     </div>
-            <div className="flex justify-center mt-4">
-              <button className="btn btn-primary" onClick={handleInvestigatePO}>Investigate</button>
-            </div>
+                    <div className="flex justify-center mt-4">
+                      <button
+                        className="btn btn-outline btn-error"
+                        onClick={() => {
+                          document.getElementById("po_investigate_modal").showModal();
+                        }}
+                      >
+                      Investigate
+                    </button>
+                  </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('purchase_modal').close()}>Close</button>
@@ -1313,9 +1348,16 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       </div>
                     ))}
                     </div>
-            <div className="flex justify-center mt-4">
-              <button className="btn btn-primary" onClick={handleInvestigateInflowDupli}>Investigate</button>
-            </div>
+                    <div className="flex justify-center mt-4">
+                      <button
+                        className="btn btn-outline btn-error"
+                        onClick={() => {
+                          document.getElementById("inflow_investigate_modal").showModal();
+                        }}
+                      >
+                      Investigate
+                    </button>
+                  </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('inflow_modal').close()}>Close</button>
@@ -1354,9 +1396,17 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       </div>
                     ))}
                     </div>
-            <div className="flex justify-center mt-10">
-              <button className="btn btn-primary" onClick={handleInvestigateOutflowDupli}>Investigate</button>
-            </div>
+                    <div className="flex justify-center mt-4">
+                      <button
+                        className="btn btn-outline btn-error"
+                        onClick={() => {
+                          document.getElementById("outflow_investigate_modal").showModal();
+                          
+                        }}
+                      >
+                      Investigate
+                    </button>
+                  </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => document.getElementById('outflow_modal').close()}>Close</button>
@@ -1561,13 +1611,17 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
               <div className="flex justify-end gap-4">
                 <button
                 className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" 
-                onClick={handleRevertAnomalyData}
+                onClick={() => {
+                  document.getElementById("revert_modal").showModal();
+                }}
                 >
                   Revert data
                 </button>
                 <button
                   className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
-                  onClick={handleRemoveAnomalyData}
+                  onClick={() => {
+                    document.getElementById("remove_data_modal").showModal();
+                  }}
                 >
                   Remove data
                 </button>
@@ -1580,6 +1634,310 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
     </dialog>
       {/* PASSWORD VERIFICATION FOR Block */}
     <dialog id="block_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" onSubmit={handleBlockUser} >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+
+              {isSubmitLoading && 
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
+                  >
+                  Confirm Password  
+                  </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
+
+     {/* PASSWORD VERIFICATION FOR POSSIBLE INFLOW */}
+     <dialog id="possible_inflow_investigate_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" onSubmit={handleBlockUser} >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+
+              {isSubmitLoading && 
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
+                  >
+                  Confirm Password  
+                  </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
+
+     {/* PASSWORD VERIFICATION FOR POSSIBLE OUTFLOW */}
+     <dialog id="possible_outflow_investigate_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" onSubmit={handleBlockUser} >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+
+              {isSubmitLoading && 
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
+                  >
+                  Confirm Password  
+                  </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
+
+     {/* PASSWORD VERIFICATION FOR BUDGET */}
+     <dialog id="budget_investigate_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" onSubmit={handleBlockUser} >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+
+              {isSubmitLoading && 
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
+                  >
+                  Confirm Password  
+                  </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
+
+     {/* PASSWORD VERIFICATION FOR P.O */}
+     <dialog id="po_investigate_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" onSubmit={handleBlockUser} >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+
+              {isSubmitLoading && 
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
+                  >
+                  Confirm Password  
+                  </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
+
+     {/* PASSWORD VERIFICATION FOR INFLOW */}
+     <dialog id="inflow_investigate_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" onSubmit={handleBlockUser} >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+
+              {isSubmitLoading && 
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
+                  >
+                  Confirm Password  
+                  </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
+
+     {/* PASSWORD VERIFICATION FOR OUTFLOW */}
+     <dialog id="outflow_investigate_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" onSubmit={handleBlockUser} >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+
+              {isSubmitLoading && 
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
+                  >
+                  Confirm Password  
+                  </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
+
+    {/* PASSWORD VERIFICATION FOR REVERT */}
+    <dialog id="revert_modal" className="modal">
+        <div className="modal-box">
+          <form className="space-y-4" onSubmit={handleBlockUser} >
+              <div>
+                <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
+                  <label className="block text-gray-600 font-medium mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              {errorVerification && <h1 className="text-red-500">{errorVerification}</h1>}
+
+              {isSubmitLoading && 
+                  <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800" type="submit"
+                  >
+                  Confirm Password  
+                  </button>
+                }
+
+                {!isSubmitLoading && 
+                  <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 mt-4 w-[140px]">
+                    <span className="loading loading-spinner loading-sm"></span>
+                  </button>
+                }
+          </form>
+        </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+    </dialog> 
+
+    {/* PASSWORD VERIFICATION FOR REMOVE DATA */}
+    <dialog id="remove_data_modal" className="modal">
         <div className="modal-box">
           <form className="space-y-4" onSubmit={handleBlockUser} >
               <div>
