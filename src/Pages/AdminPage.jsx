@@ -106,72 +106,81 @@ function AdminPage() {
                     <Route path="*" element={<PageNotFound />} />
 
                         {/* CASH COLLECTION */}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (
+                    {(user.role === 'SUPER ADMIN' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (
                         <Route path="viewCollection" element={<ViewCollection  userData={user}/>} />
                     )}
 
                         {/* BUDGET MANAGEMENNT */}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
+                    {(user.role === 'SUPER ADMIN' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
                         <Route path="budgetRequest" element={<BudgetRequest userData={user} />} />
                     )}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
+                    {(user.role === 'SUPER ADMIN' || user.role === 'FINANCE MANAGER' ||  user.role === 'ADMIN') && (
                         <Route path="viewBudgetRequest" element={<ViewBudgetRequest userData={user} />} />
                     )}
 
                         {/* ACCOUNTS RECEIVABLE */}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
+                    {(user.role === 'SUPER ADMIN' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
                         <Route path="createPurchaseOrder" element={<CreatePurchaseOrder userData={user} />} />
                     )}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
+                    {(user.role === 'SUPER ADMIN' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
                         <Route path="pendingPurchaseOrder" element={<PendingPurchaseOrder />} />
                     )}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
+                    {(user.role === 'SUPER ADMIN' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
                         <Route path="paidOrder" element={<PaidOrder />} />
                     )}
                     
                         {/* ACCCOUNTS PAYABLE */}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
+                    {(user.role === 'SUPER ADMIN' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
                         <Route path="approveRejectPayables" element={<ApproveRejectPayables />} />
                     )}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
+                    {(user.role === 'SUPER ADMIN' || user.role === 'ACCOUNTANT' ||  user.role === 'ADMIN') && (
                         <Route path="reviewPayables" element={<ReviewPayables />} />
                     )}
 
                         {/* GENERAL LEDGER */}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
+                    {(user.role === 'SUPER ADMIN' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
                         <Route path="reviewPaymentTransactions" element={<ReviewPaymentTransactions />} />
                     )}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
+                    {(user.role === 'SUPER ADMIN' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
                         <Route path="viewAuditHistory" element={<ViewAuditHistory />} />
                     )}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
+                    {(user.role === 'SUPER ADMIN' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
                         <Route path="financialReports" element={<FinancialReports userData={user}/>} />
                     )}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
+                    {(user.role === 'SUPER ADMIN' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
                         <Route path="transactionRecords" element={<TransactionRecords />} />
                     )}
-
+                    {(user.role === 'SUPER ADMIN' || user.role === 'FINANCE MANAGER' || user.role === 'ADMIN') && (   
+                     <Route path="chartOfAccounts" element={<ChartOfAccounts userData={user}/>}/>
+                    )}
                         {/* ACCOUNTS MANAGEMENT */}
-                    {(user.role === 'ADMIN' || user.role === 'CHIEF FINANCIAL OFFICER')  && (
+                    {(user.role === 'ADMIN' || user.role === 'SUPER ADMIN')  && (
                         <Route path="accountCreation" element={<AccountCreation userData={user}/>} />
                     )}
-                    {(user.role === 'ADMIN' || user.role === 'CHIEF FINANCIAL OFFICER')  && (
+                    {(user.role === 'ADMIN' || user.role === 'SUPER ADMIN')  && (
                         <Route path="viewAllAccounts" element={<ViewAllAccounts userData={user}/>} />
                     )}
 
+                    {/*SYSTEM CONFIG */}
+
                         {/* AUDIT TRAILS */}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ADMIN') && (      
+                    {(user.role === 'SUPER ADMIN') && (      
                         <Route path="auditTrails" element={<AuditTrails />} />
                     )}
 
                         {/* ANOMALY DETECTION */}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ADMIN') && (  
+                    {(user.role === 'SUPER ADMIN') && (  
                         <Route path="anomalyDetection" element={<AnomalyDetection userData={user} />} />
                     )}
 
                     {/* BLACKLISTED IP */}
-                    {(user.role === 'CHIEF FINANCIAL OFFICER' || user.role === 'ADMIN') && (  
+                    {(user.role === 'SUPER ADMIN') && (  
                         <Route path="blacklistedIP" element={<BlackListedIP  userData={user} />} />
+                    )}
+
+                    {/* BLACKLISTED IP */}
+                    {(user.role === 'SUPER ADMIN') && (  
+                        <Route path="activeStaff" element={<ActiveStaff  userData={user} />} />
                     )}
 
                     <Route path="viewFinancialReports" element={<ViewFinancialReports userData={user}/>}/>
@@ -182,8 +191,7 @@ function AdminPage() {
                     <Route path="viewReviewPaymentTransactions" element={<ViewReviewPaymentTransactions userData={user}/>} />
                     <Route path="viewRequestPayable" element={<ViewRequestPayable  userData={user}/>} />
                     <Route path="reviewViewCollection" element={<ReviewViewCollection/>}/>
-                    <Route path="chartOfAccounts" element={<ChartOfAccounts/>}/>
-                    <Route path="activeStaff" element={<ActiveStaff userData={user} />}/>
+
                 </Routes>
             </div>
         </div>

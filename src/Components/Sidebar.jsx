@@ -208,7 +208,7 @@ const toggleSidebar = () => {
       <div className="mb-2">
         <p className={`text-gray-500 mb-2 font-semibold text-sm ${isCollapsed ? "hidden" : ""}`}>Modules</p>
           {/* VIEW COLLECTION */}        
-          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
+          {(userData.role === 'SUPER ADMIN' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <TbBrandCashapp className="w-5 h-5" />}
               {!isCollapsed && (
@@ -238,7 +238,7 @@ const toggleSidebar = () => {
           )}
 
           {/* BUDGET MANAGEMENT */}
-          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
+          {(userData.role === 'SUPER ADMIN' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <TbPigMoney className="w-5 h-5" />}
               {!isCollapsed && (
@@ -286,7 +286,7 @@ const toggleSidebar = () => {
           )}
 
                     {/* ACCOUNTS RECEIVABLE */}
-          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
+          {(userData.role === 'SUPER ADMIN' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <RiUserReceived2Fill className="w-5 h-5" />}
               {!isCollapsed && (
@@ -341,7 +341,7 @@ const toggleSidebar = () => {
           )}
 
           {/* ACCOUNTS PAYABLE */}
-          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
+          {(userData.role === 'SUPER ADMIN' || userData.role === 'ACCOUNTANT' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <TbCreditCardPay className="w-5 h-5" />}
               {!isCollapsed && (
@@ -389,7 +389,7 @@ const toggleSidebar = () => {
           )}
 
           {/* GENERAL LEDGER */}
-          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
+          {(userData.role === 'SUPER ADMIN' || userData.role === 'FINANCE MANAGER' || userData.role === 'ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <FaList className="w-5 h-5" />}
               {!isCollapsed && (
@@ -467,7 +467,7 @@ const toggleSidebar = () => {
 
 
           {/* System Config */}
-          {(userData.role === 'CHIEF FINANCIAL OFFICER' || userData.role === 'ADMIN') && (
+          {(userData.role === 'SUPER ADMIN') && (
             <ul className="menu rounded-box w-56">
               {isCollapsed && <MdAccountCircle className="w-5 h-5" />}
               {!isCollapsed && (

@@ -62,44 +62,6 @@ const Search = ({ userData }) => {
           </div>
 
           <div className="flex gap-3 items-center relative">
-            {/* NOTIF ICON */}
-            <div className="relative">
-              <IoMdNotificationsOutline
-                className="text-3xl cursor-pointer"
-                onClick={handleNotificationIconClick}
-              />
-              {hasNewNotifications && notifications.some((n) => !n.read) && (
-                <div className="absolute top-0 right-0 bg-red-500 rounded-full w-4 h-4 text-white text-xs flex items-center justify-center">
-                  {notifications.filter(n => !n.read).length}
-                </div>
-              )}
-            </div>
-
-            {/* NOTIF DROPDOWN */}
-            {showNotifications && (
-              <div className="absolute right-0 top-12 w-72 h-[400px] overflow-x-auto bg-white shadow-md rounded-lg z-10">
-                <div className="p-2 text-right">
-                <h1 className="font-bold">Notifications</h1>
-                </div>
-                <ul className="p-4">
-                  {notifications.length === 0 ? (
-                    <li className="text-gray-500 text-sm p-4">No notifications</li>
-                  ) : (
-                    notifications.map((notification) => (
-                      <li
-                        key={notification.id}
-                        onClick={() => handleNotificationClick(notification.id)}
-                        className={`p-4 border-b border-white rounded hover:bg-white cursor-pointer text-sm ${
-                          notification.read ? "bg-white" : "bg-gray-100"
-                        }`}
-                      >
-                        {notification.message}
-                      </li>
-                    ))
-                  )}
-                </ul>
-              </div>
-            )}
 
             {/* USER DROPDOWN */}
             <div className="dropdown dropdown-end">

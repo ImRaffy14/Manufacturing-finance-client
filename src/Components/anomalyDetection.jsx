@@ -1279,8 +1279,8 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedInflowTransaction.totalAmount)}</p>
                     </div>
-                    <div className="flex">
-                      <p className="font-medium italic text-red-500"><strong>Note:</strong> Review the given data before proceeding to investigate.</p>
+                    <div className="flex justify-center ">
+                      <p className="font-medium italic text-red-500 mt-7"><strong>Note:</strong> Review the given data before proceeding to investigate.</p>
                     </div>
                   </div>
                   <div className="flex justify-center mt-4">
@@ -1336,8 +1336,8 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium"><strong>Total Amount:</strong></p>
                       <p className="text-gray-700">{formatCurrency(selectedOutflowTransaction.totalAmount)}</p>
                     </div>
-                    <div className="flex">
-                      <p className="font-medium italic text-red-500"><strong>Note:</strong> Review the given data before proceeding to investigate.</p>
+                    <div className="flex justify-center ">
+                      <p className="font-medium italic text-red-500 mt-7"><strong>Note:</strong> Review the given data before proceeding to investigate.</p>
                     </div>
                   </div>
                   <div className="flex justify-center mt-4">
