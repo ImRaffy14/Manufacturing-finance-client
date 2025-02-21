@@ -534,17 +534,17 @@ const unusualActivityColumns = [
 ];
 
 const flaggedAnomalyColumns = [
+  { name: 'Status', selector: row => row.status , width: '120px' },
   { name: 'ID', selector: row => row._id },
-  { name: 'Anomaly Type', selector: row => row.anomalyType },
+  { name: 'Anomaly Type', selector: row => row.anomalyType, width: '150px' },
   { name: 'Anomaly From', selector: row => row.anomalyFrom },
   { name: 'Data ID', selector: row => row.dataId},
   { name: 'Description', selector: row => row.description},
-  { name: 'Investigate By', selector: row => row.investigateBy},
+  { name: 'Investigate By', selector: row => row.investigateBy , width: '120px'},
   { name: 'Investigate Date', selector: row => row.investigateDate },
-  { name: 'Resolved By', selector: row => row.resolvedBy},
+  { name: 'Resolved By', selector: row => row.resolvedBy, width: '100px'},
   { name: 'Resolved Date', selector: row => row.resolvedDate},
   { name: 'Resolution Action', selector: row => row.resolutionAction},
-  { name: 'Status', selector: row => row.status },
 ];
 
 
@@ -733,6 +733,23 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         },
       },
     };
+    
+    const conditionalRowStyles = [
+      {
+        when: row => row.status === 'On investigation',
+        style: {
+          backgroundColor: '#3b82f6', 
+          color: 'white',
+        },
+      },
+      {
+        when: row => row.status !== 'On investigation',
+        style: {
+          backgroundColor: '#10b981',  
+          color: 'black',
+        },
+      },
+    ];
 
 
     // HANDLE OUTFLOW TO INVESTIGATE
@@ -1243,6 +1260,8 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                   />
                 }
                 customStyles={customStyles2}
+                conditionalRowStyles={conditionalRowStyles} 
+                
               />
             </div>
           </div>
