@@ -32,6 +32,12 @@ function AnomalyDetection({userData}) {
     const [selectedRowData, setSelectedRowData] = useState([])
     const [errorVerification, setErrorVerification] = useState('')
     const [isRequired, setIsRequired] = useState('')
+    const [totalFlaggedAnomalies, setTotalFlaggedAnomalies] = useState(0)
+    const [totalAnomaliesResolved, setTotalAnomaliesResolved] = useState(0)
+    const [totalOnInvestigation, setTotalOnInvestigation] = useState(0)
+    const [totalFlaggedDuplication, setTotalFlaggedDuplication] = useState(0)
+    const [totalFlaggedPossibleInflow, setTotalFlaggedPossibleInflow] = useState(0)
+    const [totalFlaggedPossibleOutflow, setTotalFlaggedPossibleOutflow] = useState(0)
 
     // TABLE DATA
     const [inflowTransactionData, setInflowTransactionData] = useState([]);
@@ -66,6 +72,12 @@ function AnomalyDetection({userData}) {
     //SOCKET CONNECTION
     const socket = useSocket()
 
+    // TOTAL FLAGGED ANOMALIES
+    useEffect(() => {
+      const total = totalFlaggedDuplication + totalFlaggedPossibleInflow + totalFlaggedPossibleOutflow
+      setTotalFlaggedAnomalies(total)
+    }, [totalFlaggedDuplication, totalFlaggedPossibleInflow, totalFlaggedPossibleOutflow])
+
     // FETCH ANOMALY DATA
     useEffect(() => {
       if(!socket) return
@@ -79,16 +91,19 @@ function AnomalyDetection({userData}) {
       socket.emit('get_suspicious_login')
       socket.emit('get_failed_attempt')
       socket.emit('get_resolved_anomalies')
+      socket.emit('get_total_anomalies')
       
       // GET POSSIBLE OUTFLOW ANOMALY
       const handlePossibleOutflowAnomaly = (response) => {
         setOutflowTransactionData(response)
+        setTotalFlaggedPossibleOutflow(response.length)
         setIsLoadingPOT(false)
       }
 
       // GET POSSIBLE INFLOW ANOMALY
       const handlePossibleInflowAnomaly = (response) => {
         setInflowTransactionData(response)
+        setTotalFlaggedPossibleInflow(response.length)
         setIsLoadingPIT(false)
       }
 
@@ -177,6 +192,38 @@ function AnomalyDetection({userData}) {
 
       // RESPONSE FROM NEW INVESTIGATE
       const handleNewInvestigate = (response) => {
+        if(response.modalType === "outflow anomaly"){
+          document.getElementById("outflow_transaction_modal").close();
+          document.getElementById("possible_outflow_investigate_modal").close();
+          
+        }
+        else if(response.modalType === "inflow anomaly"){
+          document.getElementById("inflow_transaction_modal").close();
+          document.getElementById("possible_inflow_investigate_modal").close();
+
+        }
+        else if(response.modalType === "inflow duplication"){
+          document.getElementById("inflow_modal").close();
+          document.getElementById("inflow_investigate_modal").close();
+
+        }
+        else if(response.modalType === "outflow duplication"){
+          document.getElementById("outflow_modal").close();
+          document.getElementById("outflow_investigate_modal").close();
+        }
+        else if(response.modalType === "budget req duplication"){
+          document.getElementById("budget_modal").close();
+          document.getElementById("budget_investigate_modal").close();;
+
+        }
+        else if(response.modalType === "purchase order duplication"){
+          document.getElementById("purchase_modal").close();
+          document.getElementById("po_investigate_modal").close();
+        }
+
+        setErrorVerification('')
+        setPassword('')
+        setIsSubmitLoading(true)
         toast.success('The data is now on investigation', {
           position: "top-right"
         })
@@ -184,6 +231,38 @@ function AnomalyDetection({userData}) {
 
       // ERROR ON SETTING ON INVESTIGATION
       const handleErrorInvestigation = (response) => {
+        if(response.modalType === "outflow anomaly"){
+          document.getElementById("outflow_transaction_modal").close();
+          document.getElementById("possible_outflow_investigate_modal").close();
+          
+        }
+        else if(response.modalType === "inflow anomaly"){
+          document.getElementById("inflow_transaction_modal").close();
+          document.getElementById("possible_inflow_investigate_modal").close();
+
+        }
+        else if(response.modalType === "inflow duplication"){
+          document.getElementById("inflow_modal").close();
+          document.getElementById("inflow_investigate_modal").close();
+
+        }
+        else if(response.modalType === "outflow duplication"){
+          document.getElementById("outflow_modal").close();
+          document.getElementById("outflow_investigate_modal").close();
+        }
+        else if(response.modalType === "budget req duplication"){
+          document.getElementById("budget_modal").close();
+          document.getElementById("budget_investigate_modal").close();;
+
+        }
+        else if(response.modalType === "purchase order duplication"){
+          document.getElementById("purchase_modal").close();
+          document.getElementById("po_investigate_modal").close();
+        }
+
+        setErrorVerification('')
+        setPassword('')
+        setIsSubmitLoading(true)
         toast.error(response.msg, {
           position: "top-right"
         })
@@ -220,19 +299,45 @@ function AnomalyDetection({userData}) {
 
       // HANDLE RESOLVE RESPONSE
       const handleResolvedResponse = (response) => {
+        
+        setDescription("")
+        setIsSubmitLoading(true)
+        setPassword('')
+        setErrorVerification('')
+        setIsRequired('')
+
         if(response.errMsg){
+          document.getElementById("remove_data_modal").close();
+          document.getElementById("resolve_modal").close();
+          document.getElementById('flagged_anomaly_modal').close()
           toast.error(response.errMsg, {
             position: "top-right"
           })
-          setDescription("")
           return
         }
+
+        if(response.modalType === "revert"){
+          document.getElementById("revert_modal").close();
+        }
+        else{
+          document.getElementById("remove_data_modal").close();
+        }
+        document.getElementById("resolve_modal").close();
+        document.getElementById('flagged_anomaly_modal').close()
+
         toast.success(response.msg, {
           position: "top-right"
         })
-        setDescription("")
       }
 
+      // RECEIVE TOTAL ANOMALIES
+      const handleTotalAnomalies = (response) => {
+        setTotalAnomaliesResolved(response.processedTotal.totalResolved)
+        setTotalFlaggedDuplication(response.totalAnomaly)
+        setTotalOnInvestigation(response.processedTotal.totalOnInvestigate)
+      }
+
+      socket.on('receive_total_anomalies', handleTotalAnomalies)
       socket.on('response_resolved', handleResolvedResponse)
       socket.on('error_verification', handleErrorVerification)
       socket.on('block_ip_FAL_success', handleBlockIp)
@@ -264,6 +369,7 @@ function AnomalyDetection({userData}) {
         socket.off('block_ip_FAL_success')
         socket.off('block_ip_FAL_error')
         socket.off('response_resolved')
+        socket.off('receive_total_anomalies')
       }
 
     },[socket])
@@ -442,9 +548,6 @@ const flaggedAnomalyColumns = [
 ];
 
 
-    const totalFlaggedAnomalies = 0;
-    const totalAnomaliesResolved = 0;
-    const totalOnInvestigation = 0;
 
     const handleDescriptionChange = (event) => {
       setDescription(event.target.value); 
@@ -630,9 +733,15 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         },
       },
     };
+
+
     // HANDLE OUTFLOW TO INVESTIGATE
-    const handleInvestigateOutflow = () => {
-      const data = {
+    const handleInvestigateOutflow = (e) => {
+      e.preventDefault()
+
+      setIsSubmitLoading(false)
+
+      const rowData = {
         anomalyType: "Data Discrepancy",
         dataId: selectedOutflowTransaction._id,
         anomalyFrom: 'Outflow Transactions Data',
@@ -641,13 +750,16 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         investigateDate: Date.now(),
         status: 'On investigation'
       }
-      document.getElementById("outflow_transaction_modal").close();
-      socket.emit('investigate_anomaly', data)
+      socket.emit('investigate_anomaly', {rowData, userName: userData.userName, password})
     }
 
     // HANDLE INFLOW TO INVESTIGATE
-    const handleInvestigateInflow = () => {
-      const data = {
+    const handleInvestigateInflow = (e) => {
+      e.preventDefault()
+
+      setIsSubmitLoading(false)
+
+      const rowData = {
         anomalyType: "Data Discrepancy",
         dataId: selectedInflowTransaction._id,
         anomalyFrom: 'Inflow Transactions Data',
@@ -656,13 +768,17 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
         investigateDate: Date.now(),
         status: 'On investigation'
       }
-      document.getElementById("inflow_transaction_modal").close();
-      socket.emit('investigate_anomaly', data)
+
+      socket.emit('investigate_anomaly', {rowData, userName: userData.userName, password})
     }
 
     // HANDLE BUDGET DUPLICATION TO INVESTIGATE
-      const handleInvestigateBudgetDupli = () => {
-        const data = {
+      const handleInvestigateBudgetDupli = (e) => {
+        e.preventDefault()
+
+        setIsSubmitLoading(false)
+
+        const rowData = {
           anomalyType: "Data Duplication",
           dataId: selectedBudgetRow.requestId,
           anomalyFrom: 'Budget Request Data',
@@ -671,13 +787,17 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           investigateDate: Date.now(),
           status: 'On investigation'
         }
-        document.getElementById("budget_modal").close();
-        socket.emit('investigate_anomaly', data)
+
+        socket.emit('investigate_anomaly', {rowData, userName: userData.userName, password})
       }
 
       // HANDLE PURCHASE ORDER DUPLICATION TO INVESTIGATE
-      const handleInvestigatePO = () => {
-        const data = {
+      const handleInvestigatePO = (e) => {
+        e.preventDefault()
+
+        setIsSubmitLoading(false)
+
+        const rowData = {
           anomalyType: "Data Duplication",
           dataId: selectedPurchaseRow.orderNumber,
           anomalyFrom: 'Purchase Order Data',
@@ -686,13 +806,17 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           investigateDate: Date.now(),
           status: 'On investigation'
         }
-        document.getElementById("purchase_modal").close();
-        socket.emit('investigate_anomaly', data)
+
+        socket.emit('investigate_anomaly', {rowData, userName: userData.userName, password})
       }
 
       // HANDLE INFLOW TRANSACTION DUPLICATION TO INVESTIGATE
-      const handleInvestigateInflowDupli = () => {
-        const data = {
+      const handleInvestigateInflowDupli = (e) => {
+        e.preventDefault()
+
+        setIsSubmitLoading(false)
+
+        const rowData = {
           anomalyType: "Data Duplication",
           dataId: selectedInflowRow.invoiceId,
           anomalyFrom: 'Inflow Transactions Data',
@@ -701,13 +825,17 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           investigateDate: Date.now(),
           status: 'On investigation'
         }
-        document.getElementById("inflow_modal").close();
-        socket.emit('investigate_anomaly', data)
+
+        socket.emit('investigate_anomaly', {rowData, userName: userData.userName, password})
       }
       
       // HANDLE OUTFLOW TRANSACTION DUPLICATION TO INVESTIGATE
-      const handleInvestigateOutflowDupli = () => {
-        const data = {
+      const handleInvestigateOutflowDupli = (e) => {
+        e.preventDefault()
+
+        setIsSubmitLoading(false)
+
+        const rowData = {
           anomalyType: "Data Duplication",
           dataId: selectedOutflowRow.payableId,
           anomalyFrom: 'Outflow Transactions Data',
@@ -716,17 +844,21 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           investigateDate: Date.now(),
           status: 'On investigation'
         }
-        document.getElementById("outflow_modal").close();
-        socket.emit('investigate_anomaly', data)
+
+        socket.emit('investigate_anomaly', {rowData, userName: userData.userName, password})
       }
 
       // HANDLE REVERT ANOMALY DATA
-      const handleRevertAnomalyData = () => {
+      const handleRevertAnomalyData = (e) => {
+        e.preventDefault()
+
+        setIsSubmitLoading(false)
+
         if(!description){
          return setIsRequired('Resolution Action is required.')
         }
         setIsRequired('')
-        const data = {
+        const rowData = {
           _id: selectedFlaggedAnomaly._id,
           resolvedBy: userData.userName,
           resolvedDate: Date.now(),
@@ -734,16 +866,20 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           status: 'Resolved'
         }
 
-        socket.emit('revert_resolved_anomaly', data)
+        socket.emit('revert_resolved_anomaly', {rowData, userName: userData.userName, password})
       }
 
-      // HANLE REMOVE ANOMALY DATA
-      const handleRemoveAnomalyData = () => {
+      // HANDLE REMOVE ANOMALY DATA
+      const handleRemoveAnomalyData = (e) => {
+        e.preventDefault()
+
+        setIsSubmitLoading(false)
+        
         if(!description){
           return setIsRequired('Resolution Action is required.')
         }
         setIsRequired('')
-        const data = {
+        const rowData = {
           _id: selectedFlaggedAnomaly._id,
           dataId: selectedFlaggedAnomaly.dataId,
           anomalyFrom: selectedFlaggedAnomaly.anomalyFrom,
@@ -754,7 +890,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           status: 'Resolved'
         }
 
-        socket.emit('remove_resolved_anomaly', data)
+        socket.emit('remove_resolved_anomaly', {rowData, userName: userData.userName, password})
       }
 
     return (
@@ -1152,7 +1288,6 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       className="btn btn-outline btn-error"
                       onClick={() => {
                         document.getElementById("possible_inflow_investigate_modal").showModal();
-                        handleInvestigateInflow();
                       }}
                     >
                       Investigate
@@ -1612,7 +1747,11 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 <button
                 className="btn btn-success px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200" 
                 onClick={() => {
-                  document.getElementById("revert_modal").showModal();
+                 if(description.length <= 0){
+                  setIsRequired('Resolution Action is required.')
+                  return
+                 }
+                 document.getElementById("revert_modal").showModal();
                 }}
                 >
                   Revert data
@@ -1620,6 +1759,10 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                 <button
                   className="btn btn-error px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200"
                   onClick={() => {
+                    if(description.length <= 0){
+                      setIsRequired('Resolution Action is required.')
+                      return
+                     }
                     document.getElementById("remove_data_modal").showModal();
                   }}
                 >
@@ -1673,7 +1816,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
      {/* PASSWORD VERIFICATION FOR POSSIBLE INFLOW */}
      <dialog id="possible_inflow_investigate_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" onSubmit={handleBlockUser} >
+          <form className="space-y-4" onSubmit={handleInvestigateInflow} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -1711,7 +1854,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
      {/* PASSWORD VERIFICATION FOR POSSIBLE OUTFLOW */}
      <dialog id="possible_outflow_investigate_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" onSubmit={handleBlockUser} >
+          <form className="space-y-4" onSubmit={handleInvestigateOutflow} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -1749,7 +1892,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
      {/* PASSWORD VERIFICATION FOR BUDGET */}
      <dialog id="budget_investigate_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" onSubmit={handleBlockUser} >
+          <form className="space-y-4" onSubmit={handleInvestigateBudgetDupli} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -1787,7 +1930,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
      {/* PASSWORD VERIFICATION FOR P.O */}
      <dialog id="po_investigate_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" onSubmit={handleBlockUser} >
+          <form className="space-y-4" onSubmit={handleInvestigatePO} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -1825,7 +1968,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
      {/* PASSWORD VERIFICATION FOR INFLOW */}
      <dialog id="inflow_investigate_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" onSubmit={handleBlockUser} >
+          <form className="space-y-4" onSubmit={handleInvestigateInflowDupli} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -1863,7 +2006,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
      {/* PASSWORD VERIFICATION FOR OUTFLOW */}
      <dialog id="outflow_investigate_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" onSubmit={handleBlockUser} >
+          <form className="space-y-4" onSubmit={handleInvestigateOutflowDupli} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -1901,7 +2044,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
     {/* PASSWORD VERIFICATION FOR REVERT */}
     <dialog id="revert_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" onSubmit={handleBlockUser} >
+          <form className="space-y-4" onSubmit={handleRevertAnomalyData} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>
@@ -1939,7 +2082,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
     {/* PASSWORD VERIFICATION FOR REMOVE DATA */}
     <dialog id="remove_data_modal" className="modal">
         <div className="modal-box">
-          <form className="space-y-4" onSubmit={handleBlockUser} >
+          <form className="space-y-4" onSubmit={handleRemoveAnomalyData} >
               <div>
                 <h3 className="font-bold text-lg text-center">Enter Password to Proceed</h3>
                   <label className="block text-gray-600 font-medium mb-1">Password</label>

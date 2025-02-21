@@ -187,15 +187,15 @@ function blacklistedIP({ userData }) {
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Ban Time:</strong></p>
-                      <p className="text-gray-700">{selectedRowData.banTime}</p>
+                      <p className="text-gray-700">{convertTimestamp(selectedRowData.banTime)}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Ban Duration:</strong></p>
-                      <p className="text-gray-700">{selectedRowData.banDuration}</p>
+                      <p className="text-gray-700">{convertMsToMinutes(selectedRowData.banDuration)}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Banned:</strong></p>
-                      <p className="text-gray-700">{selectedRowData.banned ? 'true' : 'false'}</p>
+                      <p className="text-gray-700">{selectedRowData.banned ? 'True' : 'False'}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="font-medium"><strong>Device Info:</strong></p>

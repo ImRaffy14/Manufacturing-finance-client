@@ -35,6 +35,7 @@ const Sidebar = ({ userData }) => {
   const [ payableLength, setPayableLength ] = useState(0)
   const [ paidLength, setPaidLength] = useState(0)
   const [ budgetLength, setBudgetLength] = useState(0)
+  const [ anomalyLength, setAnomalyLength] = useState(0)
 
   const socket = useSocket()
 
@@ -79,6 +80,7 @@ useEffect(() => {
   socket.emit('get_payable_length', { msg: "get payable length" });
   socket.emit('get_paid_records', { msg: "get paid records length" });
   socket.emit('get_budget_request_length', { msg: "get budget request records length" });
+  socket.emit('get_total_anomalies')
 
   // TRACK ACTIVE CLIENT
   socket.emit('save_active_staff', userData)
@@ -109,6 +111,16 @@ useEffect(() => {
     setBudgetLength(response);
   };
 
+  const handleTotalAnomolies = (response) => {
+    const totalAnomalies = response.totalAnomaly
+    const totalOnInvestigate = response.processedTotal.totalOnInvestigate
+
+    const total = totalAnomalies + totalOnInvestigate
+
+    setAnomalyLength(total)
+  }
+
+  socket.on('receive_total_anomalies', handleTotalAnomolies)
   socket.on("receive_payable_length", handlePayableLength);
   socket.on("receive_paid_records", handlePaidRecords);
   socket.on("receive_budget_request_length", handleBudgetRequestLength);
@@ -117,6 +129,7 @@ useEffect(() => {
     socket.off("receive_payable_length", handlePayableLength);
     socket.off("receive_paid_records", handlePaidRecords);
     socket.off("receive_budget_request_length", handleBudgetRequestLength);
+    socket.off("receive_total_anomalies")
   };
 
 }, [socket]);
@@ -462,7 +475,7 @@ const toggleSidebar = () => {
                   <details false>
                     <summary>
                       <MdAccountCircle className="w-5 h-5" /> System Configuration
-                      {notifications.accountRequest > 0 && (
+                      {anomalyLength > 0 && (
                         <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
                       )}
                     </summary>
@@ -487,6 +500,11 @@ const toggleSidebar = () => {
                     <summary className="flex items-center">
                       <VscBracketError className="w-5 h-5 mr-2" />
                       Anomaly Detection
+                      {anomalyLength > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
+                          {anomalyLength >= 100 ? "99+" : anomalyLength}
+                        </span>
+                      )}
                     </summary>
                   </NavLink>
                          
