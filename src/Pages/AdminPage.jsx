@@ -103,13 +103,12 @@ function AdminPage() {
             </div>
         );
     }
-    
-    if (!user || user.role !== 'SUPER ADMIN') return null;
     return (
         <>
         <div className="h-screen flex">
             <Sidebar  userData={user} />
             <div className="flex-col w-full overflow-auto bg-gray-200">
+            {(user.role === 'SUPER ADMIN') && (
             <div className="fixed bottom-3 right-20 z-[9999] pointer-events-auto">
           {/* Floating Chat Button */}
           {!isOpen && (
@@ -145,6 +144,7 @@ function AdminPage() {
             </div>
           )}
         </div>
+        )}
                 {user && <Search userData={user} />}    
                 <Routes>
                     <Route path="overview" element={<Dashboard />} />
