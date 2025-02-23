@@ -43,15 +43,11 @@ function AdminPage() {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const activeStaffCount = 5;
+    const [activeStaffCount, setActiveStaffCount] = useState(1)
     const socket = useSocket()
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_AUTH_URL;
 
-    const activeStaff = [
-        { "id": 1, "name": "John Doe", "role": "Finance Manager" },
-        { "id": 2, "name": "Jane Smith", "role": "Accountant" }
-      ]
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -74,6 +70,9 @@ function AdminPage() {
     useEffect(() => {
         if(!socket) return
 
+        // GET ACTIVE STAFF COUNT
+        socket.emit("get_active_staff_count")
+
         // FORCE DISCONNECT STAFF
         const forceDisconnectStaff = async (response) => {
         socket.disconnect();
@@ -88,10 +87,17 @@ function AdminPage() {
   
       }
       
+      // RECEIVE ACTIVE STAFF COUNT
+      const receiveActiveStaffCount = (response) => {
+        setActiveStaffCount(response)
+      }
+
       socket.on('force_disconnect', forceDisconnectStaff)
+      socket.on('receive_active_staff_count', receiveActiveStaffCount)
 
       return () => {
         socket.off('force_disconnect')
+        socket.off('receive_active_staff_count')
       }
 
     }, [socket])

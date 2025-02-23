@@ -5,14 +5,15 @@ function CommandTerminal() {
   const [output, setOutput] = useState("");
   const [command, setCommand] = useState("");
   const [serverStatus, setServerStatus] = useState("Fetching...");
+  const [noAccess, setNoAccess] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
 
   const ALLOWED_COMMANDS = ["pm2 restart 0", "pm2 logs", "pm2 list"];
 
   const socket = useSocket();
 
   useEffect(() => {
-    socket.emit("fetch-server-status");
-    socket.emit("command", "pm2 logs");
+    socket.emit("check_if_allowed")
 
     socket.on("terminal-output", (data) => {
         setOutput((prev) => prev + data);
@@ -22,9 +23,26 @@ function CommandTerminal() {
         setServerStatus(data);
     });
 
+    // HANDLE ACESS STATUS
+    const handleAccessStatus = (response) => {
+        if(response.status){
+            console.log(response.status)
+            socket.emit("fetch-server-status");
+            socket.emit("command", "pm2 logs");
+            setIsLoading(false)
+            setNoAccess(false)
+        }
+        else{
+            setIsLoading(false)
+        }
+    }
+
+    socket.on("access_status", handleAccessStatus)
+
     return () => {
         socket.off("terminal-output");
         socket.off("server-status");
+        socket.off("access_status")
     };
 }, []);
 
@@ -37,11 +55,32 @@ const sendCommand = (e) => {
     e.preventDefault();
     if (!ALLOWED_COMMANDS.includes(command.trim())) {
         setOutput((prev) => prev + `❌ Command not allowed: ${command}\n`);
+        setCommand("");
         return;
     }
+    setOutput((prev) => prev + `✅ Command executed: ${command}\n`);
     socket.emit("command", command);
     setCommand("");
 };
+
+if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-screen w-full"></div>
+      </div>
+    );
+  }
+
+if (noAccess) {
+return (
+    <div className="flex h-screen w-full items-center justify-center bg-gray-900 text-white">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold">Access Denied</h1>
+        <p className="mt-2 text-lg">You do not have permission to access the terminal.</p>
+      </div>
+    </div>
+);
+}
 
 return (
   <div className="h-full w-full bg-white bg-center bg-no-repeat">
