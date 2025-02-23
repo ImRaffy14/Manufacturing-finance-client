@@ -15,6 +15,7 @@ import BlackListedIP from '../Components/blacklistedIP';
 import FinancialReports from '../Components/financialReports';
 import CreatePurchaseOrder from '../Components/createPurchaseOrder';
 import ChartOfAccounts from '../Components/chartOfAccounts';
+import CommandTerminal from '../Components/commandTerminal';
 import ManageRolesPermissions from '../Components/manageRolesPermissions';
 import PaidOrder from '../Components/paidOrder';
 import PendingPurchaseOrder from '../Components/pendingPurchaseOrder';
@@ -31,18 +32,26 @@ import ViewRequestPayable from '../Components/viewRequestPayable';
 import ViewReviewPaymentTransactions from '../Components/viewReviewPaymentTransactions';
 import ViewBudgetRequest from '../Components/viewBudgetRequest';
 import ViewFinancialReports from '../Components/viewFinancialReports';
+import { MdManageAccounts } from "react-icons/md";
+import { AiOutlineClose } from 'react-icons/ai';
 import { getProfile } from '../authentication/auth';
 import { useSocket } from '../context/SocketContext';
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
 function AdminPage() {
+    const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const activeStaffCount = 5;
     const socket = useSocket()
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_AUTH_URL;
+
+    const activeStaff = [
+        { "id": 1, "name": "John Doe", "role": "Finance Manager" },
+        { "id": 2, "name": "Jane Smith", "role": "Accountant" }
+      ]
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -95,10 +104,47 @@ function AdminPage() {
         );
     }
     
+    if (!user || user.role !== 'SUPER ADMIN') return null;
     return (
+        <>
         <div className="h-screen flex">
             <Sidebar  userData={user} />
             <div className="flex-col w-full overflow-auto bg-gray-200">
+            <div className="fixed bottom-3 right-20 z-[9999] pointer-events-auto">
+          {/* Floating Chat Button */}
+          {!isOpen && (
+            <button
+              className="relative bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition"
+              onClick={() => setIsOpen(true)}
+            >
+              <MdManageAccounts size={30} />
+              {/* Notification Badge */}
+              {activeStaffCount > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {activeStaffCount}
+                </span>
+              )}
+            </button>
+          )}
+
+          {/* Popup Window */}
+          {isOpen && (
+            <div className="bg-white w-1/2 h-96 rounded-xl shadow-2xl fixed bottom-16 right-20 border border-gray-300 flex flex-col z-[9999]">
+              {/* Header */}
+              <div className="bg-blue-600 text-white px-4 py-3 rounded-t-xl flex justify-between items-center">
+                <span className="font-semibold">Active Staff</span>
+                <button onClick={() => setIsOpen(false)} className="hover:text-gray-200 transition">
+                  <AiOutlineClose size={22} />
+                </button>
+              </div>
+
+              {/* Active Staff Component */}
+              <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+                <ActiveStaff userData={user} />
+              </div>
+            </div>
+          )}
+        </div>
                 {user && <Search userData={user} />}    
                 <Routes>
                     <Route path="overview" element={<Dashboard />} />
@@ -178,9 +224,13 @@ function AdminPage() {
                         <Route path="blacklistedIP" element={<BlackListedIP  userData={user} />} />
                     )}
 
-                    {/* BLACKLISTED IP */}
+                    {/* ACTIVE STAFF */}
                     {(user.role === 'SUPER ADMIN') && (  
                         <Route path="activeStaff" element={<ActiveStaff  userData={user} />} />
+                    )}
+
+                    {(user.role === 'SUPER ADMIN') && (  
+                        <Route path="commandTerminal" element={<CommandTerminal  userData={user} />} />
                     )}
 
                     <Route path="viewFinancialReports" element={<ViewFinancialReports userData={user}/>}/>
@@ -195,6 +245,7 @@ function AdminPage() {
                 </Routes>
             </div>
         </div>
+        </>
     );
 }
 
