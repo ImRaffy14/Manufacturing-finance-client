@@ -127,19 +127,7 @@ function Dashboard() {
         <div className="bg-white/75 shadow-xl rounded-lg p-6">
           <h1 className="text-xl font-bold">Overview</h1>
           <div className="flex gap-4 p-4 overflow-x-auto flex-wrap">
-
-            <Link to="/Dashboard/accountCreation">
-              <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
-                <div className="flex items-center justify-between">
-                  <p className="text-black font-semibold text-md">Account Requests</p>
-                </div>
-                <div className="flex gap-3 my-3">
-                  <FaUsers className="text-blue-600 text-2xl my-2" />
-                  <p className="text-4xl text-black font-bold">{dashboardData.accountRequests}</p>
-                </div>
-              </div>
-            </Link>
-
+            
             <Link to="/Dashboard/createPurchaseOrder">
               <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
                 <div className="flex items-center justify-between">
