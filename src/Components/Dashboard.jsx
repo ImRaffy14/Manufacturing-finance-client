@@ -20,6 +20,7 @@ function Dashboard() {
   const [budgetRequest, setBudgetRequest] = useState(0);
   const [pendingPayables, setPendingPayables] = useState(0);
   const [invoicePending, setInvoicePending] = useState(0);
+  const [totalAnomalies, setTotalAnomaliesa] = useState(0)
   const [saleVolume, setSaleVolume] = useState([]);
   const [netIncome, setNetIncome] = useState([]);
   const [collectionAnalytics, setCollectionAnalytics] = useState(null);
@@ -32,7 +33,6 @@ function Dashboard() {
   const [dashboardData, setDashboardData] = useState({
     accountRequests: 50,
     invoiceRequests: 120,
-    approvedInvoices: 100,
     detectedAnomalies: 10,
   });
 
@@ -58,6 +58,8 @@ function Dashboard() {
     socket.emit("get_budget_request_length", { msg: "get budget request records length" });
     socket.emit("get_dashboard_analytics", { msg: "get dashboard analytics" });
     socket.emit("get_collection_analytics", { msg: "get collection analytics" });
+    socket.emit('get_total_anomalies')
+
   }, [socket]);
 
   useEffect(() => {
@@ -95,6 +97,16 @@ function Dashboard() {
       setIsLoading(false);
     };
 
+    const handleTotalAnomolies = (response) => {
+      const totalAnomalies = response.totalAnomaly
+      const totalOnInvestigate = response.processedTotal.totalOnInvestigate
+  
+      const total = totalAnomalies + totalOnInvestigate
+  
+      setTotalAnomaliesa(total)
+    }
+
+    socket.on('receive_total_anomalies', handleTotalAnomolies)
     socket.on("receive_payable_length", handlePayableLength);
     socket.on("receive_budget_request_length", handleBudgetRequestLength);
     socket.on("receive_pending_invoice", handlePendingInvoice);
@@ -107,6 +119,7 @@ function Dashboard() {
       socket.off("receive_pending_invoice", handlePendingInvoice);
       socket.off("receive_dashboard_analytics");
       socket.off("receive_collection_analytics");
+      socket.off("receive_total_anomalies")
     };
   }, [socket]);
 
@@ -195,7 +208,7 @@ function Dashboard() {
                 </div>
                 <div className="flex gap-3 my-3">
                   <MdError className="text-red-600 text-2xl my-2" />
-                  <p className="text-4xl text-black font-bold">{dashboardData.detectedAnomalies}</p>
+                  <p className="text-4xl text-black font-bold">{totalAnomalies}</p>
                 </div>
               </div>
             </Link>

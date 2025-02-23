@@ -534,17 +534,17 @@ const unusualActivityColumns = [
 ];
 
 const flaggedAnomalyColumns = [
-  { name: 'Status', selector: row => row.status , width: '120px' },
-  { name: 'ID', selector: row => row._id },
+  { name: 'Status', selector: row => row.status , width: '150px' },
+  { name: 'ID', selector: row => row._id, width: '220px' },
   { name: 'Anomaly Type', selector: row => row.anomalyType, width: '150px' },
-  { name: 'Anomaly From', selector: row => row.anomalyFrom },
-  { name: 'Data ID', selector: row => row.dataId},
-  { name: 'Description', selector: row => row.description},
+  { name: 'Anomaly From', selector: row => row.anomalyFrom, width: '200px' },
+  { name: 'Data ID', selector: row => row.dataId, width: '220px'},
+  { name: 'Description', selector: row => row.description, width: '350px'},
   { name: 'Investigate By', selector: row => row.investigateBy , width: '120px'},
   { name: 'Investigate Date', selector: row => row.investigateDate },
   { name: 'Resolved By', selector: row => row.resolvedBy, width: '100px'},
   { name: 'Resolved Date', selector: row => row.resolvedDate},
-  { name: 'Resolution Action', selector: row => row.resolutionAction},
+  { name: 'Resolution Action', selector: row => row.resolutionAction, width: '350px'},
 ];
 
 

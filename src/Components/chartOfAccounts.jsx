@@ -5,29 +5,7 @@ function ChartOfAccounts() {
   const [searchText, setSearchText] = useState('');
   const [selectedRowData, setSelectedRowData] = useState(null);
 
-  const modalRef = useRef(null); // Using useRef to directly reference the modal element
-
-  const columns = [
-    { name: 'Account Code', selector: row => row.accountCode },
-    { name: 'Account Name', selector: row => row.accountName },
-    { name: 'Category', selector: row => row.category },
-    { name: 'Subcategory', selector: row => row.subCategory },
-    { name: 'Balance', selector: row => row.balance },
-    { name: 'Description', selector: row => row.description },
-  ];
-
-  const data = [
-    {  accountCode: "101", accountName: "Total Cash", category: "Asset", subCategory: "Current Asset", description: 'Cash Available Operations' ,balance: 50000, },
-    {  accountCode: "102", accountName: "Unsold Products", category: "Asset", subCategory: "Inventory",description: 'Value of unsold stock/produts', balance: 15000,  },
-    {  accountCode: "201", accountName: "Accounts Payable-Raw Materials", category: "Liability", subCategory: "Current Liability" ,description: 'Amount owed for procured raw materials', balance: 15000,  },
-    {  accountCode: "202", accountName: "Accounts Payable-Salary & Wages", category: "Liability", subCategory: "Current Liability" ,description: 'Salary and wages payable to employees', balance: 15000,  },
-    {  accountCode: "203", accountName: "Accounts Payable-Utilities", category: "Liability", subCategory: "Current Liability" ,description: 'Outstanding bills for utilities', balance: 15000,  },
-    {  accountCode: "301", accountName: "Total Sales", category: "Revenue", subCategory: "Sales Revenue" ,description: 'Income generated from product sales', balance: 15000,  },
-    {  accountCode: "401", accountName: "Raw Material Expenses", category: "Expense", subCategory: "Cost of Goods Sold" ,description: 'Cost incurred for raw materials', balance: 15000,  },
-    {  accountCode: "402", accountName: "Machinery Expenses", category: "Expense", subCategory: "Operating Expense" ,description: 'Costs for machine maintenance/purchase', balance: 15000,  },
-    {  accountCode: "403", accountName: "Salary & Wages Expense", category: "Expense", subCategory: "Operating Expense" ,description: 'Employee salaries and wages', balance: 15000,  },
-    {  accountCode: "404", accountName: "Utilities Expense", category: "Expense", subCategory: "Operatin Expense" ,description: 'Electricity, water, and other utility costs', balance: 15000,  },
-  ];
+  const modalRef = useRef(null);
 
   const formatCurrency = (value) => {
     if (value === undefined || value === null) {
@@ -35,6 +13,32 @@ function ChartOfAccounts() {
     }
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
+
+  const columns = [
+    { name: 'Account Code', selector: row => row.accountCode, width:"120px" },
+    { name: 'Account Name', selector: row => row.accountName, width:"300px"},
+    { name: 'Category', selector: row => row.category, width:"180px" },
+    { name: 'Subcategory', selector: row => row.subCategory, width:"230px" },
+    { name: 'Description', selector: row => row.description, width:"400px" },
+    { name: 'Balance', selector: row => formatCurrency(row.balance) },
+    
+  ];
+
+  const data = [
+    {  accountCode: "101", accountName: "Total Cash", category: "Asset", subCategory: "Current Asset", description: 'Cash Available Operations' ,balance: 50000, },
+    {  accountCode: "102", accountName: "Unsold Products", category: "Asset", subCategory: "Inventory",description: 'Value of unsold stock/produts', balance: 15000,  },
+    {  accountCode: "201", accountName: "Accounts Payable-Raw Materials", category: "Liability", subCategory: "Current Liability" ,description: 'Amount owed for procured raw materials', balance: 15000,  },
+    {  accountCode: "202", accountName: "Accounts Payable-machinery", category: "Liability", subCategory: "Current Liability" ,description: 'Amount owed for procured machinery', balance: 15000,  },
+    {  accountCode: "203", accountName: "Accounts Payable-Salary & Wages", category: "Liability", subCategory: "Current Liability" ,description: 'Salary and wages payable to employees', balance: 15000,  },
+    {  accountCode: "204", accountName: "Accounts Payable-Utilities", category: "Liability", subCategory: "Current Liability" ,description: 'Outstanding bills for utilities', balance: 15000,  },
+    {  accountCode: "301", accountName: "Total Sales", category: "Revenue", subCategory: "Sales Revenue" ,description: 'Income generated from product sales', balance: 15000,  },
+    {  accountCode: "401", accountName: "Raw Material Expenses", category: "Expense", subCategory: "Cost of Goods Sold" ,description: 'Cost incurred for raw materials', balance: 15000,  },
+    {  accountCode: "402", accountName: "Machinery Expenses", category: "Expense", subCategory: "Operating Expense" ,description: 'Costs for machine maintenance/purchase', balance: 15000,  },
+    {  accountCode: "403", accountName: "Salary & Wages Expense", category: "Expense", subCategory: "Operating Expense" ,description: 'Employee salaries and wages', balance: 15000,  },
+    {  accountCode: "404", accountName: "Utilities Expense", category: "Expense", subCategory: "Operatin Expense" ,description: 'Electricity, water, and other utility costs', balance: 15000,  },
+  ];
+
+
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);

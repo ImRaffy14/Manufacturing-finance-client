@@ -47,6 +47,7 @@ function viewCollection({ userData }) {
   const [isSubmit, setIsSubmit] = useState(false)
   const [receivable, setReceivable] = useState(0)
   const [payable, setPayable] = useState(0)
+  
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
