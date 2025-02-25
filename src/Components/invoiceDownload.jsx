@@ -44,7 +44,7 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
         {/* Logo and Invoice Title */}
         <div className="flex justify-between items-center mb-4">
           <img src={logo} alt="Company Logo" className="w-32 h-auto" />
-          <h1 className="text-4xl font-bold tracking-wide text-right">INVOICE</h1>
+          <h1 className="text-4xl font-bold tracking-wide text-right">PURCHASE ORDER</h1>
         </div>
 
         {/* CUSTOMER INFO */}
@@ -57,7 +57,7 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
           </div>
 
           <div className="text-right">
-            <p><strong>INVOICE ID:</strong> {invoiceData._id || '01234'}</p>
+            <p><strong>P. ORDER ID:</strong> {invoiceData._id || '01234'}</p>
             <p><strong>DATE:</strong> {invoiceData.invoiceDate || '11.02.2030'}</p>
             <p><strong>DUE DATE:</strong> {invoiceData.dueDate || '11.03.2030'}</p>
           </div>
@@ -139,7 +139,7 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
           onClick={handleGeneratePdf}
           className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
         >
-          Download Invoice as PDF
+          Download P. Order as PDF
         </button>
       </div>
     </div>

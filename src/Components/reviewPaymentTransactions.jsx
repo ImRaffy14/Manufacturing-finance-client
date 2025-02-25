@@ -18,11 +18,11 @@ function reviewPaymentTransactions() {
   const socket = useSocket()
 
   const columns = [
-    { name: 'Invoice ID ', selector: row => row._id },
+    { name: 'P.Order ID ', selector: row => row._id },
     { name: 'Customer ID', selector: row => row.customerId },
     { name: 'Customer Name', selector: row => row.customerName },
     { name: 'Contact Details', selector: row => row.customerContact },
-    { name: 'Invoice Date', selector: row => row.invoiceDate },
+    { name: 'P.Order Date', selector: row => row.invoiceDate },
     { name: 'Due Date', selector: row => row.dueDate},
     {
       name: 'Items',

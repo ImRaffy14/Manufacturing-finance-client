@@ -33,7 +33,7 @@ function viewReviewPaymentTransactions({ userData }) {
         userName: userData.userName,
         role: userData.role,
         action: "AUDITS SALES RECORD",
-        description: `${userData.userName} audits sales records for ${rowData.customerName} Invoice ID: ${rowData._id}`,
+        description: `${userData.userName} audits sales records for ${rowData.customerName} P.Order ID: ${rowData._id}`,
       };
   
       socket.emit("addAuditTrails", invoiceTrails);
@@ -110,7 +110,7 @@ function viewReviewPaymentTransactions({ userData }) {
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Payment Review</h1>
         {/* DETAILS */}
         <h2 className="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300">
-          Details for Invoice ID: {rowData._id}
+          Details for P.Order ID: {rowData._id}
         </h2>
         <div className="space-y-4">
           <div className="flex justify-between">
@@ -126,7 +126,7 @@ function viewReviewPaymentTransactions({ userData }) {
             <p className="text-gray-700">{rowData.customerContact}</p>
           </div>
           <div className="flex justify-between">
-            <p className="font-medium"><strong>Invoice Date:</strong></p>
+            <p className="font-medium"><strong>P.Order Date:</strong></p>
             <p className="text-gray-700">{rowData.invoiceDate}</p>
           </div>
           <div className="flex justify-between">
@@ -135,21 +135,21 @@ function viewReviewPaymentTransactions({ userData }) {
           </div>
         </div>
   
-        {/* INVOICE PREVIEW */}
+        {/* PURCHASE ORDER PREVIEW */}
         <div className="w-full mx-auto mt-8 bg-white p-6 border shadow-md rounded-xl" id="payable-preview">
           <div className="flex justify-between items-center mb-4">
             <div>
               <img src={JJM} className="h-20 w-20" alt="Logo" />
             </div>
             <div className="text-right">
-              <h3 className="text-lg font-bold">Invoice</h3>
-              <p><strong>Invoice ID:</strong> {rowData._id}</p>
+              <h3 className="text-lg font-bold">Purchase Order</h3>
+              <p><strong>P.Order ID:</strong> {rowData._id}</p>
             </div>
           </div>
           <div className="mb-4">
             <p><strong>Customer ID:</strong> {rowData._id}</p>
             <p><strong>Customer Name:</strong> {rowData.customerName}</p>
-            <p><strong>Invoice Date:</strong> {rowData.invoiceDate}</p>
+            <p><strong>P.Order Date:</strong> {rowData.invoiceDate}</p>
             <p><strong>Due Date:</strong> {rowData.dueDate}</p>
           </div>
   

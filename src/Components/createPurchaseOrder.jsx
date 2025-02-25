@@ -463,8 +463,8 @@ function createPurchaseOrder({ userData }) {
         userId: userData._id,
         userName: userData.userName,
         role: userData.role,
-        action: "CREATED AN INVOICE",
-        description: `Created an invoice for ${response.customerName}. Invoice ID ${response._id}`,
+        action: "CREATED AN P.ORDER",
+        description: `Created an P.Order for ${response.customerName}. P.Order ID ${response._id}`,
       };
 
       socket.emit("addAuditTrails", invoiceTrails);

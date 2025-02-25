@@ -478,7 +478,7 @@ const inflowDuplicationColumns = [
   { name: 'Count', selector: row => row.count, width: '80px'},
   { name: 'Auditor ID', selector: row => row.auditorId, width: '200px' },
   { name: 'Auditor', selector: row => row.auditor, width: '100px' },
-  { name: 'Invoice ID', selector: row => row.invoiceId, width: '200px' },
+  { name: 'P.Order ID', selector: row => row.invoiceId, width: '200px' },
   { name: 'Inflow ID', selector: row => ( 
     <ul>
       {row.inflowId.map((item, index) => (
@@ -837,7 +837,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
           anomalyType: "Data Duplication",
           dataId: selectedInflowRow.invoiceId,
           anomalyFrom: 'Inflow Transactions Data',
-          description: `${selectedInflowRow.auditor} audits the invoice id: ${selectedInflowRow.invoiceId} many times. Inflow Transaction ID: [${selectedInflowRow.inflowId.map(data => `${data}`).join(', ')}]`,
+          description: `${selectedInflowRow.auditor} audits the p.order id: ${selectedInflowRow.invoiceId} many times. Inflow Transaction ID: [${selectedInflowRow.inflowId.map(data => `${data}`).join(', ')}]`,
           investigateBy: userData.userName,
           investigateDate: Date.now(),
           status: 'On investigation'
@@ -1287,7 +1287,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="text-gray-700">{selectedInflowTransaction.auditor}</p>
                     </div>
                     <div className="flex justify-between">
-                      <p className="font-medium"><strong>Invoice ID:</strong></p>
+                      <p className="font-medium"><strong>P.Order ID:</strong></p>
                       <p className="text-gray-700">{selectedInflowTransaction.invoiceId}</p>
                     </div>
                     <div className="flex justify-between">
@@ -1484,7 +1484,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="text-gray-700">{selectedInflowRow.auditor}</p>
                     </div>
                     <div className="flex justify-between">
-                      <p className="font-medium"><strong>Invoice ID:</strong></p>
+                      <p className="font-medium"><strong>P.Order ID:</strong></p>
                       <p className="text-gray-700">{selectedInflowRow.invoiceId}</p>
                     </div>
                     <div className="flex justify-between">

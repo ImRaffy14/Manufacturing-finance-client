@@ -19,7 +19,7 @@ function viewAuditHistory() {
     { name: 'Date & Time', selector: row => row.dateTime },
     { name: 'Auditor ID', selector: row => row.auditorId },
     { name: 'Auditor', selector: row => row.auditor },
-    { name: 'Invoice ID', selector: row => row.invoiceId },
+    { name: 'P.Order ID', selector: row => row.invoiceId },
     { name: 'Customer Name', selector: row => row.customerName },
     { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
     ];
@@ -105,7 +105,7 @@ function viewAuditHistory() {
             <h1 className="text-4xl font-bold text-center mb-6 text-gray-800">Audit Preview</h1>
                   <div className="space-y-4">
                     <div className="flex justify-between">
-                      <p className="font-medium"><strong>Invoice ID:</strong></p>
+                      <p className="font-medium"><strong>P.Order ID:</strong></p>
                       <p className="text-gray-700">{selectedRowData.invoiceId}</p>
                     </div>
                     <div className="flex justify-between">

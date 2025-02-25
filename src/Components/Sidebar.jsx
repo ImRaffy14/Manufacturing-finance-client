@@ -521,17 +521,6 @@ const toggleSidebar = () => {
                   </NavLink>
 
                   <NavLink
-                    to="activeStaff"
-                    className="relative flex items-center hover:text-blue-500"
-                    activeClassName="bg-gray-200"
-                  >
-                    <summary className="flex items-center">
-                      <VscVmActive className="w-5 h-5 mr-2" />
-                      Active Staffs
-                    </summary>
-                  </NavLink>
-
-                  <NavLink
                     to="commandTerminal"
                     className="relative flex items-center hover:text-blue-500"
                     activeClassName="bg-gray-200"
@@ -608,4 +597,16 @@ export default Sidebar;
     )}
   </ul>
 )}
+
+ <NavLink
+                    to="activeStaff"
+                    className="relative flex items-center hover:text-blue-500"
+                    activeClassName="bg-gray-200"
+                  >
+                    <summary className="flex items-center">
+                      <VscVmActive className="w-5 h-5 mr-2" />
+                      Active Staffs
+                    </summary>
+                  </NavLink>
+
  */

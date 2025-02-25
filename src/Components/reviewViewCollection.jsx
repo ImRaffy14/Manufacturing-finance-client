@@ -43,7 +43,7 @@ function reviewViewCollection() {
         { name: 'Date & Time', selector: row => row.dateTime },
         { name: 'Auditor ID', selector: row => row.auditorId },
         { name: 'Auditor', selector: row => row.auditor },
-        { name: 'Invoice ID', selector: row => row.invoiceId },
+        { name: 'P.Order ID', selector: row => row.invoiceId },
         { name: 'Customer Name', selector: row => row.customerName },
         { name: 'Total Amount', selector: row => formatCurrency(row.totalAmount)},
       ];
@@ -394,7 +394,7 @@ function reviewViewCollection() {
           <p className="text-gray-700">{selectedRowData.auditor}</p>
         </div>
         <div className="flex justify-between">
-          <p className="font-medium"><strong>Invoice ID:</strong></p>
+          <p className="font-medium"><strong>P.Order ID:</strong></p>
           <p className="text-gray-700">{selectedRowData.invoiceId}</p>
         </div>
         <div className="flex justify-between">
