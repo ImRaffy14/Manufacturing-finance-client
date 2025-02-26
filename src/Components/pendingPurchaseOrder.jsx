@@ -205,6 +205,7 @@ function pendingPurchaseOrder() {
 
                 <h3 className="text-lg font-bold mt-5"><strong>Delivery Information</strong></h3>
                 <p><strong>Shipping Method:</strong> {selectedRowData.shippingMethod || '01234'}</p>
+                <p><strong>Payment Method:</strong> {selectedRowData.paymentMethod || '01234'}</p>
                 <p><strong>Delivery Date:</strong> {selectedRowData.deliveryDate || '11.02.2030'}</p>
 
                 <h3 className="text-lg font-bold mt-5"><strong>Payment Terms</strong></h3>
@@ -290,6 +291,7 @@ function pendingPurchaseOrder() {
                   <div className="mt-8">
                     <p><strong>PAY TO:</strong></p>
                     <p>Shipping Method: {selectedRowData.shippingMethod || 'Standard Shipping'}</p>
+                    <p>Payment Method: {selectedRowData.paymentMethod || 'COD'}</p>
                     <p>Delivery Date: {selectedRowData.deliveryDate || '11.04.2030'}</p>
                   </div>
 

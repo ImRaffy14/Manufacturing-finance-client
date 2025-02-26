@@ -37,6 +37,7 @@ const Sidebar = ({ userData }) => {
   const [ paidLength, setPaidLength] = useState(0)
   const [ budgetLength, setBudgetLength] = useState(0)
   const [ anomalyLength, setAnomalyLength] = useState(0)
+  const [createInvoiceCount, setCreateInvoiceCount] = useState(0)
 
   const socket = useSocket()
 
@@ -49,11 +50,6 @@ const Sidebar = ({ userData }) => {
     budgetRequest: 0,
   });
 
-const initialData = [
-  { orderNumber: 1, customerId: 1, customerName: 'Daniel Mathew', customerAddress: '11 Barangay City', orderItem: 'JJM Dishwashing Soap', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 2, customerId: 2, customerName: 'Ramccom Macor', customerAddress: '12 Barangay City', orderItem: 'JJM Dishwashing Soa', contactInformation: '0909090909', createInvoice: '' },
-  { orderNumber: 3, customerId: 3, customerName: 'Tribue alab', customerAddress: '13 Barangay City', orderItem  : 'JJM Dishwashing Soa', contactInformation: '0909090909', createInvoice: '' },
-];
 
 const initialAccountRequestData = [
   { requestId: 1, accountName: 'John Doe', requestType: 'Account Creation' },
@@ -63,13 +59,11 @@ const initialAccountRequestData = [
 
 
 const fetchNotificationData = () => {
-  const createInvoiceCount = initialData.length; //DATA LENGTH
   const accountRequestCount = initialAccountRequestData.length; // ACCOUNT REQ DATA LENGTH
 
   // UPDATE
   setNotifications((prevState) => ({
     ...prevState,
-    createInvoice: createInvoiceCount,
     accountRequest: accountRequestCount,
     hasNotifications: createInvoiceCount > 0 || accountRequestCount > 0 || reviewPayableCount > 0 || reviewPaymentTransactionsCount > 0 || budgetRequestCount > 0,
   }));
@@ -82,6 +76,7 @@ useEffect(() => {
   socket.emit('get_paid_records', { msg: "get paid records length" });
   socket.emit('get_budget_request_length', { msg: "get budget request records length" });
   socket.emit('get_total_anomalies')
+  socket.emit('get_orders_length')
 
   // TRACK ACTIVE CLIENT
   socket.emit('save_active_staff', userData)
@@ -121,6 +116,11 @@ useEffect(() => {
     setAnomalyLength(total)
   }
 
+  const handleOrdersLength = (response) => {
+    setCreateInvoiceCount(response)
+  }
+
+  socket.on('receive_orders_length', handleOrdersLength)
   socket.on('receive_total_anomalies', handleTotalAnomolies)
   socket.on("receive_payable_length", handlePayableLength);
   socket.on("receive_paid_records", handlePaidRecords);
@@ -131,6 +131,7 @@ useEffect(() => {
     socket.off("receive_paid_records", handlePaidRecords);
     socket.off("receive_budget_request_length", handleBudgetRequestLength);
     socket.off("receive_total_anomalies")
+    socket.off("receive_orders_length")
   };
 
 }, [socket]);
@@ -296,7 +297,7 @@ const toggleSidebar = () => {
                     <summary>
                       <RiUserReceived2Fill className="w-5 h-5" />
                       Accounts Receivable
-                      {notifications.createInvoice > 0 && (
+                      {createInvoiceCount > 0 && (
                         <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
                       )}
                     </summary>
@@ -306,7 +307,7 @@ const toggleSidebar = () => {
                           <summary>
                             <FaFileInvoiceDollar />
                             Purchase Order
-                            {notifications.createInvoice > 0 && (
+                            {createInvoiceCount > 0 && (
                               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
                             )}
                           </summary>
@@ -314,9 +315,9 @@ const toggleSidebar = () => {
                             <li className="hover:text-blue-500">
                               <NavLink to="createPurchaseOrder" activeClassName="text-blue-500">
                                 ● Create Purchase Orders
-                                {notifications.createInvoice > 0 && (
+                                {createInvoiceCount > 0 && (
                                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 text-center leading-4 ml-2">
-                                    {notifications.createInvoice}
+                                    {createInvoiceCount}
                                   </span>
                                 )}
                               </NavLink>

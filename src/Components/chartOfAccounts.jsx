@@ -6,6 +6,7 @@ function ChartOfAccounts() {
   const [searchText, setSearchText] = useState('');
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [balance, setBalance] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
 
   const socket = useSocket()
 
@@ -44,6 +45,7 @@ function ChartOfAccounts() {
     // HANDLE CHART OF ACCOUNTS DATA
     const handleChartOfAccounts = (response) => {
       setBalance(response)
+      setIsLoading(false)
     }
 
     socket.on('receive_chart_of_account', handleChartOfAccounts)
@@ -86,6 +88,14 @@ function ChartOfAccounts() {
       value.toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-screen w-full"></div>
+      </div>
+    );
+  }
 
   return (
     <>

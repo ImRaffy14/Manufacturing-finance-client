@@ -67,6 +67,7 @@ function InvoiceDownload({ invoiceData, isSubmitted }) {
         <div className="mt-8">
           <p><strong>PAY TO:</strong></p>
           <p>Shipping Method: {invoiceData.shippingMethod || 'Standard Shipping'}</p>
+          <p>Payment Method: {invoiceData.paymentMethod || 'COD'}</p>
           <p>Delivery Date: {invoiceData.deliveryDate || '11.04.2030'}</p>
         </div>
 

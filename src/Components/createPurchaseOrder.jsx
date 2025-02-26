@@ -14,6 +14,43 @@ function createPurchaseOrder({ userData }) {
   const [items, setItems] = useState([{ itemName: '', quantity: 1, price: 0 }]);
   const [responseData, setResponseData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([])
+  const [selectedRowData, setSelectedRowData] = useState([])
+
+  const defaultTerms = `These are the terms and conditions:
+  - All purchases are final.
+  - No refunds after 30 days.
+  - Users must agree to the privacy policy.
+  `;
+  
+  const invoiceRef = useRef(null);
+
+  const itemOptions = [
+    { label: 'JJM Calamansi Dishwashing Liquid', value: 'soap_a', price: 28 },
+    { label: 'JJM Lemon Dishwashing Liquid', value: 'soap_b', price: 25 },
+    { label: 'JJM Antibac Fabric Conditioner', value: 'soap_c', price: 35 },
+    { label: 'JJM Calamansi Dishwashing Past', value: 'soap_d', price: 55 },
+  ];
+  
+  const [formData, setFormData] = useState({
+    customerName: '',
+    customerAddress: '',
+    customerContact: 0,
+    customerId: '',
+    orderNumber: '',
+    orderDate: '',
+    shippingMethod: '',
+    deliveryDate: '',
+    paymentMethod: '',
+    items: [{ itemName: '', quantity: 1, price: 0 }],
+    invoiceDate: '',
+    dueDate: '',
+    subtotal: 0,
+    discounts: 0,
+    totalAmount: 0,
+    terms: defaultTerms,
+    notes: '',
+  });
 
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
@@ -26,229 +63,47 @@ function createPurchaseOrder({ userData }) {
     { name: 'Customer ID', selector: row => row.customerId },
     { name: 'Customer Name', selector: row => row.customerName },
     { name: 'Customer Address', selector: row => row.customerAddress },
-    { name: 'Orders', selector: row => row.orderItem },
+    { name: 'Orders', selector: row => (
+      <ul>
+        {row.orders.map((item, index) => (
+      <li key={index}>[Product: {item.itemName} Quantity: {item.quantity} Price: {item.price}]</li>
+    ))}
+      </ul>
+    ) },
     { name: 'Contact Information', selector: row => row.contactInformation },
+    { name: 'Order Date', selector: row => row.orderDate },
+    { name: 'Delivery Date', selector: row => row.deliveryDate },
+    { name: 'Shipping Method', selector: row => row.shippingMethod },
+    { name: 'Payment Method', selector: row => row.paymentMethod },
     {
       name: 'Create Purchase Order',
       selector: row => (
         <a className="text-4xl">
           <IoCreateOutline
             className="hover:cursor-pointer"
-            onClick={() => document.getElementById('invoice_modal').showModal()}
+            onClick={() => {document.getElementById('invoice_modal').showModal()
+            setFormData((prevData) => ({
+              ...prevData,
+              customerAddress: row.customerAddress,
+              customerName: row.customerName,
+              customerId: row.customerId,
+              orderNumber: row.orderNumber,
+              customerContact: row.contactInformation,
+              orderDate: row.orderDate,
+              shippingMethod: row.shippingMethod,
+              paymentMethod: row.paymentMethod,
+              deliveryDate: row.deliveryDate,
+              items: row.orders.map(order => ({
+                itemName: order.itemName,
+                quantity: order.quantity,
+                price: order.price
+              }))
+            }))
+          }}
           />
         </a>
       ),
     },
-  ];
-
-  const data = [
-    {
-      orderNumber: 1,
-      customerId: 1,
-      customerName: 'Nathaniel Oxford',
-      customerAddress: '01 Commonwealth Townhomes, Feria, Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0909090909',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 2,
-      customerId: 2,
-      customerName: 'Daniel Parker',
-      customerAddress: '14 Commonwealth Townhomes, Feria, Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0909090909',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 3,
-      customerId: 3,
-      customerName: 'Joshua Moralese',
-      customerAddress: '26 Commonwealth Townhomes, Feria, Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0909090909',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 4,
-      customerId: 4,
-      customerName: 'Sarah Williams',
-      customerAddress: '19 Bonifacio St., Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0912123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 5,
-      customerId: 5,
-      customerName: 'John Smith',
-      customerAddress: '23 Manila Ave, Makati, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0917123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 6,
-      customerId: 6,
-      customerName: 'Maria Garcia',
-      customerAddress: '45 Quezon St., Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0922123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 7,
-      customerId: 7,
-      customerName: 'Paul Richards',
-      customerAddress: '10 Sampaguita St., San Juan, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0933123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 8,
-      customerId: 8,
-      customerName: 'Emily Johnson',
-      customerAddress: '21 Rosa St., Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0928123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 9,
-      customerId: 9,
-      customerName: 'James Thompson',
-      customerAddress: '33 Maharlika Village, Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0919123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 10,
-      customerId: 10,
-      customerName: 'Jessica Clark',
-      customerAddress: '18 Sunflower St., Caloocan, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0912123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 11,
-      customerId: 11,
-      customerName: 'Michael Williams',
-      customerAddress: '40 Dapitan St., Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0924123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 12,
-      customerId: 12,
-      customerName: 'Rachel Johnson',
-      customerAddress: '15 Antonio St., Marikina, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0936123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 13,
-      customerId: 13,
-      customerName: 'David Kim',
-      customerAddress: '22 Pangarap St., Taguig, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0906123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 14,
-      customerId: 14,
-      customerName: 'Sophia Lee',
-      customerAddress: '50 Malaya St., Pasig, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0923123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 15,
-      customerId: 15,
-      customerName: 'Andrew Clark',
-      customerAddress: '30 Tandang Sora, Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0915123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 16,
-      customerId: 16,
-      customerName: 'Olivia Wilson',
-      customerAddress: '11 Fairview Ave, Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0908123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 17,
-      customerId: 17,
-      customerName: 'Benjamin Scott',
-      customerAddress: '77 Rizal St., Makati, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0919123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 18,
-      customerId: 18,
-      customerName: 'Isabella Evans',
-      customerAddress: '29 Quezon Ave, Quezon City, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0920123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 19,
-      customerId: 19,
-      customerName: 'Lucas Martinez',
-      customerAddress: '31 Victory St., Taguig, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0907123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 20,
-      customerId: 20,
-      customerName: 'Charlotte Taylor',
-      customerAddress: '12 Calamba St., San Juan, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0925123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 21,
-      customerId: 21,
-      customerName: 'Ella Green',
-      customerAddress: '10 San Pedro St., Mandaluyong, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0932123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 22,
-      customerId: 22,
-      customerName: 'Henry Harris',
-      customerAddress: '5 Moon St., Paranaque, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0918123456',
-      createInvoice: '',
-    },
-    {
-      orderNumber: 23,
-      customerId: 23,
-      customerName: 'Grace Robinson',
-      customerAddress: '17 Marigold St., Pasig, Metro Manila',
-      orderItem: 'JJM Calamansi Dishwashing Liquid',
-      contactInformation: '0915123456',
-      createInvoice: '',
-    }
   ];
   
 
@@ -262,39 +117,6 @@ function createPurchaseOrder({ userData }) {
     )
   );
 
-  const defaultTerms = `These are the terms and conditions:
-  - All purchases are final.
-  - No refunds after 30 days.
-  - Users must agree to the privacy policy.
-  `;
-  
-  const invoiceRef = useRef(null);
-  
-  const [formData, setFormData] = useState({
-    customerName: '',
-    customerAddress: '',
-    customerContact: 0,
-    customerId: '',
-    orderNumber: 0,
-    orderDate: '',
-    shippingMethod: '',
-    deliveryDate: '',
-    items: [{ itemName: '', quantity: 1, price: 0 }],
-    invoiceDate: '',
-    dueDate: '',
-    subtotal: 0,
-    discounts: 0,
-    totalAmount: 0,
-    terms: defaultTerms,
-    notes: '',
-  });
-
-  const itemOptions = [
-    { label: 'JJM Calamansi Dishwashing Liquid', value: 'soap_a', price: 28 },
-    { label: 'JJM Lemon Dishwashing Liquid', value: 'soap_b', price: 25 },
-    { label: 'JJM Antibac Fabric Conditioner', value: 'soap_c', price: 35 },
-    { label: 'JJM Calamansi Dishwashing Past', value: 'soap_d', price: 55 },
-  ];
 
   useEffect(() => {
     calculateTotal();
@@ -357,43 +179,21 @@ function createPurchaseOrder({ userData }) {
     }));
   };
 
-  const validateItems = () => {
-    return formData.items.every(item =>
-      itemOptions.some(option => option.label === item.itemName)
-    );
-  };
 
   const validateForm = () => {
     const {
-      customerName,
-      customerAddress,
-      customerContact,
-      orderNumber,
-      orderDate,
-      shippingMethod,
-      deliveryDate,
       items,
       invoiceDate,
       dueDate,
     } = formData;
   
     if (
-      !customerName ||
-      !customerAddress ||
-      !customerContact ||
-      !orderNumber ||
-      !orderDate ||
-      !shippingMethod ||
-      !deliveryDate ||
       !invoiceDate ||
       !dueDate
     ) {
       return false;
     }
   
-    if (!validateItems()) {
-      return false;
-    }
   
     if (
       items.length === 0 ||
@@ -406,6 +206,7 @@ function createPurchaseOrder({ userData }) {
   };
 
   const handleViewPreview = () => {
+    console.log(formData)
     if (validateForm()) {
       document.getElementById('preview_modal').showModal();
     } else {
@@ -449,6 +250,8 @@ function createPurchaseOrder({ userData }) {
 
   // RESPONSE FROM SUBMITTED INVOICE RECORD
   useEffect(() => {
+    socket.emit("get_orders")
+
     socket.on("response_create_invoice", (response) => {
       setResponseData(response);
       setIsSubmitted(true); 
@@ -470,9 +273,18 @@ function createPurchaseOrder({ userData }) {
       socket.emit("addAuditTrails", invoiceTrails);
     });
 
+
+    // HANDLE GET ORDERS
+    const getOrders = (response) => {
+      setData(response)
+    }
+ 
+    socket.on("receive_orders", getOrders)
+
     return () => {
       socket.off("response_create_invoice");
       socket.off("trails_error");
+      socket.off("receive_orders")
     };
   }, [socket, userData]);
 
@@ -533,7 +345,7 @@ function createPurchaseOrder({ userData }) {
                     onChange={handleChange}
                     className="border px-4 py-2 w-full rounded"
                     placeholder="Enter customer name"
-                    required
+                    readOnly
                   />
                 </div>
                 <div>
@@ -545,7 +357,7 @@ function createPurchaseOrder({ userData }) {
                     onChange={handleChange}
                     className="border px-4 py-2 w-full rounded"
                     placeholder="Enter customer address"
-                    required
+                    readOnly
                   />
                 </div>
                 <div>
@@ -557,7 +369,7 @@ function createPurchaseOrder({ userData }) {
                     onChange={handleChange}
                     className="border px-4 py-2 w-full rounded"
                     placeholder="Enter contact info"
-                    required
+                    readOnly
                   />
                 </div>
                 <div>
@@ -569,7 +381,7 @@ function createPurchaseOrder({ userData }) {
                     onChange={handleChange}
                     className="border px-4 py-2 w-full rounded"
                     placeholder="Enter customer ID"
-                    required
+                    readOnly
                   />
                 </div>
               </div>
@@ -586,7 +398,7 @@ function createPurchaseOrder({ userData }) {
                     onChange={handleChange}
                     className="border px-4 py-2 w-full rounded"
                     placeholder="Enter order number"
-                    required
+                    readOnly
                   />
                 </div>
                 <div>
@@ -597,7 +409,7 @@ function createPurchaseOrder({ userData }) {
                     value={formData.orderDate}
                     onChange={handleChange}
                     className="border px-4 py-2 w-full rounded"
-                    required
+                    readOnly
                   />
                 </div>
                 <div>
@@ -609,7 +421,18 @@ function createPurchaseOrder({ userData }) {
                     onChange={handleChange}
                     className="border px-4 py-2 w-full rounded"
                     placeholder="Enter shipping method"
-                    required
+                    readOnly
+                  />
+                </div>
+                <div>
+                  <label className="block mb-2 font-semibold">Payment Method</label>
+                  <input
+                    type="text"
+                    name="paymentMethod"
+                    value={formData.paymentMethod}
+                    onChange={handleChange}
+                    className="border px-4 py-2 w-full rounded"
+                    readOnly
                   />
                 </div>
                 <div>
@@ -620,39 +443,25 @@ function createPurchaseOrder({ userData }) {
                     value={formData.deliveryDate}
                     onChange={handleChange}
                     className="border px-4 py-2 w-full rounded"
-                    required
+                    readOnly
                   />
                 </div>
               </div>
 
               {/* Items Information */}
               <h3 className="text-lg font-semibold mb-4">Items</h3>
-              <button
-                type="button"
-                onClick={addItem}
-                className="mb-8 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Add Item
-              </button>
               <div className="grid grid-cols-2 gap-4 mb-6">
                 {formData.items.map((item, index) => (
                   <div key={index} className="flex items-center space-x-4 mb-2 bg-gray-100 rounded-lg p-3">
                     <div className="flex-1">
                       <label className="block mb-1 font-semibold">Item</label>
-                      <select
+                      <input
+                        type="text"
                         name="itemName"
                         value={item.itemName}
-                        onChange={(e) => handleItemChange(index, e)}
-                        className="border px-4 py-2 w-[140px] rounded"
-                        required
-                      >
-                        <option value="NONE">Select Item</option>
-                        {itemOptions.map((option, i) => (
-                          <option key={i} value={option.label}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
+                        readOnly
+                        className="border px-4 py-2 w-[200px] rounded"
+                      />
                     </div>
 
                     <div>
@@ -661,7 +470,7 @@ function createPurchaseOrder({ userData }) {
                         type="number"
                         name="quantity"
                         value={item.quantity}
-                        onChange={(e) => handleQuantityChange(index, e)}
+                        readOnly
                         className="border px-4 py-2 w-full rounded"
                         min="1"
                       />
@@ -676,14 +485,6 @@ function createPurchaseOrder({ userData }) {
                         className="border px-4 py-2 w-full rounded bg-gray-200"
                       />
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => removeItem(index)}
-                      className="text-red-600 font-semibold"
-                    >
-                      Remove
-                    </button>
                   </div>
                 ))}
               </div>
@@ -803,6 +604,7 @@ function createPurchaseOrder({ userData }) {
               <p><strong>Order Number:</strong> {formData.orderNumber}</p>
               <p><strong>Order Date:</strong> {formData.orderDate}</p>
               <p><strong>Shipping Method:</strong> {formData.shippingMethod}</p>
+              <p><strong>Payment Method:</strong> {formData.paymentMethod}</p>
               <p><strong>Delivery Date:</strong> {formData.deliveryDate}</p>
             </div>
             <div className="mb-4">

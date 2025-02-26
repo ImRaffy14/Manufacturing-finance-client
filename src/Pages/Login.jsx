@@ -64,10 +64,12 @@ function Login() {
         if (timeLeft <= 0) return;
     
         const timer = setInterval(() => {
-          setTimeLeft((prevTime) => prevTime - 1000); 
+          setTimeLeft((prevTime) => prevTime - 1000);
         }, 1000);
     
-        return () => clearInterval(timer);
+        return () => {
+            clearInterval(timer)
+        };
       }, [timeLeft]);
 
     // BLACKLISTED TIME FORMAT
@@ -302,6 +304,8 @@ function Login() {
         }
     }, [otp])
 
+    
+
     return (
         <>
                 {showTermsModal && (
@@ -365,13 +369,13 @@ function Login() {
                                 />
                             </div>
                             <div className="flex">
-                                <p className="text-blue-500 font-bold text-sm hover:text-blue-800 cursor-pointer"
+                                <p className="text-blue-500 font-semibold text-md hover:text-blue-800 cursor-pointer mb-2"
                                 onClick={()=>document.getElementById('terms_modal').showModal()}
                                 >Terms and conditions</p>
                             </div>
 
 
-                            {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage} <span>{timeLeft !== 1 ? formatTimeBL(timeLeft) !== 1 ? formatTimeBL(timeLeft) : ' ': ''}</span></h1>}
+                            {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage} <span>{timeLeft <= 0 ? '' : formatTimeBL(timeLeft) }</span></h1>}
                             {isNoLongerBL && <h1 className="text-green-500 mb-4">{isNoLongerBL}</h1> }
 
                             <div className="flex justify-between items-center border px-2">

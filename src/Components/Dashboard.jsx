@@ -21,6 +21,7 @@ function Dashboard() {
   const [pendingPayables, setPendingPayables] = useState(0);
   const [invoicePending, setInvoicePending] = useState(0);
   const [totalAnomalies, setTotalAnomaliesa] = useState(0)
+  const [invoiceRequests, setInvoiceRequests] = useState(0)
   const [saleVolume, setSaleVolume] = useState([]);
   const [netIncome, setNetIncome] = useState([]);
   const [collectionAnalytics, setCollectionAnalytics] = useState(null);
@@ -30,11 +31,6 @@ function Dashboard() {
 
   const socket = useSocket();
 
-  const [dashboardData, setDashboardData] = useState({
-    accountRequests: 50,
-    invoiceRequests: 120,
-    detectedAnomalies: 10,
-  });
 
   const formatDateString = (dateString) => {
     if (!dateString) return 'Unknown Date';
@@ -59,6 +55,7 @@ function Dashboard() {
     socket.emit("get_dashboard_analytics", { msg: "get dashboard analytics" });
     socket.emit("get_collection_analytics", { msg: "get collection analytics" });
     socket.emit('get_total_anomalies')
+    socket.emit('get_orders_length')
 
   }, [socket]);
 
@@ -106,6 +103,12 @@ function Dashboard() {
       setTotalAnomaliesa(total)
     }
 
+    const handleTotalInvoiceRequests = (response) => {
+      setInvoiceRequests(response)
+    }
+
+
+    socket.on('receive_orders_length', handleTotalInvoiceRequests)
     socket.on('receive_total_anomalies', handleTotalAnomolies)
     socket.on("receive_payable_length", handlePayableLength);
     socket.on("receive_budget_request_length", handleBudgetRequestLength);
@@ -120,6 +123,7 @@ function Dashboard() {
       socket.off("receive_dashboard_analytics");
       socket.off("receive_collection_analytics");
       socket.off("receive_total_anomalies")
+      socket.off('receive_orders_length')
     };
   }, [socket]);
 
@@ -148,7 +152,7 @@ function Dashboard() {
                 </div>
                 <div className="flex gap-3 my-3">
                   <FaFileInvoiceDollar className="text-blue-600 text-2xl my-2" />
-                  <p className="text-4xl text-black font-bold">{dashboardData.invoiceRequests}</p>
+                  <p className="text-4xl text-black font-bold">{invoiceRequests}</p>
                 </div>
               </div>
             </Link>
