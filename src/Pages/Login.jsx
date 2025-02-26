@@ -364,6 +364,12 @@ function Login() {
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
+                            <div className="flex">
+                                <p className="text-blue-500 font-bold text-sm hover:text-blue-800 cursor-pointer"
+                                onClick={()=>document.getElementById('terms_modal').showModal()}
+                                >Terms and conditions</p>
+                            </div>
+
 
                             {errorMessage && <h1 className="text-red-500 mb-4">{errorMessage} <span>{timeLeft !== 1 ? formatTimeBL(timeLeft) !== 1 ? formatTimeBL(timeLeft) : ' ': ''}</span></h1>}
                             {isNoLongerBL && <h1 className="text-green-500 mb-4">{isNoLongerBL}</h1> }
@@ -407,6 +413,25 @@ function Login() {
                 </div>
             </div>
             )}
+
+            <dialog id="terms_modal" className="modal">
+                    <div className="modal-box w-full max-w-[900px] rounded-xl shadow-2xl bg-white p-10">
+                        <h2 className="text-2xl font-bold mb-4">Terms and Conditions</h2>
+                        <p className="text-md text-gray-700 mb-6 text-left">
+                            Welcome to our financial management system. Your security is our priority, and we collect IP addresses for security purposes, anomaly detection, and monitoring unauthorized access attempts. By accessing this system, you agree to comply with the following terms:
+                        </p>
+                        <ul className="text-md text-gray-700 text-left list-disc pl-6 mb-6">
+                            <li>Your IP address will be recorded for security and auditing purposes.</li>
+                            <li>You must not share your login credentials with anyone.</li>
+                            <li>Unauthorized access attempts may result in account suspension.</li>
+                            <li>All transactions are logged and monitored for security purposes.</li>
+                            <li>By proceeding, you confirm that you understand and accept these terms.</li>
+                        </ul>
+                    </div>
+            <form method="dialog" className="modal-backdrop">
+                <button>close</button>
+            </form>
+            </dialog>
 
             {/* MFA MODAL */}
             <dialog id="mfa_modal" className="modal modal-bottom sm:modal-middle">

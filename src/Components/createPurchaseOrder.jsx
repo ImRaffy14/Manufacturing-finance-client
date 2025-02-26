@@ -575,7 +575,7 @@ function createPurchaseOrder({ userData }) {
               </div>
 
               {/* Order Details */}
-              <h3 className="text-lg font-semibold mb-4">Order Details</h3>
+              <h3 className="text-lg font-semibold mb-4">Order Information</h3>
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div>
                   <label className="block mb-2 font-semibold">Order Number</label>
@@ -689,10 +689,10 @@ function createPurchaseOrder({ userData }) {
               </div>
 
               {/* Invoice Details */}
-              <h3 className="text-lg font-semibold mb-4">Order Details</h3>
+              <h3 className="text-lg font-semibold mb-4">Purchase Order Details</h3>
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div>
-                  <label className="block mb-2 font-semibold">Order Date</label>
+                  <label className="block mb-2 font-semibold">P. Order Date</label>
                   <input
                     type="date"
                     name="invoiceDate"
