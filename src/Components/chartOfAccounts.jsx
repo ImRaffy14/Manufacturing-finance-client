@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSocket } from "../context/SocketContext"
 import DataTable from 'react-data-table-component';
+import { FaRedo } from "react-icons/fa";
 
 function ChartOfAccounts() {
   const [searchText, setSearchText] = useState('');
@@ -112,13 +113,21 @@ function ChartOfAccounts() {
                 pointerOnHover
                 subHeader
                 subHeaderComponent={
+                <div className="flex items-center gap-2">
                   <input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchText}
-                    onChange={handleSearch}
-                    className="mb-2 p-2 border border-gray-400 rounded-lg"
+                      type="text"
+                      placeholder="Search..."
+                      value={searchText}
+                      onChange={handleSearch}
+                      className="p-2 border border-gray-400 rounded-lg"
                   />
+                  <button 
+                      className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+                      title="Reload"
+                  >
+                      <FaRedo className="text-gray-700" />
+                  </button>
+              </div>
                 }
                 onRowClicked={handleRowClick}
               />
