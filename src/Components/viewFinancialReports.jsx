@@ -55,49 +55,43 @@ const viewFinancialReports = ({userData}) => {
   };
 
 
-  const exportToPDF = () => {
+  const exportToPDF = async () => {
     const exportBtn = document.getElementById('export-button');
     exportBtn.style.display = 'none';
-  
+
     const pdf = new jsPDF('p', 'mm', 'a4');
     const sections = [
-      document.getElementById('report-header-and-narrative-balance-sheet'), // PAGE 1
-      document.getElementById('income-statement-and-cash-flow'),            // PAGE 2
+        document.getElementById('report-header-and-narrative-balance-sheet'),
+        document.getElementById('income-statement-and-cash-flow'),
     ];
-  
-    const captureSection = (section, isLastSection, callback) => {
-      if (!section) {
-        console.error('Invalid section element. Skipping this section.');
-        callback();
-        return;
-      }
-  
-      html2canvas(section, { scale: 3, useCORS: true }).then((canvas) => {
+
+    const captureSection = async (section, isLastSection) => {
+        if (!section) return;
+
+        const canvas = await html2canvas(section, { scale: 3, useCORS: true });
         const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 210; 
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
-        pdf.addImage(imgData, 'PNG', 0, 10, imgWidth, imgHeight);
-        if (!isLastSection) pdf.addPage();
-  
-        callback();
-      }).catch((error) => {
-        console.error('Error capturing section:', error);
-        callback();
-      });
+
+        let imgWidth = 210; 
+        let imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let pageHeight = 297;
+        let yPosition = 10; 
+
+        while (imgHeight > 0) {
+            pdf.addImage(imgData, 'PNG', 0, yPosition, imgWidth, Math.min(imgHeight, pageHeight - yPosition));
+            imgHeight -= pageHeight - yPosition;
+            if (imgHeight > 0) pdf.addPage(); 
+            yPosition = 10; 
+        }
+
+        if (!isLastSection && imgHeight > 0) pdf.addPage();
     };
-  
-    const processSections = (index) => {
-      const isLastSection = index === sections.length - 1;
-      if (index < sections.length) {
-        captureSection(sections[index], isLastSection, () => processSections(index + 1));
-      } else {
-        pdf.save(`${currentDate}-financial-report.pdf`);
-        exportBtn.style.display = 'block';
-      }
-    };
-  
-    processSections(0);
+
+    for (let i = 0; i < sections.length; i++) {
+        await captureSection(sections[i], i === sections.length - 1);
+    }
+
+    pdf.save(`${currentDate}-financial-report.pdf`);
+    exportBtn.style.display = 'block';
   };
   
   if (isLoading) {
