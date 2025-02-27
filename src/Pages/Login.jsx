@@ -25,6 +25,14 @@ function Login() {
     const [timeLeft, setTimeLeft] = useState(0)
     const [showTermsModal, setShowTermsModal] = useState(true);
 
+    // CHECK IF ALREADY ACCEPTED THE TERMS AND CONDITION
+    useEffect(() => {
+        const result = localStorage.getItem("isAccepted")
+        if(result){
+            setShowTermsModal(false)
+        }
+    }, [])
+
     useEffect(() => {
         if (showTermsModal) {
             document.body.style.overflow = 'hidden';
@@ -304,7 +312,11 @@ function Login() {
         }
     }, [otp])
 
-    
+    // HANDLE TERMS AND CONDITION
+    const handleTermsAndCondition = () => {
+        localStorage.setItem('isAccepted', true)
+        setShowTermsModal(false)
+    }
 
     return (
         <>
@@ -323,7 +335,7 @@ function Login() {
                             <li>By proceeding, you confirm that you understand and accept these terms.</li>
                         </ul>
                         <button
-                            onClick={() => setShowTermsModal(false)}
+                            onClick={handleTermsAndCondition}
                             className="btn btn-primary w-full py-3 text-lg"
                         >
                             Accept

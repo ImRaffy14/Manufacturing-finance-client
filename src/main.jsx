@@ -5,7 +5,5 @@ import './index.css'
 import { SocketProvider } from './context/SocketContext.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
       <App />
-  </StrictMode>,
 )
