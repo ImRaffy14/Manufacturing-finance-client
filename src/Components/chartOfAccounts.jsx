@@ -57,6 +57,12 @@ function ChartOfAccounts() {
 
   }, [socket])
 
+  // HANDLE RELOAD
+  const handleReload = () => {
+    socket.emit("get_chart_of_account")
+    setIsLoading(true)
+  }
+
   const data = [
     {  accountCode: "101", accountName: "Total Cash", category: "Asset", subCategory: "Current Asset", description: 'Cash Available Operations' ,balance: balance.totalCash, },
     {  accountCode: "201", accountName: "Accounts Payable-Raw Materials", category: "Liability", subCategory: "Current Liability" ,description: 'Amount owed for procured raw materials', balance: balance.payableRawMaterials,  },
@@ -124,6 +130,7 @@ function ChartOfAccounts() {
                   <button 
                       className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
                       title="Reload"
+                      onClick={handleReload}
                   >
                       <FaRedo className="text-gray-700" />
                   </button>
