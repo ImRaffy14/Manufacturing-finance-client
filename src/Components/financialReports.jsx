@@ -9,6 +9,7 @@ function FinancialReports({ userData }) {
 
   const [searchText, setSearchText] = useState('');
   const [data, setData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   
   const formatCurrency = (value) => {
     return `₱${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
@@ -40,6 +41,7 @@ function FinancialReports({ userData }) {
 
     const handleFinancialReport = (response) => {
       setData(response)
+      setIsLoading(false)
     }
 
     socket.on('receive_financial_report', handleFinancialReport)
@@ -62,6 +64,14 @@ function FinancialReports({ userData }) {
   const handleRowClick = (row) => {
     navigate('/Dashboard/viewFinancialReports', { state: { rowData: row } });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-screen w-full"></div>
+      </div>
+    );
+  }
 
   return (
     <>
