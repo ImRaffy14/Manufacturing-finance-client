@@ -5,10 +5,12 @@ import { toast } from 'react-toastify';
 import BackgroundImage from '../assets/BG.jpg';
 import Recaptcha from '../assets/recaptcha.png'
 import axios from 'axios'
+import DOMPurify from 'dompurify';
 import ReCAPTCHA from 'react-google-recaptcha';
 import OTP from '../assets/OTP.png'
 
 function Login() {
+    const sanitizeInput = (input) => DOMPurify.sanitize(input);
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -24,6 +26,21 @@ function Login() {
     const [timer, setTimer] = useState(300);
     const [timeLeft, setTimeLeft] = useState(0)
     const [showTermsModal, setShowTermsModal] = useState(true);
+
+    //SANITIZE
+    const handleUsernameChange = (e) => {
+        const value = e.target.value;
+        if (/^[a-zA-Z0-9_]*$/.test(value)) {
+            setUserName(value);
+        }
+    };
+
+    const handlePasswordChange = (e) => {
+        const value = e.target.value;
+        if (/^[a-zA-Z0-9!@#$%^&*()_+={}\[\]:;"'<>,.?/-]{6,}$/.test(value)) {
+            setPassword(value);
+        }
+    };
 
     // CHECK IF ALREADY ACCEPTED THE TERMS AND CONDITION
     useEffect(() => {
@@ -363,7 +380,7 @@ function Login() {
                                     className="input input-bordered w-full py-3 px-4 text-lg border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                                     required
                                     value={userName}
-                                    onChange={(e) => setUserName(e.target.value)}
+                                    onChange={(e) => setUserName(sanitizeInput(e.target.value))}
                                 />
                             </div> 
 
@@ -377,7 +394,7 @@ function Login() {
                                     className="input input-bordered w-full py-3 px-4 text-lg border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                                     required
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) => setPassword(sanitizeInput(e.target.value))}
                                 />
                             </div>
                             <div className="flex">

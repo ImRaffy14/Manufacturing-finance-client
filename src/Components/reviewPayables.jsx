@@ -240,7 +240,7 @@ function reviewPayables() {
           <div className="mx-4">
             <div className="overflow-x-auto w-full">
               <DataTable
-                title="Pending Payables"
+                title="Pending Budget Requests"
                 columns={columns}
                 data={filteredData}
                 pagination

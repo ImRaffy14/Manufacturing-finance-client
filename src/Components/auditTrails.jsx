@@ -125,9 +125,12 @@ function AuditTrails() {
                       <p className="font-medium"><strong>Action:</strong></p>
                       <p className="text-gray-700">{selectedRowData.action}</p>
                     </div>
-                    <div className="flex justify-between">
-                      <p className="font-medium"><strong>Description:</strong></p>
-                      <p className="text-gray-700 max-w-xl text-justify">
+                    <div className="border-b-2 border-gray-500"></div>
+                    <div className="flex justify-center mb-4">
+                      <p className="font-medium text-lg"><strong>Description:</strong></p>
+                    </div>
+                    <div className="flex justify-center mb-4">
+                      <p className="text-gray-700 w-full h-28 overflow-y-auto break-words text-center">
                         {selectedRowData.description}
                       </p>
                     </div>

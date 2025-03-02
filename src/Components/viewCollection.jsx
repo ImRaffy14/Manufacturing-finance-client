@@ -393,7 +393,7 @@ if (isLoading) {
         </div>
       </div>
 
-      {(userData.role === 'ADMIN')  && (
+      {(userData.role === 'ADMIN' || userData.role === 'SUPER ADMIN')  && (
       <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
         <div className="flex items-center justify-between">
           <p className="text-gray-600 font-semibold text-sm">Cash Deposit</p>
@@ -406,7 +406,7 @@ if (isLoading) {
       </div>
           )}
 
-      {(userData.role === 'ADMIN')  && (
+      {(userData.role === 'ADMIN' || userData.role === 'SUPER ADMIN')  && (
       <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
         <div className="flex items-center justify-between">
           <p className="text-gray-600 font-semibold text-sm">Cash Withdrawal</p>

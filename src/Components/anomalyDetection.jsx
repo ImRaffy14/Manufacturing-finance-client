@@ -1711,7 +1711,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium text-lg"><strong>Description:</strong></p>
                     </div>
                     <div className="flex justify-center mb-4">
-                      <p className="text-gray-700 w-full h-28 overflow-y-auto break-words">
+                      <p className="text-gray-700 w-full h-28 overflow-y-auto break-words text-center">
                         {selectedFlaggedAnomaly.description}
                       </p>
                     </div>
@@ -1729,7 +1729,7 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
                       <p className="font-medium text-lg"><strong>Resolution Action:</strong></p>
                     </div>
                     <div className="flex justify-center mb-4">
-                      <p className="text-gray-700 w-full h-32 overflow-y-auto break-words">
+                      <p className="text-gray-700 w-full h-32 overflow-y-auto break-words text-center">
                         {selectedFlaggedAnomaly.resolutionAction}
                       </p>
                     </div>
