@@ -571,6 +571,8 @@ if (isLoading) {
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="number" 
         placeholder="PHP"
+        min="1" 
+        max="500000"
         value={withdrawAmount}
         onChange={(e) => setWithdrawAmount(e.target.value)}
         required
@@ -652,6 +654,8 @@ if (isLoading) {
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="number" 
         placeholder="PHP"
+        min="1" 
+        max="500000"
         value={depositAmount}
         onChange={(e) => setDepositAmount(e.target.value)}
         required
