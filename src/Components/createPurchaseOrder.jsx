@@ -392,7 +392,7 @@ function createPurchaseOrder({ userData }) {
                 <div>
                   <label className="block mb-2 font-semibold">Order Number</label>
                   <input
-                    type="number"
+                    type="text"
                     name="orderNumber"
                     value={formData.orderNumber}
                     onChange={handleChange}
