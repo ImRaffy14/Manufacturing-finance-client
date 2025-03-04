@@ -278,13 +278,22 @@ function createPurchaseOrder({ userData }) {
     const getOrders = (response) => {
       setData(response)
     }
- 
+
+    socket.on("invoice_error", (response) => {
+      setIsPreview(false);
+      setIsLoading(false);
+      toast.error(response.message, {
+        position: "top-right",
+      });
+    });
+
     socket.on("receive_orders", getOrders)
 
     return () => {
       socket.off("response_create_invoice");
       socket.off("trails_error");
-      socket.off("receive_orders")
+      socket.off("receive_orders");
+      socket.off("invoice_error");
     };
   }, [socket, userData]);
 

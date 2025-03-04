@@ -157,6 +157,18 @@ function Dashboard() {
               </div>
             </Link>
 
+            <Link to="/Dashboard/pendingPurchaseOrder">
+              <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
+                <div className="flex items-center justify-between">
+                  <p className="text-black font-semibold text-md">On Process Purchase Orders</p>
+                </div>
+                <div className="flex gap-3 my-3">
+                  <FiRepeat className="text-green-600 text-2xl my-2" />
+                  <p className="text-4xl text-black font-bold">{invoicePending}</p>
+                </div>
+              </div>
+            </Link>
+
             <Link to="/Dashboard/reviewPayables">
               <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
                 <div className="flex items-center justify-between">
@@ -177,18 +189,6 @@ function Dashboard() {
                 <div className="flex gap-3 my-3">
                   <FaMoneyCheckDollar className="text-blue-600 text-2xl my-2" />
                   <p className="text-4xl text-black font-bold">{budgetRequest}</p>
-                </div>
-              </div>
-            </Link>
-
-            <Link to="/Dashboard/pendingPurchaseOrder">
-              <div className="bg-white shadow-xl w-[280px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
-                <div className="flex items-center justify-between">
-                  <p className="text-black font-semibold text-md">On Process Purchase Orders</p>
-                </div>
-                <div className="flex gap-3 my-3">
-                  <FiRepeat className="text-green-600 text-2xl my-2" />
-                  <p className="text-4xl text-black font-bold">{invoicePending}</p>
                 </div>
               </div>
             </Link>
