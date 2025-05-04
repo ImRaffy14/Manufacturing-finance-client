@@ -396,12 +396,12 @@ if (isLoading) {
       {(userData.role === 'ADMIN' || userData.role === 'SUPER ADMIN')  && (
       <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
         <div className="flex items-center justify-between">
-          <p className="text-gray-600 font-semibold text-sm">Cash Deposit</p>
+          <p className="text-gray-600 font-semibold text-sm">Cash Imbursement</p>
           <PiHandDeposit className="text-green-600 text-xl" />
         </div>
         <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('deposit_modal').showModal()}>
           <FaRegPlusSquare className="text-green-600 text-2xl my-2" />
-          <p className="text-3xl font-bold">Deposit</p>
+          <p className="text-3xl font-bold">Imbursement</p>
         </div>
       </div>
           )}
@@ -409,21 +409,21 @@ if (isLoading) {
       {(userData.role === 'ADMIN' || userData.role === 'SUPER ADMIN')  && (
       <div className="bg-white shadow-lg w-[280px] p-5 rounded-lg mt-10 transition-transform transform hover:scale-105  hover:shadow-xl">
         <div className="flex items-center justify-between">
-          <p className="text-gray-600 font-semibold text-sm">Cash Withdrawal</p>
+          <p className="text-gray-600 font-semibold text-sm">Cash Disbursement</p>
           <PiHandWithdraw className="text-red-600 text-xl" />
         </div>
         <div className="flex gap-3 my-3 hover:cursor-pointer"  onClick={() => document.getElementById('withdraw_modal').showModal()}>
           <FaRegMinusSquare className="text-red-600 text-2xl my-2" />
-          <p className="text-3xl font-bold">Withdraw</p>
+          <p className="text-3xl font-bold">Disbursement</p>
         </div>
       </div>
           )}
-     </div>
+    </div>
 
       {/* FINANCIAL CHART */}
     <div className="bg-white/75 shadow-xl rounded-lg p-6 mt-7">
       <h1 className="text-xl font-bold">Month of {currentMonth}</h1>
-   <div className="flex flex-wrap gap-4">
+    <div className="flex flex-wrap gap-4">
   {/* REVENUE CARD */}
   <div className="bg-white/75 shadow-xl w-full sm:w-[350px] md:w-[370px] lg:w-[350px] p-5 rounded-lg mt-3 transition-transform transform hover:scale-105 hover:shadow-xl">
     <div className="flex items-center justify-between">
@@ -560,7 +560,7 @@ if (isLoading) {
   <dialog id="withdraw_modal" className="modal">
   <div className="modal-box">
     <h3 className="flex items-center justify-center font-bold text-lg">
-      Enter Amount to Withdraw
+      Enter Amount to Disburse
     </h3>
     
     <div className="w-full mt-2">
@@ -592,7 +592,7 @@ if (isLoading) {
           }
         }}
       >
-        Withdraw
+        Disburse
       </button>
     </div>
   </div>
@@ -606,7 +606,7 @@ if (isLoading) {
     <form className="space-y-4" onSubmit={handlesWithdrawSubmit}>
       <div>
         <h3 className="font-bold text-lg text-center">
-          Enter Password to Confirm Withdrawal
+          Enter Password to Confirm Disbursement
         </h3>
         <label className="block text-gray-600 font-medium mb-1">Password</label>
         <input
@@ -643,7 +643,7 @@ if (isLoading) {
 <dialog id="deposit_modal" className="modal">
   <div className="modal-box">
     <h3 className="flex items-center justify-center font-bold text-lg">
-      Enter Amount to Deposit
+      Enter Amount to Imburse
     </h3>
     
     <div className="w-full mt-2">
@@ -675,7 +675,7 @@ if (isLoading) {
           }
         }}
       >
-        Deposit
+        Imburse
       </button>
     </div>
   </div>
@@ -689,7 +689,7 @@ if (isLoading) {
     <form className="space-y-4" onSubmit={handlesDepositSubmit}>
       <div>
         <h3 className="font-bold text-lg text-center">
-          Enter Password to Confirm Deposit
+          Enter Password to Confirm Imbursement
         </h3>
         <label className="block text-gray-600 font-medium mb-1">Password</label>
         <input
