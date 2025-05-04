@@ -705,8 +705,8 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       },
       rows: {
         style: {
-          backgroundColor: 'rgba(200, 50, 50, 0.90)', 
-          color: 'white', 
+       backgroundColor: 'rgba(220, 100, 100, 0.3)', // Muted red
+color: '#2b2b2b'
         },
       },
     };
@@ -714,13 +714,13 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
     const customStyles2 = {
       headRow: {
         style: {
-          backgroundColor: 'rgba(200, 50, 50, 0.90)', 
+          backgroundColor: 'rgba(0, 85, 170, 0.85)', 
           color: 'white',
         },
       },
       title: {
         style: {
-          color: 'white',
+          color: '#1f2937', // dark gray instead of white for better contrast
           fontSize: '18px',
           padding: '10px',
           textAlign: 'center',
@@ -728,29 +728,29 @@ const filteredOutflowDuplicationData = outflowDupulicationData.filter(row =>
       },
       rows: {
         style: {
-          backgroundColor: 'rgba(0, 85, 170, 0.85)', 
-          color: 'white',
+          backgroundColor: '#f9fafb', // very light gray background for default
+          color: '#1f2937', // almost-black text for better readability
         },
       },
     };
+    
     
     const conditionalRowStyles = [
       {
         when: row => row.status === 'On investigation',
         style: {
-          backgroundColor: '#3b82f6', 
-          color: 'white',
+          backgroundColor: 'rgba(96, 165, 250, 0.4)', // Soft sky blue
+          color: '#1e3a8a', // dark blue text
         },
       },
       {
         when: row => row.status !== 'On investigation',
         style: {
-          backgroundColor: '#10b981',  
-          color: 'black',
+          backgroundColor: 'rgba(110, 231, 183, 0.4)', // Light mint green
+          color: '#065f46', // dark teal text
         },
       },
     ];
-
 
     // HANDLE OUTFLOW TO INVESTIGATE
     const handleInvestigateOutflow = (e) => {

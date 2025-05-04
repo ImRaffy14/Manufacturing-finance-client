@@ -476,7 +476,7 @@ const toggleSidebar = () => {
                 <li>
                   <details false>
                     <summary>
-                      <MdAccountCircle className="w-5 h-5" /> System Configuration
+                      <MdAccountCircle className="w-5 h-5" /> Administrative Utilities
                       {anomalyLength > 0 && (
                         <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3"></span>
                       )}
